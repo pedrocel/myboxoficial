@@ -53,4 +53,28 @@
     background: #6aa921;
     border-radius: 10px;
   }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .modal-backdrop {
+    animation: fadeIn 0.25s ease;
+  }
+  .modal-panel {
+    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .hero-glow {
+    background: radial-gradient(ellipse at 30% 80%, rgba(106, 169, 33, 0.25) 0%, transparent 60%);
+  }
 }

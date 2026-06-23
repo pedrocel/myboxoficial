@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { AgendamentoModal } from '../components/units/AgendamentoModal'
+import { AgendamentoModalPremium } from '../components/units-preview/AgendamentoModalPremium'
 import {
   getUnitBySlug,
   getUnitImage,
@@ -12,16 +12,43 @@ import { STATE_NAMES } from '../lib/brazil-states'
 import { useAOS } from '../hooks/useAOS'
 
 const MODALIDADES = [
-  { icon: 'fa-dumbbell', title: 'Musculação', desc: 'Equipamentos modernos e ambiente motivador.' },
-  { icon: 'fa-running', title: 'Cross Training', desc: 'Metodologia própria validada por milhões de alunos.' },
-  { icon: 'fa-users', title: 'Aulas Coletivas', desc: 'Comunidade e ecossistema de opções.' },
-  { icon: 'fa-coffee', title: 'My Coffee', desc: 'Café de qualidade antes ou depois do treino.' },
+  {
+    icon: 'fa-dumbbell',
+    title: 'Musculação',
+    desc: 'Equipamentos de última geração em um ambiente que motiva seus resultados.',
+    color: 'from-emerald-500/20 to-emerald-600/5',
+  },
+  {
+    icon: 'fa-running',
+    title: 'Cross Training',
+    desc: 'Metodologia própria validada por mais de um milhão de alunos no Brasil.',
+    color: 'from-green-500/20 to-green-600/5',
+  },
+  {
+    icon: 'fa-users',
+    title: 'Aulas Coletivas',
+    desc: 'Comunidade, energia e variedade para você nunca enjoar do treino.',
+    color: 'from-lime-500/20 to-lime-600/5',
+  },
+  {
+    icon: 'fa-coffee',
+    title: 'My Coffee',
+    desc: 'Café especial antes ou depois do treino. Conceito de shopping fitness.',
+    color: 'from-amber-500/20 to-amber-600/5',
+  },
 ]
 
 const HORARIOS = [
-  { dia: 'Seg — Sex', musc: '06h — 23h', cross: '06h — 20h' },
-  { dia: 'Sábado', musc: '08h — 18h', cross: '09h — 12h' },
-  { dia: 'Domingo', musc: '09h — 15h', cross: '10h — 11h' },
+  { dia: 'Segunda — Sexta', musc: '06h — 23h', cross: '06h, 07h, 08h, 12h, 18h, 19h, 20h' },
+  { dia: 'Sábado', musc: '08h — 18h', cross: '09h, 10h, 11h' },
+  { dia: 'Domingo', musc: '09h — 15h', cross: '10h, 11h' },
+]
+
+const GALLERY_IMAGES = [
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
+  'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80',
+  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
+  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80',
 ]
 
 export function UnitDetailPreviewPage() {
@@ -41,49 +68,53 @@ export function UnitDetailPreviewPage() {
   }
 
   const mapsDirections = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(getFullAddress(unit))}`
+  const heroImage = getUnitImage(unit)
 
   return (
     <div className="bg-mydark font-sans min-h-screen">
       {/* Preview ribbon */}
-      <div className="bg-mygold text-mydark text-center text-xs font-bold py-1.5 tracking-wide">
-        PREVIEW — Nova página de unidade em avaliação ·{' '}
+      <div className="bg-mygold text-mydark text-center text-xs font-bold py-1.5 tracking-wide relative z-50">
+        PREVIEW — Nova página de unidade ·{' '}
         <Link to={`/unidades/${unit.url_page}`} className="underline hover:no-underline">
           ver versão atual
         </Link>
       </div>
 
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden">
-        <img
-          src={getUnitImage(unit)}
-          alt={unit.name}
-          className="absolute inset-0 w-full h-full object-cover scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-mydark via-mydark/70 to-mydark/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-mygreen/20 to-transparent" />
+      <section className="relative min-h-[85vh] flex items-end overflow-hidden">
+        <img src={heroImage} alt={unit.name} className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-mydark via-mydark/80 to-mydark/40" />
+        <div className="absolute inset-0 hero-glow" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-mygreen/50 to-transparent" />
 
-        <div className="relative z-10 container mx-auto px-4 pb-12 pt-32 w-full">
+        <div className="relative z-10 container mx-auto px-4 pb-16 pt-28 w-full">
           <Link
             to="/unidades-preview"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-6 transition"
+            className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-8 transition group"
           >
-            <i className="fas fa-arrow-left" /> Voltar ao mapa
+            <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition">
+              <i className="fas fa-arrow-left text-xs" />
+            </span>
+            Voltar ao mapa
           </Link>
 
-          <div className="flex flex-wrap gap-2 mb-4" data-aos="fade-down">
-            <span className="bg-mygreen text-white text-xs font-bold px-3 py-1 rounded-full">
-              {unit.is_public ? 'UNIDADE PREMIUM' : 'UNIDADE EXCLUSIVA'}
+          <div className="flex flex-wrap gap-2 mb-5" data-aos="fade-down">
+            <span className="bg-mygreen text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-mygreen/30">
+              {unit.is_public ? '★ UNIDADE PREMIUM' : 'UNIDADE EXCLUSIVA'}
             </span>
-            <span className="bg-white/15 backdrop-blur text-white text-xs font-medium px-3 py-1 rounded-full border border-white/20">
+            <span className="bg-white/10 backdrop-blur-md text-white text-xs font-medium px-4 py-1.5 rounded-full border border-white/20">
               {unit.cidade} — {STATE_NAMES[unit.estado] ?? unit.estado}
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 text-shadow max-w-4xl" data-aos="fade-up">
+          <h1
+            className="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-5 leading-tight max-w-4xl tracking-tight"
+            data-aos="fade-up"
+          >
             {unit.name}
           </h1>
-          <p className="text-lg text-white/90 max-w-2xl mb-8" data-aos="fade-up" data-aos-delay="100">
-            <i className="fas fa-map-marker-alt text-mygreen mr-2" />
+          <p className="text-lg text-white/80 max-w-xl mb-10 flex items-start gap-2" data-aos="fade-up" data-aos-delay="100">
+            <i className="fas fa-map-marker-alt text-mygreen mt-1 shrink-0" />
             {getFullAddress(unit)}
           </p>
 
@@ -91,9 +122,9 @@ export function UnitDetailPreviewPage() {
             <button
               type="button"
               onClick={() => setAgendamentoOpen(true)}
-              className="bg-mygreen hover:bg-green-600 text-white font-bold py-3.5 px-8 rounded-full transition shadow-lg shadow-mygreen/30"
+              className="group bg-mygreen hover:bg-green-500 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-xl shadow-mygreen/30 hover:shadow-mygreen/50 hover:scale-[1.02] flex items-center gap-2"
             >
-              <i className="fas fa-dumbbell mr-2" />
+              <i className="fas fa-calendar-check group-hover:scale-110 transition" />
               Agendar aula experimental
             </button>
             {whatsapp && (
@@ -101,9 +132,9 @@ export function UnitDetailPreviewPage() {
                 href={whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white/10 backdrop-blur hover:bg-white/20 text-white font-bold py-3.5 px-8 rounded-full transition border border-white/30"
+                className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold py-4 px-8 rounded-2xl transition border border-white/25 flex items-center gap-2"
               >
-                <i className="fab fa-whatsapp mr-2" />
+                <i className="fab fa-whatsapp text-lg" />
                 WhatsApp
               </a>
             )}
@@ -111,96 +142,110 @@ export function UnitDetailPreviewPage() {
               href={mapsDirections}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur hover:bg-white/20 text-white font-bold py-3.5 px-8 rounded-full transition border border-white/30"
+              className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold py-4 px-8 rounded-2xl transition border border-white/25 flex items-center gap-2"
             >
-              <i className="fas fa-directions mr-2" />
+              <i className="fas fa-directions" />
               Como chegar
             </a>
           </div>
         </div>
       </section>
 
-      {/* Stats bar */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="container mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* Stats */}
+      <section className="bg-white relative z-10 -mt-6 mx-4 sm:mx-auto sm:max-w-5xl rounded-2xl shadow-xl border border-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
           {[
-            { icon: 'fa-star', label: 'Avaliação', value: '5.0' },
-            { icon: 'fa-clock', label: 'Aberto hoje', value: '06h — 23h' },
-            { icon: 'fa-dumbbell', label: 'Modalidades', value: '4+' },
-            { icon: 'fa-users', label: 'Comunidade', value: 'My Box' },
+            { icon: 'fa-star', label: 'Avaliação', value: '5.0', sub: 'Google' },
+            { icon: 'fa-clock', label: 'Hoje', value: '06h—23h', sub: 'Aberto' },
+            { icon: 'fa-dumbbell', label: 'Modalidades', value: '4+', sub: 'Opções' },
+            { icon: 'fa-heart', label: 'Comunidade', value: 'My Box', sub: 'Família' },
           ].map((s) => (
-            <div key={s.label} className="flex items-center gap-3" data-aos="fade-up">
-              <div className="w-11 h-11 rounded-xl gradient-green flex items-center justify-center shrink-0">
-                <i className={`fas ${s.icon} text-white`} />
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">{s.label}</p>
-                <p className="font-bold text-mydark">{s.value}</p>
-              </div>
+            <div key={s.label} className="p-5 text-center" data-aos="fade-up">
+              <i className={`fas ${s.icon} text-mygreen text-lg mb-2`} />
+              <p className="text-2xl font-black text-mydark">{s.value}</p>
+              <p className="text-xs text-gray-400">{s.sub}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Main content */}
+      {/* Gallery strip */}
+      <section className="py-8 overflow-hidden" data-aos="fade-up">
+        <div className="flex gap-3 px-4 overflow-x-auto scrollbar-hide">
+          {[heroImage, ...GALLERY_IMAGES].map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              className="h-44 w-64 shrink-0 rounded-2xl object-cover border border-white/10 shadow-lg"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Content */}
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               {/* Modalidades */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8" data-aos="fade-up">
-                <h2 className="text-2xl font-bold text-mydark mb-6">O que você encontra aqui</h2>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10" data-aos="fade-up">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl md:text-3xl font-black text-mydark">O que você encontra</h2>
+                  <span className="text-mygreen text-sm font-bold">My Box</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {MODALIDADES.map((m) => (
                     <div
                       key={m.title}
-                      className="group p-5 rounded-xl bg-gray-50 hover:bg-green-50 border border-transparent hover:border-mygreen/30 transition"
+                      className={`group relative p-6 rounded-2xl bg-gradient-to-br ${m.color} border border-gray-100 hover:border-mygreen/40 hover:shadow-md transition-all overflow-hidden`}
                     >
-                      <div className="w-12 h-12 rounded-xl gradient-green flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                        <i className={`fas ${m.icon} text-white text-lg`} />
+                      <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
+                        <i className={`fas ${m.icon} text-white text-xl`} />
                       </div>
-                      <h3 className="font-bold text-mydark mb-1">{m.title}</h3>
-                      <p className="text-sm text-gray-600">{m.desc}</p>
+                      <h3 className="font-bold text-mydark text-lg mb-2">{m.title}</h3>
+                      <p className="text-sm text-gray-600 leading-relaxed">{m.desc}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Horários */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8" data-aos="fade-up">
-                <h2 className="text-2xl font-bold text-mydark mb-6">Horários de funcionamento</h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-gray-100">
-                        <th className="pb-3 font-bold text-mydark">Dia</th>
-                        <th className="pb-3 font-bold text-mydark">Musculação</th>
-                        <th className="pb-3 font-bold text-mydark">Cross Training</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                      {HORARIOS.map((h) => (
-                        <tr key={h.dia}>
-                          <td className="py-3 font-medium text-mydark">{h.dia}</td>
-                          <td className="py-3 text-gray-600">{h.musc}</td>
-                          <td className="py-3 text-gray-600">{h.cross}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10" data-aos="fade-up">
+                <h2 className="text-2xl md:text-3xl font-black text-mydark mb-8">Horários</h2>
+                <div className="space-y-3">
+                  {HORARIOS.map((h) => (
+                    <div
+                      key={h.dia}
+                      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 p-4 rounded-2xl bg-gray-50 border border-gray-100"
+                    >
+                      <p className="font-bold text-mydark sm:w-36 shrink-0">{h.dia}</p>
+                      <div className="flex flex-wrap gap-3 text-sm">
+                        <span className="flex items-center gap-1.5 text-gray-600">
+                          <i className="fas fa-dumbbell text-mygreen text-xs" />
+                          {h.musc}
+                        </span>
+                        <span className="text-gray-300 hidden sm:inline">|</span>
+                        <span className="flex items-center gap-1.5 text-gray-600">
+                          <i className="fas fa-running text-mygreen text-xs" />
+                          {h.cross}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               {/* Mapa */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-aos="fade-up">
-                <div className="p-6 border-b border-gray-100">
-                  <h2 className="text-2xl font-bold text-mydark">Localização</h2>
-                  <p className="text-gray-500 text-sm mt-1">{unit.como_chegar}</p>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden" data-aos="fade-up">
+                <div className="p-8 border-b border-gray-100">
+                  <h2 className="text-2xl font-black text-mydark">Como chegar</h2>
+                  <p className="text-gray-500 mt-2">{unit.como_chegar}</p>
                 </div>
                 <iframe
                   src={getMapEmbedUrl(unit)}
                   width="100%"
-                  height="320"
+                  height="360"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
@@ -211,89 +256,67 @@ export function UnitDetailPreviewPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <div
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-6"
-                data-aos="fade-left"
-              >
-                <h3 className="text-xl font-bold text-mydark mb-6">Fale com a unidade</h3>
-
-                {unit.telefone && (
-                  <div className="flex items-start gap-3 mb-5 pb-5 border-b border-gray-100">
-                    <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
-                      <i className="fas fa-phone text-mygreen" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Telefone</p>
-                      <a href={`tel:${unit.telefone_numerico}`} className="font-bold text-mydark hover:text-mygreen">
-                        {unit.telefone}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {unit.email && (
-                  <div className="flex items-start gap-3 mb-5 pb-5 border-b border-gray-100">
-                    <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
-                      <i className="fas fa-envelope text-mygreen" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">E-mail</p>
-                      <a href={`mailto:${unit.email}`} className="font-bold text-mydark hover:text-mygreen break-all">
-                        {unit.email}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-start gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
-                    <i className="fas fa-map-pin text-mygreen" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Endereço</p>
-                    <p className="font-bold text-mydark text-sm leading-relaxed">{getFullAddress(unit)}</p>
-                    {unit.cep && <p className="text-gray-500 text-sm mt-1">CEP {unit.cep}</p>}
-                  </div>
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden sticky top-6" data-aos="fade-left">
+                <div className="gradient-green p-6 text-white">
+                  <h3 className="text-xl font-black">Agende sua visita</h3>
+                  <p className="text-green-100 text-sm mt-1">Primeira aula experimental gratuita</p>
                 </div>
-
-                <div className="space-y-3">
-                  <button
-                    type="button"
-                    onClick={() => setAgendamentoOpen(true)}
-                    className="w-full bg-mygreen hover:bg-green-600 text-white font-bold py-3.5 rounded-xl transition shadow-md"
-                  >
-                    Agendar aula experimental
-                  </button>
-                  {whatsapp && (
-                    <a
-                      href={whatsapp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl transition"
-                    >
-                      <i className="fab fa-whatsapp text-lg" />
-                      Falar no WhatsApp
+                <div className="p-6 space-y-5">
+                  {unit.telefone && (
+                    <a href={`tel:${unit.telefone_numerico}`} className="flex items-center gap-3 group">
+                      <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-mygreen group-hover:text-white transition text-mygreen">
+                        <i className="fas fa-phone" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Telefone</p>
+                        <p className="font-bold text-mydark group-hover:text-mygreen transition">{unit.telefone}</p>
+                      </div>
                     </a>
                   )}
-                  <a
-                    href={mapsDirections}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 border-2 border-gray-200 hover:border-mygreen text-mydark font-bold py-3 rounded-xl transition"
-                  >
-                    <i className="fas fa-directions" />
-                    Abrir no Google Maps
-                  </a>
-                </div>
-              </div>
+                  {unit.email && (
+                    <a href={`mailto:${unit.email}`} className="flex items-center gap-3 group">
+                      <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-mygreen transition text-mygreen">
+                        <i className="fas fa-envelope group-hover:text-white" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">E-mail</p>
+                        <p className="font-bold text-mydark text-sm truncate group-hover:text-mygreen transition">
+                          {unit.email}
+                        </p>
+                      </div>
+                    </a>
+                  )}
+                  <div className="flex items-start gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center text-mygreen shrink-0">
+                      <i className="fas fa-map-pin" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Endereço</p>
+                      <p className="font-bold text-mydark text-sm leading-relaxed">{getFullAddress(unit)}</p>
+                    </div>
+                  </div>
 
-              {/* CTA card */}
-              <div className="rounded-2xl overflow-hidden shadow-lg" data-aos="fade-left" data-aos-delay="100">
-                <div className="gradient-green p-6 text-white">
-                  <h3 className="text-lg font-bold mb-2">Primeira aula grátis?</h3>
-                  <p className="text-green-100 text-sm">
-                    Agende sua aula experimental e conheça o conceito My Box de perto.
-                  </p>
+                  <div className="pt-2 space-y-3">
+                    <button
+                      type="button"
+                      onClick={() => setAgendamentoOpen(true)}
+                      className="w-full bg-mygreen hover:bg-green-600 text-white font-bold py-4 rounded-2xl transition shadow-lg shadow-mygreen/20 flex items-center justify-center gap-2"
+                    >
+                      <i className="fas fa-calendar-check" />
+                      Escolher horário
+                    </button>
+                    {whatsapp && (
+                      <a
+                        href={whatsapp}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-2xl transition"
+                      >
+                        <i className="fab fa-whatsapp text-lg" />
+                        WhatsApp
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,28 +324,48 @@ export function UnitDetailPreviewPage() {
         </div>
       </section>
 
-      {/* Mobile sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-gray-200 p-3 flex gap-2 shadow-2xl">
+      {/* Bottom CTA */}
+      <section className="relative overflow-hidden py-20" data-aos="fade-up">
+        <img src={heroImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-mydark/85" />
+        <div className="relative container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Pronto para começar?</h2>
+          <p className="text-white/70 mb-8 max-w-md mx-auto">
+            Agende sua aula experimental gratuita e descubra por que a My Box está mudando o fitness no Brasil.
+          </p>
+          <button
+            type="button"
+            onClick={() => setAgendamentoOpen(true)}
+            className="bg-mygreen hover:bg-green-500 text-white font-bold py-4 px-10 rounded-2xl transition shadow-xl shadow-mygreen/30 text-lg"
+          >
+            Agendar agora — é grátis
+          </button>
+        </div>
+      </section>
+
+      {/* Mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 flex gap-2 shadow-2xl">
         <button
           type="button"
           onClick={() => setAgendamentoOpen(true)}
-          className="flex-1 bg-mygreen text-white font-bold py-3 rounded-xl text-sm"
+          className="flex-1 bg-mygreen text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 shadow-md"
         >
+          <i className="fas fa-calendar-check" />
           Agendar aula
         </button>
         {whatsapp && (
           <a
             href={whatsapp}
-            className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl text-sm text-center"
+            className="w-14 bg-green-500 text-white rounded-2xl flex items-center justify-center shadow-md"
           >
-            WhatsApp
+            <i className="fab fa-whatsapp text-xl" />
           </a>
         )}
       </div>
 
-      <div className="h-20 lg:hidden" />
+      <div className="h-24 lg:hidden" />
 
-      <AgendamentoModal unit={unit} open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)} />
+      <AgendamentoModalPremium unit={unit} open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)} />
     </div>
   )
 }
