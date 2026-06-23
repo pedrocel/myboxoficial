@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { Eye, Sun, CalendarDays } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
+import { Card } from '../../../components/ui/card'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
+import { OWNER_NAV } from '../../../lib/panel-nav'
 import type { UnitVisit } from '../../../types/database'
 
-import { OWNER_NAV } from '../../../lib/panel-nav'
 export function OwnerVisitsPage() {
   const { profile } = useAuth()
   const [visits, setVisits] = useState<UnitVisit[]>([])
@@ -46,30 +47,37 @@ export function OwnerVisitsPage() {
         <StatCard icon={CalendarDays} label="Últimos 7 dias" value={week} variant="blue" />
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+      <Card className="overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+            <tr className="bg-muted/50 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               <th className="px-6 py-4">Data / Hora</th>
               <th className="px-6 py-4">Página</th>
               <th className="px-6 py-4">Origem</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-border">
             {visits.map((v) => (
-              <tr key={v.id} className="hover:bg-gray-50/50">
-                <td className="px-6 py-4 font-medium text-mydark">
+              <tr key={v.id} className="hover:bg-muted/30 transition">
+                <td className="px-6 py-4 font-medium text-foreground">
                   {new Date(v.created_at).toLocaleString('pt-BR')}
                 </td>
-                <td className="px-6 py-4 text-gray-500 text-xs">{v.path ?? '—'}</td>
-                <td className="px-6 py-4 text-gray-400 text-xs truncate max-w-[200px]">
+                <td className="px-6 py-4 text-muted-foreground text-xs">{v.path ?? '—'}</td>
+                <td className="px-6 py-4 text-muted-foreground text-xs truncate max-w-[200px]">
                   {v.referrer || 'Direto'}
                 </td>
               </tr>
             ))}
+            {!visits.length && (
+              <tr>
+                <td colSpan={3} className="px-6 py-12 text-center text-muted-foreground">
+                  Nenhuma visita registrada ainda
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-      </div>
+      </Card>
     </PanelLayout>
   )
 }

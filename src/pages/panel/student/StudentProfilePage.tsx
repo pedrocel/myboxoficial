@@ -1,9 +1,15 @@
 import { useState, type FormEvent } from 'react'
+import { Loader2 } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
-
 import { STUDENT_NAV } from '../../../lib/panel-nav'
+import { Button } from '../../../components/ui/button'
+import { Input } from '../../../components/ui/input'
+import { Label } from '../../../components/ui/label'
+import { Card, CardContent } from '../../../components/ui/card'
+import { Badge } from '../../../components/ui/badge'
+
 export function StudentProfilePage() {
   const { profile, refreshProfile } = useAuth()
   const [fullName, setFullName] = useState(profile?.full_name ?? '')
@@ -28,64 +34,40 @@ export function StudentProfilePage() {
 
   return (
     <PanelLayout title="Meu perfil" subtitle="Seus dados pessoais" nav={STUDENT_NAV}>
-      <form onSubmit={handleSubmit} className="max-w-lg">
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-5">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full gradient-green flex items-center justify-center text-white font-black text-2xl">
-              {(fullName || profile?.email || '?')[0]?.toUpperCase()}
+      <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
+        <Card>
+          <CardContent className="p-8 space-y-5">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full gradient-green flex items-center justify-center text-white font-bold text-2xl">
+                {(fullName || profile?.email || '?')[0]?.toUpperCase()}
+              </div>
+              <div>
+                <p className="font-bold text-foreground">{fullName || 'Aluno'}</p>
+                <p className="text-sm text-muted-foreground">{profile?.email}</p>
+                <Badge variant="secondary" className="mt-2">Aluno</Badge>
+              </div>
             </div>
-            <div>
-              <p className="font-black text-mydark">{fullName || 'Aluno'}</p>
-              <p className="text-sm text-gray-500">{profile?.email}</p>
-              <span className="inline-block mt-1 text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">
-                Aluno
-              </span>
+
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Nome completo</Label>
+              <Input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
             </div>
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone / WhatsApp</Label>
+              <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">E-mail</Label>
+              <Input id="email" type="email" value={profile?.email ?? ''} disabled className="opacity-60" />
+            </div>
+          </CardContent>
+        </Card>
 
-          <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Nome completo</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="mt-1.5 w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen"
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Telefone / WhatsApp</label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="mt-1.5 w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen"
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">E-mail</label>
-            <input
-              type="email"
-              value={profile?.email ?? ''}
-              disabled
-              className="mt-1.5 w-full px-4 py-3 bg-gray-100 border border-gray-100 rounded-xl text-gray-400 cursor-not-allowed"
-            />
-          </div>
-        </div>
+        {saved && <p className="text-primary text-sm font-medium">Perfil atualizado!</p>}
 
-        {saved && (
-          <p className="text-mygreen text-sm font-semibold mt-4 flex items-center gap-2">
-            <i className="fas fa-check-circle" />
-            Perfil atualizado!
-          </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="mt-6 bg-mygreen hover:bg-green-600 disabled:opacity-60 text-white font-bold py-4 px-8 rounded-xl transition"
-        >
-          {saving ? <i className="fas fa-spinner fa-spin" /> : 'Salvar perfil'}
-        </button>
+        <Button type="submit" disabled={saving} size="lg">
+          {saving ? <Loader2 className="animate-spin" /> : 'Salvar perfil'}
+        </Button>
       </form>
     </PanelLayout>
   )

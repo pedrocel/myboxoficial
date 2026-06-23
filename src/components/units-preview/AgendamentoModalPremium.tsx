@@ -6,19 +6,21 @@ import { getUnitImage } from '../../lib/units'
 import { createBookingWithStudentAccess } from '../../lib/bookings'
 import {
   getAvailableDates,
-  getTimeSlotsForDate,
+  getTimeSlotsFromUnitHorarios,
   MODALIDADES_AGENDA,
   PERIOD_LABELS,
   type TimeSlot,
 } from '../../lib/scheduling'
+import type { UnitHorario } from '../../lib/unit-settings'
 
 type Props = {
   unit: Unit
+  horarios?: UnitHorario[]
   open: boolean
   onClose: () => void
 }
 
-export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
+export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props) {
   const dates = useMemo(() => getAvailableDates(14), [])
   const [step, setStep] = useState<1 | 2>(1)
   const [selectedDate, setSelectedDate] = useState(dates[1]?.value ?? dates[0].value)
@@ -33,7 +35,10 @@ export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
   const [email, setEmail] = useState('')
   const [telefone, setTelefone] = useState('')
 
-  const timeSlots = useMemo(() => getTimeSlotsForDate(selectedDate), [selectedDate])
+  const timeSlots = useMemo(
+    () => getTimeSlotsFromUnitHorarios(selectedDate, horarios ?? [], modalidade),
+    [selectedDate, horarios, modalidade],
+  )
 
   const slotsByPeriod = useMemo(() => {
     const groups: Record<string, TimeSlot[]> = { manha: [], tarde: [], noite: [] }
@@ -58,7 +63,7 @@ export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
 
   useEffect(() => {
     setSelectedTime(null)
-  }, [selectedDate])
+  }, [selectedDate, modalidade])
 
   if (!open) return null
 

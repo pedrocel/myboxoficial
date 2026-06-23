@@ -335,7 +335,7 @@ export function UnitDetailPreviewPage() {
 
       <div className="h-24 lg:hidden" />
 
-      <AgendamentoModalPremium unit={unit} open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)} />
+      <AgendamentoModalPremium unit={unit} horarios={horarios} open={agendamentoOpen} onClose={() => setAgendamentoOpen(false)} />
     </div>
   )
 }

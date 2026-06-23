@@ -1,10 +1,12 @@
 import { useEffect, useState, useMemo } from 'react'
+import { Calendar, Users } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
+import { Card, CardContent } from '../../../components/ui/card'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
+import { OWNER_NAV } from '../../../lib/panel-nav'
 import type { Booking } from '../../../types/database'
 
-import { OWNER_NAV } from '../../../lib/panel-nav'
 type StudentRow = {
   email: string
   name: string
@@ -49,36 +51,38 @@ export function OwnerStudentsPage() {
     <PanelLayout title="Alunos" subtitle="Pessoas que agendaram na sua unidade" nav={OWNER_NAV}>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {students.map((s) => (
-          <div key={s.email} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full gradient-green flex items-center justify-center text-white font-bold text-lg shrink-0">
-                {s.name[0]?.toUpperCase()}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-black text-mydark truncate">{s.name}</h3>
-                <p className="text-xs text-gray-400 truncate">{s.email}</p>
-                <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
-                  <span><i className="fas fa-calendar mr-1" />{s.bookings} agendamento{s.bookings > 1 ? 's' : ''}</span>
-                  <span>Último: {new Date(s.lastBooking + 'T12:00:00').toLocaleDateString('pt-BR')}</span>
+          <Card key={s.email} className="hover:border-primary/30 hover:shadow-md transition">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full gradient-green flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  {s.name[0]?.toUpperCase()}
                 </div>
-                <a
-                  href={`https://wa.me/55${s.phone.replace(/\D/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-4 text-sm font-bold text-green-600 hover:text-green-700"
-                >
-                  <i className="fab fa-whatsapp" />
-                  Contatar
-                </a>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-bold text-foreground truncate">{s.name}</h3>
+                  <p className="text-xs text-muted-foreground truncate">{s.email}</p>
+                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{s.bookings} agendamento{s.bookings > 1 ? 's' : ''}</span>
+                    <span>Último: {new Date(s.lastBooking + 'T12:00:00').toLocaleDateString('pt-BR')}</span>
+                  </div>
+                  <a
+                    href={`https://wa.me/55${s.phone.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-4 text-sm font-semibold text-primary hover:text-primary/80"
+                  >
+                    <i className="fab fa-whatsapp" />
+                    Contatar
+                  </a>
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
       {!students.length && (
-        <div className="text-center py-16 text-gray-400">
-          <i className="fas fa-users text-4xl mb-4" />
+        <div className="text-center py-16 text-muted-foreground">
+          <Users className="h-12 w-12 mx-auto mb-4 opacity-40" />
           <p>Nenhum aluno ainda. Compartilhe o link da sua unidade!</p>
         </div>
       )}

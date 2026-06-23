@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ThemeToggle } from '../theme/ThemeToggle'
 
 const navLinks = [
   { href: '#sobre', label: 'Sobre' },
@@ -60,9 +59,7 @@ export function Header() {
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <ThemeToggle className="text-white hover:bg-white/10 hidden md:flex" />
-          <button
+        <button
           type="button"
           className="md:hidden text-white"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -70,7 +67,6 @@ export function Header() {
         >
           <i className={`fas ${mobileOpen ? 'fa-times' : 'fa-bars'} text-2xl`} />
         </button>
-        </div>
       </div>
 
       {mobileOpen && (

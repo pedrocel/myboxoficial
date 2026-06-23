@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Search } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
+import { Input } from '../../../components/ui/input'
+import { Card } from '../../../components/ui/card'
+import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import type { Profile } from '../../../types/database'
 
 const ROLE_LABELS = { admin: 'Administrador', owner: 'Dono', student: 'Aluno' }
-const ROLE_COLORS = {
-  admin: 'bg-purple-100 text-purple-700',
-  owner: 'bg-mygreen/20 text-mygreen',
-  student: 'bg-blue-100 text-blue-700',
-}
 
 export function AdminUsersPage() {
   const [users, setUsers] = useState<Profile[]>([])
@@ -35,16 +34,20 @@ export function AdminUsersPage() {
     <PanelLayout title="Usuários" subtitle={`${users.length} contas no sistema`} nav={ADMIN_NAV}>
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1 max-w-md">
-          <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
-          <input
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar nome ou e-mail..."
-            className="w-full pl-11 pr-4 py-3 bg-white border rounded-xl shadow-sm focus:ring-2 focus:ring-mygreen"
+            className="pl-10"
           />
         </div>
-        <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="px-4 py-3 bg-white border rounded-xl text-sm font-semibold">
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="px-4 py-2 h-10 bg-background border border-input rounded-xl text-sm font-medium text-foreground"
+        >
           <option value="">Todos os perfis</option>
           <option value="admin">Administradores</option>
           <option value="owner">Donos</option>
@@ -54,25 +57,20 @@ export function AdminUsersPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filtered.map((u) => (
-          <Link
-            key={u.id}
-            to={`/painel/admin/usuarios/${u.id}`}
-            className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-lg hover:border-mygreen/30 transition group flex items-start gap-4"
-          >
-            <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center text-white font-black text-xl shrink-0 shadow-md">
-              {(u.full_name ?? u.email)[0]?.toUpperCase()}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-black text-mydark truncate group-hover:text-mygreen transition">{u.full_name ?? '—'}</p>
-              <p className="text-sm text-gray-500 truncate">{u.email}</p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${ROLE_COLORS[u.role]}`}>
-                  {ROLE_LABELS[u.role]}
-                </span>
-                {u.unit_slug && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{u.unit_slug}</span>}
+          <Link key={u.id} to={`/painel/admin/usuarios/${u.id}`}>
+            <Card className="p-5 hover:border-primary/30 hover:shadow-lg transition group flex items-start gap-4 h-full">
+              <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-md">
+                {(u.full_name ?? u.email)[0]?.toUpperCase()}
               </div>
-            </div>
-            <i className="fas fa-chevron-right text-gray-300 group-hover:text-mygreen mt-4" />
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-foreground truncate group-hover:text-primary transition">{u.full_name ?? '—'}</p>
+                <p className="text-sm text-muted-foreground truncate">{u.email}</p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <Badge variant="secondary">{ROLE_LABELS[u.role]}</Badge>
+                  {u.unit_slug && <Badge variant="outline">{u.unit_slug}</Badge>}
+                </div>
+              </div>
+            </Card>
           </Link>
         ))}
       </div>

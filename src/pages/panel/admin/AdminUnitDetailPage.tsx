@@ -1,10 +1,13 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { Eye, CalendarCheck, Clock, Users } from 'lucide-react'
+import { Eye, CalendarCheck, Clock, Users, ArrowLeft, ExternalLink } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { UnitCustomizeEditor, buildUnitUpdatePayload } from '../../../components/panel/UnitCustomizeEditor'
+import { Button } from '../../../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
+import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import { getUnitGallery, getUnitModalidades, ownerDefaultPassword } from '../../../lib/unit-settings'
@@ -77,19 +80,21 @@ export function AdminUnitDetailPage() {
   return (
     <PanelLayout title={unit.name} subtitle={`${unit.cidade} — ${STATE_NAMES[unit.estado ?? ''] ?? unit.estado}`} nav={ADMIN_NAV}>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <Link to="/painel/admin/unidades" className="text-sm text-gray-500 hover:text-mygreen flex items-center gap-1">
-          <i className="fas fa-arrow-left" /> Unidades
+        <Link to="/painel/admin/unidades" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+          <ArrowLeft className="h-4 w-4" /> Unidades
         </Link>
-        <div className="flex gap-2 ml-auto">
-          <button type="button" onClick={() => setTab('overview')} className={`px-4 py-2 rounded-xl text-sm font-bold ${tab === 'overview' ? 'bg-mygreen text-white' : 'bg-white border'}`}>
+        <div className="flex flex-wrap gap-2 ml-auto">
+          <Button type="button" variant={tab === 'overview' ? 'default' : 'outline'} size="sm" onClick={() => setTab('overview')}>
             Dashboard
-          </button>
-          <button type="button" onClick={() => setTab('edit')} className={`px-4 py-2 rounded-xl text-sm font-bold ${tab === 'edit' ? 'bg-mygreen text-white' : 'bg-white border'}`}>
+          </Button>
+          <Button type="button" variant={tab === 'edit' ? 'default' : 'outline'} size="sm" onClick={() => setTab('edit')}>
             Editar unidade
-          </button>
-          <Link to={`/unidades-preview/${slug}`} target="_blank" className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 text-mydark hover:bg-gray-200 flex items-center gap-2">
-            <i className="fas fa-external-link-alt" /> Página pública
-          </Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to={`/unidades-preview/${slug}`} target="_blank">
+              <ExternalLink className="h-3.5 w-3.5" /> Página pública
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -119,72 +124,97 @@ export function AdminUnitDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div className="lg:col-span-1 bg-white rounded-2xl border p-6 shadow-sm space-y-4">
-              <h3 className="font-black text-mydark flex items-center gap-2"><i className="fas fa-address-card text-mygreen" /> Contato</h3>
-              {[
-                ['Telefone', unit.telefone, 'fa-phone'],
-                ['WhatsApp', unit.whatsapp, 'fa-whatsapp'],
-                ['E-mail', unit.email, 'fa-envelope'],
-                ['Dono', unit.nome_dono, 'fa-user-tie'],
-              ].map(([l, v, icon]) => v && (
-                <div key={l as string} className="flex items-start gap-3 text-sm">
-                  <i className={`fas ${icon} text-mygreen mt-0.5 w-4`} />
-                  <div><p className="text-[10px] text-gray-400 uppercase font-bold">{l}</p><p className="font-semibold text-mydark">{v}</p></div>
-                </div>
-              ))}
-              <div className="pt-3 border-t">
-                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Endereço</p>
-                <p className="text-sm text-gray-600">{[unit.logradouro, unit.numero, unit.cidade, unit.estado].filter(Boolean).join(', ')}</p>
-              </div>
-            </div>
-
-            <div className="lg:col-span-1 bg-white rounded-2xl border p-6 shadow-sm">
-              <h3 className="font-black text-mydark mb-4 flex items-center gap-2"><i className="fas fa-user-shield text-mygreen" /> Dono da unidade</h3>
-              {owner ? (
-                <Link to={`/painel/admin/usuarios/${owner.id}`} className="block p-4 bg-gray-50 rounded-xl hover:bg-green-50 transition group">
-                  <p className="font-bold text-mydark group-hover:text-mygreen">{owner.full_name}</p>
-                  <p className="text-sm text-gray-500">{owner.email}</p>
-                  <p className="text-xs text-mygreen mt-2 font-semibold">Ver perfil →</p>
-                </Link>
-              ) : (
-                <div className="p-4 bg-amber-50 rounded-xl text-sm text-amber-800">
-                  <p className="font-bold mb-1">Sem owner vinculado</p>
-                  <p className="text-xs">Rode <code>npm run owners:create</code></p>
-                  {unit.email && <p className="text-xs mt-2">Senha padrão: <strong>{ownerDefaultPassword(unit.name)}</strong></p>}
-                </div>
-              )}
-            </div>
-
-            <div className="lg:col-span-1 bg-white rounded-2xl border p-6 shadow-sm">
-              <h3 className="font-black text-mydark mb-4 flex items-center gap-2"><i className="fas fa-dumbbell text-mygreen" /> Modalidades</h3>
-              <div className="flex flex-wrap gap-2">
-                {mods.map((m) => (
-                  <span key={m.id} className="text-xs font-bold px-3 py-1.5 rounded-full bg-green-50 text-mygreen border border-mygreen/20">
-                    <i className={`fas ${m.icon} mr-1`} />{m.title}
-                  </span>
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <i className="fas fa-address-card text-primary" /> Contato
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  ['Telefone', unit.telefone, 'fa-phone'],
+                  ['WhatsApp', unit.whatsapp, 'fa-whatsapp'],
+                  ['E-mail', unit.email, 'fa-envelope'],
+                  ['Dono', unit.nome_dono, 'fa-user-tie'],
+                ].map(([l, v, icon]) => v && (
+                  <div key={l as string} className="flex items-start gap-3 text-sm">
+                    <i className={`fas ${icon} text-primary mt-0.5 w-4`} />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground uppercase font-semibold">{l}</p>
+                      <p className="font-medium text-foreground">{v}</p>
+                    </div>
+                  </div>
                 ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-4">{unit.gallery_images?.length ?? 0} imagens na galeria</p>
-            </div>
+                <div className="pt-3 border-t border-border">
+                  <p className="text-[10px] text-muted-foreground uppercase font-semibold mb-1">Endereço</p>
+                  <p className="text-sm text-muted-foreground">{[unit.logradouro, unit.numero, unit.cidade, unit.estado].filter(Boolean).join(', ')}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <i className="fas fa-user-shield text-primary" /> Dono da unidade
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {owner ? (
+                  <Link to={`/painel/admin/usuarios/${owner.id}`} className="block p-4 bg-muted/50 rounded-xl hover:bg-accent transition group">
+                    <p className="font-bold text-foreground group-hover:text-primary">{owner.full_name}</p>
+                    <p className="text-sm text-muted-foreground">{owner.email}</p>
+                    <p className="text-xs text-primary mt-2 font-semibold">Ver perfil →</p>
+                  </Link>
+                ) : (
+                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-sm text-amber-400">
+                    <p className="font-bold mb-1">Sem owner vinculado</p>
+                    <p className="text-xs">Rode <code>npm run owners:create</code></p>
+                    {unit.email && <p className="text-xs mt-2">Senha padrão: <strong>{ownerDefaultPassword(unit.name)}</strong></p>}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <i className="fas fa-dumbbell text-primary" /> Modalidades
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {mods.map((m) => (
+                    <Badge key={m.id} variant="success">
+                      <i className={`fas ${m.icon} mr-1`} />{m.title}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">{unit.gallery_images?.length ?? 0} imagens na galeria</p>
+              </CardContent>
+            </Card>
           </div>
 
-          <h3 className="font-black text-mydark mb-4">Últimos agendamentos</h3>
-          <BookingsTable bookings={bookings} />
+          <Card className="mb-8">
+            <CardHeader><CardTitle>Últimos agendamentos</CardTitle></CardHeader>
+            <CardContent><BookingsTable bookings={bookings} /></CardContent>
+          </Card>
 
-          <h3 className="font-black text-mydark mb-4 mt-8">Visitas recentes</h3>
-          <div className="bg-white rounded-2xl border overflow-hidden">
-            <table className="w-full text-sm">
-              <tbody className="divide-y">
-                {visits.map((v) => (
-                  <tr key={v.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium">{new Date(v.created_at).toLocaleString('pt-BR')}</td>
-                    <td className="px-4 py-3 text-gray-500 text-xs">{v.referrer || 'Direto'}</td>
-                  </tr>
-                ))}
-                {!visits.length && <tr><td colSpan={2} className="px-4 py-8 text-center text-gray-400">Nenhuma visita registrada</td></tr>}
-              </tbody>
-            </table>
-          </div>
+          <Card>
+            <CardHeader><CardTitle>Visitas recentes</CardTitle></CardHeader>
+            <CardContent className="p-0">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-border">
+                  {visits.map((v) => (
+                    <tr key={v.id} className="hover:bg-muted/30">
+                      <td className="px-4 py-3 font-medium text-foreground">{new Date(v.created_at).toLocaleString('pt-BR')}</td>
+                      <td className="px-4 py-3 text-muted-foreground text-xs">{v.referrer || 'Direto'}</td>
+                    </tr>
+                  ))}
+                  {!visits.length && <tr><td colSpan={2} className="px-4 py-8 text-center text-muted-foreground">Nenhuma visita registrada</td></tr>}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
         </>
       ) : (
         <UnitCustomizeEditor unit={unit} onSave={saveUnit} />
