@@ -9,6 +9,15 @@ import { MetaPixel } from './components/analytics/MetaPixel'
 const UnitsPreviewPage = lazy(() =>
   import('./pages/UnitsPreviewPage').then((m) => ({ default: m.UnitsPreviewPage })),
 )
+const UnitDetailPreviewPage = lazy(() =>
+  import('./pages/UnitDetailPreviewPage').then((m) => ({ default: m.UnitDetailPreviewPage })),
+)
+
+const previewFallback = (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <i className="fas fa-spinner fa-spin text-mygreen text-3xl" />
+  </div>
+)
 
 export default function App() {
   return (
@@ -20,14 +29,16 @@ export default function App() {
         <Route
           path="/unidades-preview"
           element={
-            <Suspense
-              fallback={
-                <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                  <i className="fas fa-spinner fa-spin text-mygreen text-3xl" />
-                </div>
-              }
-            >
+            <Suspense fallback={previewFallback}>
               <UnitsPreviewPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/unidades-preview/:slug"
+          element={
+            <Suspense fallback={previewFallback}>
+              <UnitDetailPreviewPage />
             </Suspense>
           }
         />

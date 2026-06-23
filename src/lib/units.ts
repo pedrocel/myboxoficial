@@ -1,6 +1,7 @@
 import type { Unit } from '../types/unit'
 import unitsData from '../data/units.json'
 import { getFallbackCoords } from './brazil-states'
+import { getDistanceKm } from './geo'
 
 const DEFAULT_IMAGE =
   'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
@@ -69,4 +70,20 @@ export function getUnitCoords(unit: Unit, indexInState = 0): [number, number] {
 
 export function getStatesFromUnits(units: Unit[]): string[] {
   return [...new Set(units.map((u) => u.estado))].sort()
+}
+
+export type UnitWithDistance = Unit & { distanceKm: number }
+
+export function sortUnitsByDistance(
+  unitList: Unit[],
+  userLat: number,
+  userLng: number,
+): UnitWithDistance[] {
+  return unitList
+    .map((unit, i) => {
+      const [lat, lng] = getUnitCoords(unit, i)
+      const distanceKm = getDistanceKm(userLat, userLng, lat, lng)
+      return { ...unit, distanceKm }
+    })
+    .sort((a, b) => a.distanceKm - b.distanceKm)
 }

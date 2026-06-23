@@ -1,16 +1,26 @@
 import { Link } from 'react-router-dom'
 import type { Unit } from '../../types/unit'
 import { getUnitImage } from '../../lib/units'
+import { formatDistance } from '../../lib/geo'
 import { STATE_NAMES } from '../../lib/brazil-states'
 
 type Props = {
   units: Unit[]
   selectedSlug: string | null
+  nearestSlug?: string | null
+  distances?: Record<string, number>
   onSelect: (slug: string) => void
-  onHover?: (slug: string | null) => void
+  detailBasePath?: string
 }
 
-export function UnitsPreviewList({ units, selectedSlug, onSelect, onHover }: Props) {
+export function UnitsPreviewList({
+  units,
+  selectedSlug,
+  nearestSlug,
+  distances = {},
+  onSelect,
+  detailBasePath = '/unidades-preview',
+}: Props) {
   if (units.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -24,39 +34,55 @@ export function UnitsPreviewList({ units, selectedSlug, onSelect, onHover }: Pro
     <ul className="space-y-3">
       {units.map((unit) => {
         const isSelected = unit.url_page === selectedSlug
+        const isNearest = unit.url_page === nearestSlug
+        const dist = distances[unit.url_page]
+
         return (
           <li key={unit.url_page}>
             <button
               type="button"
               onClick={() => onSelect(unit.url_page)}
-              onMouseEnter={() => onHover?.(unit.url_page)}
-              onMouseLeave={() => onHover?.(null)}
-              className={`w-full text-left rounded-lg border overflow-hidden transition-all ${
+              className={`w-full text-left rounded-xl border overflow-hidden transition-all ${
                 isSelected
                   ? 'border-mygreen shadow-md ring-2 ring-mygreen/30'
                   : 'border-gray-200 hover:border-mygreen/50 hover:shadow-sm'
               }`}
             >
               <div className="flex gap-3 p-3">
-                <img
-                  src={getUnitImage(unit)}
-                  alt=""
-                  className="w-16 h-16 rounded-md object-cover shrink-0"
-                />
+                <div className="relative shrink-0">
+                  <img src={getUnitImage(unit)} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                  {isNearest && (
+                    <span className="absolute -top-1 -right-1 bg-mygold text-mydark text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow">
+                      #
+                    </span>
+                  )}
+                </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold text-mydark truncate">{unit.name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold text-mydark truncate">{unit.name}</p>
+                    {dist != null && (
+                      <span className="shrink-0 text-xs font-semibold text-mygreen bg-green-50 px-2 py-0.5 rounded-full">
+                        {formatDistance(dist)}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-500 truncate">
                     {unit.cidade} — {STATE_NAMES[unit.estado] ?? unit.estado}
                   </p>
-                  <p className="text-xs text-gray-400 truncate mt-0.5">{unit.como_chegar}</p>
+                  {isNearest && (
+                    <p className="text-xs text-mygold font-medium mt-0.5">
+                      <i className="fas fa-star mr-1" />
+                      Mais próxima de você
+                    </p>
+                  )}
                 </div>
                 <Link
-                  to={`/unidades/${unit.url_page}`}
+                  to={`${detailBasePath}/${unit.url_page}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="shrink-0 self-center text-mygreen hover:text-green-700 text-sm font-medium px-2"
-                  title="Abrir página da unidade"
+                  className="shrink-0 self-center bg-mygreen/10 text-mygreen hover:bg-mygreen hover:text-white w-9 h-9 rounded-full flex items-center justify-center transition"
+                  title="Ver detalhes"
                 >
-                  <i className="fas fa-external-link-alt" />
+                  <i className="fas fa-arrow-right text-sm" />
                 </Link>
               </div>
             </button>
