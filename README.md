@@ -52,7 +52,9 @@ npm run dev
 |---|---|
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Node version | 20+ |
+| Node version | `20` (env `NODE_VERSION`) |
+
+O roteamento SPA (`/unidades`, etc.) é feito via `wrangler.jsonc` com `not_found_handling: single-page-application`. **Não use** `_redirects` com `/* /index.html 200` — isso causa loop infinito na Cloudflare.
 
 ## Variáveis de ambiente
 
