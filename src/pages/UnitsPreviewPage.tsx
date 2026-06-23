@@ -93,7 +93,7 @@ export function UnitsPreviewPage() {
   }, [allUnits])
 
   return (
-    <div className="bg-gray-50 font-sans min-h-screen flex flex-col">
+    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
       <UnitsListHeader />
 
       <div className="bg-gradient-to-r from-mydark to-gray-800 text-white">
@@ -110,29 +110,29 @@ export function UnitsPreviewPage() {
 
       <main className="container mx-auto px-4 py-6 flex-1 flex flex-col gap-6">
         <section>
-          <h1 className="text-3xl md:text-4xl font-bold text-mydark mb-2">
-            Encontre sua <span className="text-mygreen">My Box</span>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Encontre sua <span className="text-primary">My Box</span>
           </h1>
-          <p className="text-gray-600 mb-6 max-w-2xl">
+          <p className="text-muted-foreground mb-6 max-w-2xl">
             Use sua localização para descobrir a unidade mais próxima ou explore o mapa interativo com todas as
             academias pelo Brasil.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-mygreen">{allUnits.length}</p>
-              <p className="text-sm text-gray-500">Unidades</p>
+            <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
+              <p className="text-3xl font-bold text-primary">{allUnits.length}</p>
+              <p className="text-sm text-muted-foreground">Unidades</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-mygreen">{states.length}</p>
-              <p className="text-sm text-gray-500">Estados</p>
+            <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
+              <p className="text-3xl font-bold text-primary">{states.length}</p>
+              <p className="text-sm text-muted-foreground">Estados</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-mygreen">+50k</p>
-              <p className="text-sm text-gray-500">Alunos</p>
+            <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
+              <p className="text-3xl font-bold text-primary">+50k</p>
+              <p className="text-sm text-muted-foreground">Alunos</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-              <p className="text-3xl font-bold text-mygreen">GPS</p>
-              <p className="text-sm text-gray-500">Busca por proximidade</p>
+            <div className="bg-card rounded-xl p-4 shadow-sm border border-border text-center">
+              <p className="text-3xl font-bold text-primary">GPS</p>
+              <p className="text-sm text-muted-foreground">Busca por proximidade</p>
             </div>
           </div>
         </section>
@@ -160,7 +160,7 @@ export function UnitsPreviewPage() {
               type="button"
               onClick={() => setActiveState(null)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                activeState === null ? 'bg-mygreen text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-mygreen'
+                activeState === null ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground border border-border hover:border-primary'
               }`}
             >
               Todos ({allUnits.length})
@@ -171,14 +171,14 @@ export function UnitsPreviewPage() {
                 type="button"
                 onClick={() => setActiveState(activeState === uf ? null : uf)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                  activeState === uf ? 'bg-mygreen text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-mygreen'
+                  activeState === uf ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground border border-border hover:border-primary'
                 }`}
               >
                 {uf} ({statsByState[uf]})
               </button>
             ))}
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {filteredUnits.length} unidade{filteredUnits.length !== 1 ? 's' : ''} encontrada
             {activeState ? ` em ${STATE_NAMES[activeState] ?? activeState}` : ''}
             {coords ? ' · ordenadas por distância' : ''}
@@ -198,7 +198,7 @@ export function UnitsPreviewPage() {
             />
           </div>
           <div className="lg:col-span-2 flex flex-col min-h-[300px] lg:max-h-[calc(100vh-22rem)]">
-            <h2 className="text-lg font-bold text-mydark mb-3 shrink-0">
+            <h2 className="text-lg font-bold text-foreground mb-3 shrink-0">
               {coords ? 'Unidades por proximidade' : 'Lista de unidades'}
             </h2>
             <div className="overflow-y-auto flex-1 pr-1 custom-scrollbar">

@@ -47,10 +47,10 @@ const investCards = [
 
 export function InvestSection() {
   return (
-    <section id="investir" className="py-20 bg-gray-100">
+    <section id="investir" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl font-bold text-mydark mb-4">OPORTUNIDADE DE NEGÓCIO</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">OPORTUNIDADE DE NEGÓCIO</h2>
           <h3 className="text-2xl font-bold text-mygreen mb-6">POR QUE INVESTIR NA REDE MY BOX?</h3>
           <div className="w-24 h-1 bg-mygreen mx-auto" />
         </div>
@@ -58,7 +58,7 @@ export function InvestSection() {
           {investCards.map((card) => (
             <div
               key={card.title}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden"
+              className="bg-card rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden"
               data-aos="fade-up"
               data-aos-delay={card.delay}
             >
@@ -67,8 +67,8 @@ export function InvestSection() {
                 <div className="w-16 h-16 rounded-full gradient-green flex items-center justify-center mb-6 shadow-lg">
                   <i className={`fas ${card.icon} text-white text-2xl`} />
                 </div>
-                <h3 className="text-xl font-bold text-mydark mb-3">{card.title}</h3>
-                <p className="text-gray-700">{card.description}</p>
+                <h3 className="text-xl font-bold text-foreground mb-3">{card.title}</h3>
+                <p className="text-muted-foreground">{card.description}</p>
               </div>
             </div>
           ))}

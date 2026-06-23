@@ -13,7 +13,7 @@ export function UnitsSearchBar({ onSearch, onOpenAgendamentos, unitsCount }: Pro
 
   return (
     <section className="mb-8">
-      <h1 className="text-2xl font-bold text-mydark mb-4">E aí, onde você quer treinar?</h1>
+      <h1 className="text-2xl font-bold text-foreground mb-4">E aí, onde você quer treinar?</h1>
       <div className="relative search-input-wrapper">
         <input
           type="text"
@@ -21,7 +21,7 @@ export function UnitsSearchBar({ onSearch, onOpenAgendamentos, unitsCount }: Pro
           onChange={(e) => setQuery(e.target.value)}
           onKeyUp={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="Digite sua cidade, bairro ou endereço para localizar"
-          className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+          className="w-full px-4 py-3 pr-10 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
         />
         <button
           type="button"
@@ -33,7 +33,7 @@ export function UnitsSearchBar({ onSearch, onOpenAgendamentos, unitsCount }: Pro
         </button>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 mt-4">
-        <p className="text-sm text-gray-500">{unitsCount} unidades encontradas</p>
+        <p className="text-sm text-muted-foreground">{unitsCount} unidades encontradas</p>
         <button
           type="button"
           onClick={onOpenAgendamentos}

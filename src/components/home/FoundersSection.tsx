@@ -17,17 +17,17 @@ const founders = [
 
 export function FoundersSection() {
   return (
-    <section id="fundadores" className="py-20 bg-gray-100">
+    <section id="fundadores" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl font-bold text-mydark mb-4">FUNDADORES</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">FUNDADORES</h2>
           <div className="w-24 h-1 bg-mygreen mx-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {founders.map((founder) => (
             <div
               key={founder.name}
-              className="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition"
+              className="bg-card rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition"
               data-aos="fade-up"
               data-aos-delay={founder.delay}
             >
@@ -36,14 +36,14 @@ export function FoundersSection() {
                   <img src={founder.image} className="w-full h-full object-cover min-h-[200px]" alt={founder.name} />
                 </div>
                 <div className="md:w-3/5 p-6">
-                  <h3 className="text-2xl font-bold text-mydark mb-2">{founder.name}</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">{founder.name}</h3>
                   <p className="text-mygreen font-semibold mb-4">{founder.role}</p>
-                  <p className="text-gray-700 mb-4">{founder.bio}</p>
+                  <p className="text-muted-foreground mb-4">{founder.bio}</p>
                   <div className="flex space-x-3">
-                    <a href="#" className="text-mydark hover:text-mygreen transition" aria-label="Instagram">
+                    <a href="#" className="text-foreground hover:text-mygreen transition" aria-label="Instagram">
                       <i className="fab fa-instagram text-xl" />
                     </a>
-                    <a href="#" className="text-mydark hover:text-mygreen transition" aria-label="LinkedIn">
+                    <a href="#" className="text-foreground hover:text-mygreen transition" aria-label="LinkedIn">
                       <i className="fab fa-linkedin text-xl" />
                     </a>
                   </div>

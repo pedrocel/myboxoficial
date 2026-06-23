@@ -66,19 +66,19 @@ export function AgendamentosModal({ open, onClose }: Props) {
       aria-modal="true"
     >
       <div
-        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-card rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-mydark">Consultar Meus Agendamentos</h3>
-            <button type="button" onClick={onClose} className="text-gray-400 hover:text-mydark" aria-label="Fechar">
+            <h3 className="text-2xl font-bold text-foreground">Consultar Meus Agendamentos</h3>
+            <button type="button" onClick={onClose} className="text-gray-400 hover:text-foreground" aria-label="Fechar">
               <i className="fas fa-times text-xl" />
             </button>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="consulta-email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="consulta-email" className="block text-sm font-medium text-muted-foreground mb-2">
               Digite seu e-mail para consultar agendamentos:
             </label>
             <div className="flex gap-2">
@@ -89,7 +89,7 @@ export function AgendamentosModal({ open, onClose }: Props) {
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyUp={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="seu@email.com"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+                className="flex-1 px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
               />
               <button
                 type="button"
@@ -104,27 +104,27 @@ export function AgendamentosModal({ open, onClose }: Props) {
           {loading && (
             <div className="text-center py-8">
               <i className="fas fa-spinner fa-spin text-mygreen text-2xl mb-4" />
-              <p className="text-gray-500">Buscando agendamentos...</p>
+              <p className="text-muted-foreground">Buscando agendamentos...</p>
             </div>
           )}
 
           {!loading && searched && agendamentos.length > 0 && (
             <div>
-              <h4 className="text-lg font-bold text-mydark mb-4">Seus Agendamentos</h4>
+              <h4 className="text-lg font-bold text-foreground mb-4">Seus Agendamentos</h4>
               <div className="space-y-4">
                 {agendamentos.map((ag, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-4 border-l-4 border-mygreen">
+                  <div key={i} className="bg-muted/50 rounded-lg p-4 border-l-4 border-mygreen">
                     <div className="flex justify-between items-start mb-2">
-                      <h5 className="font-bold text-mydark">{ag.modalidade}</h5>
-                      <span className="text-sm text-gray-500">
+                      <h5 className="font-bold text-foreground">{ag.modalidade}</h5>
+                      <span className="text-sm text-muted-foreground">
                         {formatDate(ag.data)} às {ag.horario}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       <i className="fas fa-map-marker-alt mr-1" />
                       {ag.unidade || 'Unidade My Box'}
                     </p>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-muted-foreground">
                       <p>
                         <strong>Nome:</strong> {ag.nome}
                       </p>
@@ -146,7 +146,7 @@ export function AgendamentosModal({ open, onClose }: Props) {
           {!loading && searched && agendamentos.length === 0 && (
             <div className="text-center py-8">
               <i className="fas fa-calendar-times text-gray-300 text-4xl mb-4" />
-              <p className="text-gray-500">
+              <p className="text-muted-foreground">
                 {import.meta.env.VITE_API_URL
                   ? 'Nenhum agendamento encontrado para este e-mail.'
                   : 'Consulta de agendamentos disponível quando a API estiver configurada (VITE_API_URL).'}

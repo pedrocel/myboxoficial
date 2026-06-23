@@ -53,7 +53,7 @@ export function UnitDetailPreviewPage() {
   const comoChegar = dbUnit?.como_chegar || unit.como_chegar
 
   return (
-    <div className="bg-mydark font-sans min-h-screen">
+    <div className="bg-background font-sans min-h-screen text-foreground">
       {/* Preview ribbon */}
       <div className="bg-mygold text-mydark text-center text-xs font-bold py-1.5 tracking-wide relative z-50">
         PREVIEW — Nova página de unidade ·{' '}
@@ -134,8 +134,8 @@ export function UnitDetailPreviewPage() {
       </section>
 
       {/* Stats */}
-      <section className="bg-white relative z-10 -mt-6 mx-4 sm:mx-auto sm:max-w-5xl rounded-2xl shadow-xl border border-gray-100">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+      <section className="bg-card relative z-10 -mt-6 mx-4 sm:mx-auto sm:max-w-5xl rounded-2xl shadow-xl border border-border">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
           {[
             { icon: 'fa-star', label: 'Avaliação', value: '5.0', sub: 'Google' },
             { icon: 'fa-clock', label: 'Hoje', value: '06h—23h', sub: 'Aberto' },
@@ -143,9 +143,9 @@ export function UnitDetailPreviewPage() {
             { icon: 'fa-heart', label: 'Comunidade', value: 'My Box', sub: 'Família' },
           ].map((s) => (
             <div key={s.label} className="p-5 text-center" data-aos="fade-up">
-              <i className={`fas ${s.icon} text-mygreen text-lg mb-2`} />
-              <p className="text-2xl font-black text-mydark">{s.value}</p>
-              <p className="text-xs text-gray-400">{s.sub}</p>
+              <i className={`fas ${s.icon} text-primary text-lg mb-2`} />
+              <p className="text-2xl font-black text-foreground">{s.value}</p>
+              <p className="text-xs text-muted-foreground">{s.sub}</p>
             </div>
           ))}
         </div>
@@ -157,46 +157,44 @@ export function UnitDetailPreviewPage() {
       </section>
 
       {/* Content */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-background py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-              {/* Modalidades */}
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10" data-aos="fade-up">
+              <div className="bg-card rounded-3xl shadow-sm border border-border p-8 md:p-10" data-aos="fade-up">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl md:text-3xl font-black text-mydark">O que você encontra</h2>
-                  <span className="text-mygreen text-sm font-bold">My Box</span>
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground">O que você encontra</h2>
+                  <span className="text-primary text-sm font-bold">My Box</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {modalidades.map((m) => (
                     <div
                       key={m.id}
-                      className={`group relative p-6 rounded-2xl bg-gradient-to-br ${m.color} border border-gray-100 hover:border-mygreen/40 hover:shadow-md transition-all overflow-hidden`}
+                      className={`group relative p-6 rounded-2xl bg-gradient-to-br ${m.color} border border-border hover:border-primary/40 hover:shadow-md transition-all overflow-hidden`}
                     >
                       <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                         <i className={`fas ${m.icon} text-white text-xl`} />
                       </div>
-                      <h3 className="font-bold text-mydark text-lg mb-2">{m.title}</h3>
-                      <p className="text-sm text-gray-600 leading-relaxed">{m.desc}</p>
+                      <h3 className="font-bold text-foreground text-lg mb-2">{m.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Horários */}
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10" data-aos="fade-up">
-                <h2 className="text-2xl md:text-3xl font-black text-mydark mb-8">Horários</h2>
+              <div className="bg-card rounded-3xl shadow-sm border border-border p-8 md:p-10" data-aos="fade-up">
+                <h2 className="text-2xl md:text-3xl font-black text-foreground mb-8">Horários</h2>
                 <div className="space-y-3">
                   {horarios.map((h) => (
                     <div
                       key={h.id}
-                      className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10"
+                      className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 rounded-2xl bg-muted/40 border border-border"
                     >
-                      <p className="font-bold text-mydark dark:text-white sm:w-36 shrink-0">{h.label}</p>
+                      <p className="font-bold text-foreground sm:w-36 shrink-0">{h.label}</p>
                       <div className="flex flex-col gap-2 text-sm flex-1">
                         {h.slots.map((slot) => (
-                          <span key={slot.id} className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                            <span className="font-medium text-mygreen">{slot.activity}:</span>
+                          <span key={slot.id} className="flex items-center gap-2 text-muted-foreground">
+                            <span className="font-medium text-primary">{slot.activity}:</span>
                             {slot.hours}
                           </span>
                         ))}
@@ -206,11 +204,10 @@ export function UnitDetailPreviewPage() {
                 </div>
               </div>
 
-              {/* Mapa */}
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden" data-aos="fade-up">
-                <div className="p-8 border-b border-gray-100">
-                  <h2 className="text-2xl font-black text-mydark">Como chegar</h2>
-                  <p className="text-gray-500 mt-2">{comoChegar}</p>
+              <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" data-aos="fade-up">
+                <div className="p-8 border-b border-border">
+                  <h2 className="text-2xl font-black text-foreground">Como chegar</h2>
+                  <p className="text-muted-foreground mt-2">{comoChegar}</p>
                 </div>
                 <iframe
                   src={mapEmbed}
@@ -226,7 +223,7 @@ export function UnitDetailPreviewPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden sticky top-6" data-aos="fade-left">
+              <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden sticky top-6" data-aos="fade-left">
                 <div className="gradient-green p-6 text-white">
                   <h3 className="text-xl font-black">Agende sua visita</h3>
                   <p className="text-green-100 text-sm mt-1">Primeira aula experimental gratuita</p>
@@ -234,35 +231,35 @@ export function UnitDetailPreviewPage() {
                 <div className="p-6 space-y-5">
                   {unit.telefone && (
                     <a href={`tel:${unit.telefone_numerico}`} className="flex items-center gap-3 group">
-                      <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-mygreen group-hover:text-white transition text-mygreen">
+                      <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition text-primary">
                         <i className="fas fa-phone" />
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Telefone</p>
-                        <p className="font-bold text-mydark group-hover:text-mygreen transition">{unit.telefone}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Telefone</p>
+                        <p className="font-bold text-foreground group-hover:text-primary transition">{unit.telefone}</p>
                       </div>
                     </a>
                   )}
                   {unit.email && (
                     <a href={`mailto:${unit.email}`} className="flex items-center gap-3 group">
-                      <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-mygreen transition text-mygreen">
-                        <i className="fas fa-envelope group-hover:text-white" />
+                      <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center group-hover:bg-primary transition text-primary">
+                        <i className="fas fa-envelope group-hover:text-primary-foreground" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">E-mail</p>
-                        <p className="font-bold text-mydark text-sm truncate group-hover:text-mygreen transition">
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">E-mail</p>
+                        <p className="font-bold text-foreground text-sm truncate group-hover:text-primary transition">
                           {unit.email}
                         </p>
                       </div>
                     </a>
                   )}
                   <div className="flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center text-mygreen shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center text-primary shrink-0">
                       <i className="fas fa-map-pin" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Endereço</p>
-                      <p className="font-bold text-mydark text-sm leading-relaxed">{getFullAddress(unit)}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Endereço</p>
+                      <p className="font-bold text-foreground text-sm leading-relaxed">{getFullAddress(unit)}</p>
                     </div>
                   </div>
 
@@ -314,7 +311,7 @@ export function UnitDetailPreviewPage() {
       </section>
 
       {/* Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 flex gap-2 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-card/95 backdrop-blur-md border-t border-border p-3 flex gap-2 shadow-2xl">
         <button
           type="button"
           onClick={() => setAgendamentoOpen(true)}

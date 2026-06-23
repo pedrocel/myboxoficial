@@ -27,10 +27,10 @@ const modalities = [
 
 export function ModalitiesSection() {
   return (
-    <section id="modalidades" className="py-20 bg-white">
+    <section id="modalidades" className="py-20 bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl font-bold text-mydark mb-4">MODALIDADES</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">MODALIDADES</h2>
           <div className="w-24 h-1 bg-mygreen mx-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -50,8 +50,8 @@ export function ModalitiesSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70" />
                 <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white">{mod.title}</h3>
               </div>
-              <div className="p-6 bg-white">
-                <p className="text-gray-700">{mod.description}</p>
+              <div className="p-6 bg-card">
+                <p className="text-muted-foreground">{mod.description}</p>
               </div>
             </div>
           ))}

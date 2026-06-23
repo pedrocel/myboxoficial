@@ -69,13 +69,13 @@ export function FranchiseForm() {
   }
 
   return (
-    <div id="formulario" className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up">
+    <div id="formulario" className="max-w-4xl mx-auto bg-card rounded-xl shadow-xl overflow-hidden" data-aos="fade-up">
       <div className="p-8">
-        <h3 className="text-2xl font-bold text-mydark mb-6 text-center">Quero ser um Franqueado</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Quero ser um Franqueado</h3>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="nome" className="block text-sm font-medium text-muted-foreground mb-1">
                 Nome Completo
               </label>
               <input
@@ -84,11 +84,11 @@ export function FranchiseForm() {
                 required
                 value={form.nome}
                 onChange={(e) => update('nome', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+                className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-1">
                 E-mail
               </label>
               <input
@@ -97,11 +97,11 @@ export function FranchiseForm() {
                 required
                 value={form.email}
                 onChange={(e) => update('email', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+                className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
               />
             </div>
             <div>
-              <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="telefone" className="block text-sm font-medium text-muted-foreground mb-1">
                 Telefone
               </label>
               <input
@@ -110,11 +110,11 @@ export function FranchiseForm() {
                 required
                 value={form.telefone}
                 onChange={(e) => update('telefone', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+                className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
               />
             </div>
             <div>
-              <label htmlFor="cidade" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="cidade" className="block text-sm font-medium text-muted-foreground mb-1">
                 Cidade/Estado
               </label>
               <input
@@ -123,13 +123,13 @@ export function FranchiseForm() {
                 required
                 value={form.cidade}
                 onChange={(e) => update('cidade', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+                className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="investimento_disponivel" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="investimento_disponivel" className="block text-sm font-medium text-muted-foreground mb-1">
               Investimento Disponível
             </label>
             <select
@@ -137,7 +137,7 @@ export function FranchiseForm() {
               required
               value={form.investimento_disponivel}
               onChange={(e) => update('investimento_disponivel', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+              className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
             >
               <option value="">Selecione uma opção</option>
               <option value="ate-500k">De R$200mil à R$400mil</option>
@@ -146,7 +146,7 @@ export function FranchiseForm() {
           </div>
 
           <div>
-            <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="mensagem" className="block text-sm font-medium text-muted-foreground mb-1">
               Mensagem (opcional)
             </label>
             <textarea
@@ -154,7 +154,7 @@ export function FranchiseForm() {
               rows={4}
               value={form.mensagem}
               onChange={(e) => update('mensagem', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
+              className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
             />
           </div>
 
@@ -165,9 +165,9 @@ export function FranchiseForm() {
               required
               checked={form.termos}
               onChange={(e) => update('termos', e.target.checked)}
-              className="h-4 w-4 text-mygreen focus:ring-mygreen border-gray-300 rounded"
+              className="h-4 w-4 text-mygreen focus:ring-mygreen border-border rounded"
             />
-            <label htmlFor="termos" className="ml-2 block text-sm text-gray-700">
+            <label htmlFor="termos" className="ml-2 block text-sm text-muted-foreground">
               Concordo com os{' '}
               <Link to="/termos" className="text-mygreen hover:underline">
                 termos de uso

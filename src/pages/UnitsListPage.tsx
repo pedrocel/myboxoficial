@@ -36,7 +36,7 @@ export function UnitsListPage() {
   }
 
   return (
-    <div className="bg-white font-sans min-h-screen flex flex-col">
+    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
       <UnitsListHeader />
       <main className="container mx-auto px-4 py-8 flex-1">
         <UnitsSearchBar
@@ -46,12 +46,12 @@ export function UnitsListPage() {
         />
 
         <section>
-          <h2 className="text-xl font-bold text-mydark mb-6">Unidades My Box</h2>
+          <h2 className="text-xl font-bold text-foreground mb-6">Unidades My Box</h2>
 
           {visibleUnits.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
-              <i className="fas fa-search text-gray-300 text-5xl mb-4" />
-              <p className="text-gray-500 text-center">Nenhuma unidade encontrada com os critérios selecionados.</p>
+              <i className="fas fa-search text-muted-foreground/50 text-5xl mb-4" />
+              <p className="text-muted-foreground text-center">Nenhuma unidade encontrada com os critérios selecionados.</p>
               <button
                 type="button"
                 onClick={handleReset}
@@ -73,7 +73,7 @@ export function UnitsListPage() {
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="border border-gray-300 text-mydark hover:bg-gray-100 font-medium py-2 px-8 rounded-md transition"
+                className="border border-border text-foreground hover:bg-muted font-medium py-2 px-8 rounded-md transition"
               >
                 Ver mais
               </button>

@@ -142,7 +142,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
     >
       <div className="absolute inset-0 bg-mydark/70 backdrop-blur-sm modal-backdrop" onClick={onClose} />
 
-      <div className="relative w-full sm:max-w-lg max-h-[95vh] sm:max-h-[90vh] flex flex-col bg-white sm:rounded-3xl shadow-2xl overflow-hidden modal-panel">
+      <div className="relative w-full sm:max-w-lg max-h-[95vh] sm:max-h-[90vh] flex flex-col bg-white text-gray-900 sm:rounded-3xl shadow-2xl overflow-hidden modal-panel [&_input]:text-gray-900 [&_input]:placeholder:text-gray-400">
         {/* Header */}
         <div className="relative shrink-0 overflow-hidden">
           <img src={getUnitImage(unit)} alt="" className="absolute inset-0 w-full h-full object-cover" />
@@ -245,7 +245,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
             <div className="p-6 space-y-6">
               {/* Modalidade */}
               <div>
-                <p className="text-sm font-bold text-mydark mb-3 flex items-center gap-2">
+                <p className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <i className="fas fa-dumbbell text-mygreen" />
                   Escolha a modalidade
                 </p>
@@ -257,8 +257,8 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                       onClick={() => setModalidade(m.id)}
                       className={`flex items-center gap-2.5 p-3 rounded-xl border-2 text-left transition ${
                         modalidade === m.id
-                          ? 'border-mygreen bg-green-50 text-mydark'
-                          : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200'
+                          ? 'border-mygreen bg-green-50 text-gray-900'
+                          : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-gray-300'
                       }`}
                     >
                       <i className={`fas ${m.icon} ${modalidade === m.id ? 'text-mygreen' : 'text-gray-400'}`} />
@@ -270,7 +270,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
 
               {/* Data */}
               <div>
-                <p className="text-sm font-bold text-mydark mb-3 flex items-center gap-2">
+                <p className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <i className="fas fa-calendar-alt text-mygreen" />
                   Escolha o dia
                 </p>
@@ -283,7 +283,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                       className={`shrink-0 flex flex-col items-center w-16 py-3 rounded-2xl border-2 transition ${
                         selectedDate === d.value
                           ? 'border-mygreen bg-mygreen text-white shadow-md shadow-mygreen/30'
-                          : 'border-gray-100 bg-white text-mydark hover:border-mygreen/40'
+                          : 'border-gray-200 bg-white text-gray-900 hover:border-mygreen/40'
                       }`}
                     >
                       <span className={`text-[10px] font-semibold uppercase ${selectedDate === d.value ? 'text-green-100' : 'text-gray-400'}`}>
@@ -300,7 +300,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
 
               {/* Horários */}
               <div>
-                <p className="text-sm font-bold text-mydark mb-3 flex items-center gap-2">
+                <p className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <i className="fas fa-clock text-mygreen" />
                   Escolha o horário
                 </p>
@@ -309,7 +309,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                   if (!slots.length) return null
                   return (
                     <div key={period} className="mb-4">
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">
                         {PERIOD_LABELS[period]}
                       </p>
                       <div className="grid grid-cols-4 gap-2">
@@ -321,7 +321,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                             className={`py-2.5 rounded-xl text-sm font-bold transition ${
                               selectedTime === slot.value
                                 ? 'bg-mygreen text-white shadow-md shadow-mygreen/25 scale-105'
-                                : 'bg-gray-50 text-mydark border border-gray-100 hover:border-mygreen/50 hover:bg-green-50'
+                                : 'bg-gray-50 text-gray-900 border border-gray-200 hover:border-mygreen/50 hover:bg-green-50'
                             }`}
                           >
                             {slot.label}
@@ -341,12 +341,12 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                   <i className={`fas ${selectedMod?.icon ?? 'fa-star'} text-white`} />
                 </div>
                 <div>
-                  <p className="font-bold text-mydark text-sm">{selectedMod?.label}</p>
+                  <p className="font-bold text-gray-900 text-sm">{selectedMod?.label}</p>
                   <p className="text-mygreen text-sm font-medium">
                     {selectedDateObj?.dayNum} {selectedDateObj?.month} · {selectedTime ?? '—'}
                   </p>
                 </div>
-                <button type="button" onClick={() => setStep(1)} className="ml-auto text-xs text-gray-400 hover:text-mygreen font-medium">
+                <button type="button" onClick={() => setStep(1)} className="ml-auto text-xs text-gray-500 hover:text-mygreen font-medium">
                   Alterar
                 </button>
               </div>
@@ -360,7 +360,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                     onChange={(e) => setNome(e.target.value)}
                     placeholder="Nome completo"
                     required
-                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white transition"
+                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white focus:text-gray-900 transition"
                   />
                 </div>
                 <div className="relative">
@@ -371,7 +371,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Seu melhor e-mail"
                     required
-                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white transition"
+                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white focus:text-gray-900 transition"
                   />
                 </div>
                 <div className="relative">
@@ -382,7 +382,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                     onChange={(e) => setTelefone(e.target.value)}
                     placeholder="WhatsApp / telefone"
                     required
-                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white transition"
+                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-mygreen focus:bg-white focus:text-gray-900 transition"
                   />
                 </div>
               </div>

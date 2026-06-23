@@ -14,7 +14,7 @@ export function HomePage() {
   useSmoothScroll()
 
   return (
-    <div className="bg-gray-100 font-sans">
+    <div className="bg-background font-sans text-foreground">
       <Header />
       <main>
         <HeroSection />

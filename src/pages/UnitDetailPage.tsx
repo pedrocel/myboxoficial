@@ -27,7 +27,7 @@ export function UnitDetailPage() {
   }
 
   return (
-    <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
+    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
       <Header />
       <UnitHero unit={unit} onOpenAgendamento={() => setAgendamentoOpen(true)} />
 

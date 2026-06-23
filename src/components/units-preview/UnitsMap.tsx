@@ -141,7 +141,7 @@ export function UnitsMap({
         <FlyToUnit coords={flyToCoords} zoom={userLocation ? 11 : 14} />
       </MapContainer>
 
-      <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow text-sm font-medium text-mydark">
+      <div className="absolute top-3 left-3 z-[1000] bg-card/95 backdrop-blur px-3 py-2 rounded-lg shadow border border-border text-sm font-medium text-foreground">
         <i className="fas fa-map-marker-alt text-mygreen mr-1" />
         {units.length} unidades no mapa
       </div>

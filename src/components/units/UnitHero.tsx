@@ -43,14 +43,14 @@ export function UnitHero({ unit, onOpenAgendamento }: Props) {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white hover:bg-gray-200 text-mydark font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
+              className="bg-card hover:bg-muted text-foreground font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
             >
               <i className="fas fa-phone-alt mr-2" /> WhatsApp
             </a>
           ) : unit.telefone ? (
             <a
               href={`tel:${unit.telefone_numerico}`}
-              className="bg-white hover:bg-gray-200 text-mydark font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
+              className="bg-card hover:bg-muted text-foreground font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
             >
               <i className="fas fa-phone-alt mr-2" /> Ligar Agora
             </a>

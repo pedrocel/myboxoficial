@@ -26,9 +26,9 @@ export function LocationSearchBar({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Buscar por cidade, bairro ou nome da unidade..."
-            className="w-full px-4 py-3 pl-10 pr-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen bg-white shadow-sm"
+            className="w-full px-4 py-3 pl-10 pr-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-card text-foreground placeholder:text-muted-foreground shadow-sm"
           />
-          <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
         </div>
         <button
           type="button"
@@ -36,8 +36,8 @@ export function LocationSearchBar({
           disabled={locating}
           className={`shrink-0 flex items-center justify-center gap-2 font-semibold py-3 px-5 rounded-xl transition shadow-sm ${
             hasLocation
-              ? 'bg-mydark text-white hover:bg-gray-800'
-              : 'bg-mygreen text-white hover:bg-green-600'
+              ? 'bg-muted text-foreground hover:bg-muted/80 border border-border'
+              : 'bg-primary text-primary-foreground hover:bg-primary/90'
           } disabled:opacity-60`}
         >
           {locating ? (
@@ -59,13 +59,13 @@ export function LocationSearchBar({
         </button>
       </div>
       {geoError && (
-        <p className="text-sm text-red-600 flex items-center gap-2">
+        <p className="text-sm text-destructive flex items-center gap-2">
           <i className="fas fa-exclamation-circle" />
           {geoError}
         </p>
       )}
       {hasLocation && !geoError && (
-        <p className="text-sm text-mygreen flex items-center gap-2">
+        <p className="text-sm text-primary flex items-center gap-2">
           <i className="fas fa-check-circle" />
           Localização ativa — unidades ordenadas da mais próxima à mais distante
         </p>

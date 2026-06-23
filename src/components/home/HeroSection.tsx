@@ -25,7 +25,7 @@ export function HeroSection() {
           </Link>
           <a
             href="#investir"
-            className="bg-white hover:bg-gray-200 text-mydark font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
+            className="bg-card hover:bg-muted text-foreground font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg"
           >
             Quero abrir a minha My Box
           </a>

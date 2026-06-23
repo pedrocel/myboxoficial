@@ -24,8 +24,8 @@ export function UnitsPreviewList({
   if (units.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <i className="fas fa-search text-gray-300 text-4xl mb-3" />
-        <p className="text-gray-500">Nenhuma unidade encontrada.</p>
+        <i className="fas fa-search text-muted-foreground/40 text-4xl mb-3" />
+        <p className="text-muted-foreground">Nenhuma unidade encontrada.</p>
       </div>
     )
   }
@@ -42,10 +42,10 @@ export function UnitsPreviewList({
             <button
               type="button"
               onClick={() => onSelect(unit.url_page)}
-              className={`w-full text-left rounded-xl border overflow-hidden transition-all ${
+              className={`w-full text-left rounded-xl border overflow-hidden transition-all bg-card ${
                 isSelected
-                  ? 'border-mygreen shadow-md ring-2 ring-mygreen/30'
-                  : 'border-gray-200 hover:border-mygreen/50 hover:shadow-sm'
+                  ? 'border-primary shadow-md ring-2 ring-primary/30'
+                  : 'border-border hover:border-primary/50 hover:shadow-sm'
               }`}
             >
               <div className="flex gap-3 p-3">
@@ -59,14 +59,14 @@ export function UnitsPreviewList({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-bold text-mydark truncate">{unit.name}</p>
+                    <p className="font-bold text-foreground truncate">{unit.name}</p>
                     {dist != null && (
-                      <span className="shrink-0 text-xs font-semibold text-mygreen bg-green-50 px-2 py-0.5 rounded-full">
+                      <span className="shrink-0 text-xs font-semibold text-primary bg-primary/15 px-2 py-0.5 rounded-full">
                         {formatDistance(dist)}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 truncate">
+                  <p className="text-sm text-muted-foreground truncate">
                     {unit.cidade} — {STATE_NAMES[unit.estado] ?? unit.estado}
                   </p>
                   {isNearest && (
@@ -79,7 +79,7 @@ export function UnitsPreviewList({
                 <Link
                   to={`${detailBasePath}/${unit.url_page}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="shrink-0 self-center bg-mygreen/10 text-mygreen hover:bg-mygreen hover:text-white w-9 h-9 rounded-full flex items-center justify-center transition"
+                  className="shrink-0 self-center bg-primary/15 text-primary hover:bg-primary hover:text-primary-foreground w-9 h-9 rounded-full flex items-center justify-center transition"
                   title="Ver detalhes"
                 >
                   <i className="fas fa-arrow-right text-sm" />
