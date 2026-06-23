@@ -16,4 +16,6 @@ export interface Unit {
   is_public: boolean
   status: boolean
   image_background?: string
+  lat?: number
+  lng?: number
 }

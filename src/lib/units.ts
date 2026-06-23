@@ -1,5 +1,6 @@
 import type { Unit } from '../types/unit'
 import unitsData from '../data/units.json'
+import { getFallbackCoords } from './brazil-states'
 
 const DEFAULT_IMAGE =
   'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
@@ -57,4 +58,15 @@ export function getWhatsAppUrl(unit: Unit): string | null {
 export function getMapEmbedUrl(unit: Unit): string {
   const address = encodeURIComponent(getFullAddress(unit))
   return `https://maps.google.com/maps?q=${address}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+}
+
+export function getUnitCoords(unit: Unit, indexInState = 0): [number, number] {
+  if (unit.lat != null && unit.lng != null) {
+    return [unit.lat, unit.lng]
+  }
+  return getFallbackCoords(unit.estado, indexInState)
+}
+
+export function getStatesFromUnits(units: Unit[]): string[] {
+  return [...new Set(units.map((u) => u.estado))].sort()
 }

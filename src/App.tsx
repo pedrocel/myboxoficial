@@ -1,9 +1,14 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
 import { UnitsListPage } from './pages/UnitsListPage'
 import { UnitDetailPage } from './pages/UnitDetailPage'
 import { ComingSoonPage } from './pages/ComingSoonPage'
 import { MetaPixel } from './components/analytics/MetaPixel'
+
+const UnitsPreviewPage = lazy(() =>
+  import('./pages/UnitsPreviewPage').then((m) => ({ default: m.UnitsPreviewPage })),
+)
 
 export default function App() {
   return (
@@ -12,6 +17,20 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/unidades" element={<UnitsListPage />} />
+        <Route
+          path="/unidades-preview"
+          element={
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                  <i className="fas fa-spinner fa-spin text-mygreen text-3xl" />
+                </div>
+              }
+            >
+              <UnitsPreviewPage />
+            </Suspense>
+          }
+        />
         <Route path="/unidades/:slug" element={<UnitDetailPage />} />
         <Route
           path="/termos"

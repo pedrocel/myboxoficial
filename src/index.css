@@ -36,4 +36,21 @@
   .search-input-wrapper:focus-within::before {
     width: 100%;
   }
+  .leaflet-container {
+    font-family: inherit;
+    z-index: 0;
+  }
+  .mybox-marker {
+    background: #6aa921;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #6aa921;
+    border-radius: 10px;
+  }
 }
