@@ -106,8 +106,8 @@ export function PanelLayout({ title, subtitle, nav, children }: Props) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-[280px] flex flex-col h-screen border-r border-border bg-card shadow-2xl transition-transform duration-300 ease-out',
-          'lg:static lg:translate-x-0 lg:shadow-none lg:shrink-0',
+          'fixed inset-y-0 left-0 z-50 w-[280px] flex flex-col h-screen overflow-hidden border-r border-border bg-card shadow-2xl transition-transform duration-300 ease-out',
+          'lg:translate-x-0 lg:shadow-none',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
@@ -173,7 +173,7 @@ export function PanelLayout({ title, subtitle, nav, children }: Props) {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen lg:ml-[280px]">
         <header className="glass-panel sticky top-0 z-30 px-4 sm:px-8 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Button
