@@ -1,6 +1,15 @@
 import type { DbUnit } from '../types/database'
 
-export type UnitHorario = { dia: string; musc: string; cross: string }
+export type HorarioSlot = { id: string; activity: string; hours: string }
+
+export type UnitHorario = {
+  id: string
+  label: string
+  slots: HorarioSlot[]
+}
+
+/** @deprecated formato legado — migrado automaticamente em parseHorarios */
+export type LegacyUnitHorario = { dia: string; musc: string; cross: string }
 
 export type UnitModalidade = {
   id: string
@@ -11,10 +20,37 @@ export type UnitModalidade = {
   enabled: boolean
 }
 
+let slotCounter = 0
+export function newHorarioId() {
+  slotCounter += 1
+  return `h-${Date.now()}-${slotCounter}`
+}
+
 export const DEFAULT_HORARIOS: UnitHorario[] = [
-  { dia: 'Segunda — Sexta', musc: '06h — 23h', cross: '06h, 07h, 08h, 12h, 18h, 19h, 20h' },
-  { dia: 'Sábado', musc: '08h — 18h', cross: '09h, 10h, 11h' },
-  { dia: 'Domingo', musc: '09h — 15h', cross: '10h, 11h' },
+  {
+    id: 'default-weekday',
+    label: 'Segunda — Sexta',
+    slots: [
+      { id: 's1', activity: 'Musculação', hours: '06h — 23h' },
+      { id: 's2', activity: 'Cross / Coletivas', hours: '06h, 07h, 08h, 12h, 18h, 19h, 20h' },
+    ],
+  },
+  {
+    id: 'default-saturday',
+    label: 'Sábado',
+    slots: [
+      { id: 's3', activity: 'Musculação', hours: '08h — 18h' },
+      { id: 's4', activity: 'Cross / Coletivas', hours: '09h, 10h, 11h' },
+    ],
+  },
+  {
+    id: 'default-sunday',
+    label: 'Domingo',
+    slots: [
+      { id: 's5', activity: 'Musculação', hours: '09h — 15h' },
+      { id: 's6', activity: 'Cross / Coletivas', hours: '10h, 11h' },
+    ],
+  },
 ]
 
 export const DEFAULT_MODALIDADES: UnitModalidade[] = [
@@ -30,8 +66,25 @@ export const FALLBACK_GALLERY = [
   'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
 ]
 
+function isLegacyHorario(item: unknown): item is LegacyUnitHorario {
+  return typeof item === 'object' && item !== null && 'dia' in item && 'musc' in item
+}
+
+function isNewHorario(item: unknown): item is UnitHorario {
+  return typeof item === 'object' && item !== null && 'label' in item && 'slots' in item
+}
+
+function migrateLegacy(item: LegacyUnitHorario, index: number): UnitHorario {
+  const slots: HorarioSlot[] = []
+  if (item.musc?.trim()) slots.push({ id: newHorarioId(), activity: 'Musculação', hours: item.musc })
+  if (item.cross?.trim()) slots.push({ id: newHorarioId(), activity: 'Cross / Coletivas', hours: item.cross })
+  return { id: `legacy-${index}`, label: item.dia, slots }
+}
+
 export function parseHorarios(raw: unknown): UnitHorario[] {
-  if (Array.isArray(raw) && raw.length) return raw as UnitHorario[]
+  if (!Array.isArray(raw) || !raw.length) return DEFAULT_HORARIOS
+  if (isNewHorario(raw[0])) return raw as UnitHorario[]
+  if (isLegacyHorario(raw[0])) return (raw as LegacyUnitHorario[]).map(migrateLegacy)
   return DEFAULT_HORARIOS
 }
 
@@ -59,4 +112,16 @@ export function getUnitGallery(unit: DbUnit | null | undefined, fallbackHero?: s
 
 export function ownerDefaultPassword(unitName: string): string {
   return `${unitName.trim()} 2026`
+}
+
+export function createEmptyHorario(): UnitHorario {
+  return {
+    id: newHorarioId(),
+    label: 'Novo período',
+    slots: [{ id: newHorarioId(), activity: 'Musculação', hours: '08h — 18h' }],
+  }
+}
+
+export function createEmptySlot(): HorarioSlot {
+  return { id: newHorarioId(), activity: 'Nova atividade', hours: '08h — 12h' }
 }

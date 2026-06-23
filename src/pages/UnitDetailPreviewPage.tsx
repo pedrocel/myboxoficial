@@ -189,20 +189,17 @@ export function UnitDetailPreviewPage() {
                 <div className="space-y-3">
                   {horarios.map((h) => (
                     <div
-                      key={h.dia}
-                      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 p-4 rounded-2xl bg-gray-50 border border-gray-100"
+                      key={h.id}
+                      className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10"
                     >
-                      <p className="font-bold text-mydark sm:w-36 shrink-0">{h.dia}</p>
-                      <div className="flex flex-wrap gap-3 text-sm">
-                        <span className="flex items-center gap-1.5 text-gray-600">
-                          <i className="fas fa-dumbbell text-mygreen text-xs" />
-                          {h.musc}
-                        </span>
-                        <span className="text-gray-300 hidden sm:inline">|</span>
-                        <span className="flex items-center gap-1.5 text-gray-600">
-                          <i className="fas fa-running text-mygreen text-xs" />
-                          {h.cross}
-                        </span>
+                      <p className="font-bold text-mydark dark:text-white sm:w-36 shrink-0">{h.label}</p>
+                      <div className="flex flex-col gap-2 text-sm flex-1">
+                        {h.slots.map((slot) => (
+                          <span key={slot.id} className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                            <span className="font-medium text-mygreen">{slot.activity}:</span>
+                            {slot.hours}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   ))}

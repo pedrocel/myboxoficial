@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { Store, CalendarCheck, Users, Eye } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
+import { Badge } from '../../../components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import type { Booking, DbUnit, Profile } from '../../../types/database'
@@ -33,21 +36,21 @@ export function AdminDashboardPage() {
   return (
     <PanelLayout title="Administração" subtitle="Visão geral do sistema My Box" nav={ADMIN_NAV}>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <StatCard icon="fa-store" label="Unidades cadastradas" value={units.length} color="green" />
-        <StatCard icon="fa-calendar-check" label="Agendamentos recentes" value={bookings.length} color="blue" />
-        <StatCard icon="fa-users" label="Usuários no sistema" value={users.length} color="dark" />
-        <StatCard icon="fa-eye" label="Visitas às unidades" value={visits} color="gold" trend="Total acumulado" />
+        <StatCard icon={Store} label="Unidades cadastradas" value={units.length} />
+        <StatCard icon={CalendarCheck} label="Agendamentos recentes" value={bookings.length} variant="blue" />
+        <StatCard icon={Users} label="Usuários no sistema" value={users.length} variant="muted" />
+        <StatCard icon={Eye} label="Visitas às unidades" value={visits} variant="gold" trend="Total acumulado" />
       </div>
 
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-black text-mydark">Últimos agendamentos</h2>
-        {pending > 0 && (
-          <span className="text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
-            {pending} pendente{pending > 1 ? 's' : ''}
-          </span>
-        )}
-      </div>
-      <BookingsTable bookings={bookings} showUnit />
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Últimos agendamentos</CardTitle>
+          {pending > 0 && <Badge variant="secondary">{pending} pendente{pending > 1 ? 's' : ''}</Badge>}
+        </CardHeader>
+        <CardContent>
+          <BookingsTable bookings={bookings} showUnit />
+        </CardContent>
+      </Card>
     </PanelLayout>
   )
 }

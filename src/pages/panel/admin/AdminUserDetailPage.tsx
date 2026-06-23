@@ -1,3 +1,4 @@
+import { CalendarCheck, Clock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
@@ -90,8 +91,8 @@ export function AdminUserDetailPage() {
           )}
 
           <div className="grid grid-cols-2 gap-4">
-            <StatCard icon="fa-calendar-check" label="Agendamentos" value={bookings.length} color="green" />
-            <StatCard icon="fa-clock" label="Pendentes" value={bookings.filter((b) => b.status === 'pending').length} color="gold" />
+            <StatCard icon={CalendarCheck} label="Agendamentos" value={bookings.length} />
+            <StatCard icon={Clock} label="Pendentes" value={bookings.filter((b) => b.status === 'pending').length} variant="gold" />
           </div>
 
           {profile.role === 'student' && (

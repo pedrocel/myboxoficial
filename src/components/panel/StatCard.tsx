@@ -1,27 +1,33 @@
+import type { LucideIcon } from 'lucide-react'
+import { Card, CardContent } from '../ui/card'
+import { cn } from '../../lib/utils'
+
 type Props = {
-  icon: string
+  icon: LucideIcon
   label: string
   value: string | number
   trend?: string
-  color?: 'green' | 'gold' | 'dark' | 'blue'
+  variant?: 'default' | 'gold' | 'blue' | 'muted'
 }
 
-const COLORS = {
-  green: 'from-mygreen/20 to-mygreen/5 text-mygreen',
-  gold: 'from-mygold/20 to-mygold/5 text-amber-600',
-  dark: 'from-mydark/20 to-mydark/5 text-mydark',
-  blue: 'from-blue-500/20 to-blue-500/5 text-blue-600',
+const VARIANTS = {
+  default: 'bg-primary/10 text-primary',
+  gold: 'bg-amber-500/10 text-amber-500',
+  blue: 'bg-blue-500/10 text-blue-500',
+  muted: 'bg-muted text-muted-foreground',
 }
 
-export function StatCard({ icon, label, value, trend, color = 'green' }: Props) {
+export function StatCard({ icon: Icon, label, value, trend, variant = 'default' }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
-      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${COLORS[color]} flex items-center justify-center mb-4`}>
-        <i className={`fas ${icon} text-lg`} />
-      </div>
-      <p className="text-3xl font-black text-mydark">{value}</p>
-      <p className="text-sm text-gray-500 mt-1">{label}</p>
-      {trend && <p className="text-xs text-mygreen font-semibold mt-2">{trend}</p>}
-    </div>
+    <Card className="hover:shadow-md transition-shadow border-border/60">
+      <CardContent className="p-6">
+        <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center mb-4', VARIANTS[variant])}>
+          <Icon className="h-5 w-5" />
+        </div>
+        <p className="text-3xl font-bold text-foreground tabular-nums">{value}</p>
+        <p className="text-sm text-muted-foreground mt-1">{label}</p>
+        {trend && <p className="text-xs text-primary font-medium mt-2">{trend}</p>}
+      </CardContent>
+    </Card>
   )
 }

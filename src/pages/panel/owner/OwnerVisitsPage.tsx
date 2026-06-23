@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Eye, Sun, CalendarDays } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { useAuth } from '../../../contexts/AuthContext'
@@ -40,9 +41,9 @@ export function OwnerVisitsPage() {
   return (
     <PanelLayout title="Visitas" subtitle="Quem visualizou a página da sua unidade" nav={OWNER_NAV}>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <StatCard icon="fa-eye" label="Total registrado" value={visits.length} color="green" />
-        <StatCard icon="fa-sun" label="Hoje" value={today} color="gold" />
-        <StatCard icon="fa-calendar-week" label="Últimos 7 dias" value={week} color="blue" />
+        <StatCard icon={Eye} label="Total registrado" value={visits.length} />
+        <StatCard icon={Sun} label="Hoje" value={today} variant="gold" />
+        <StatCard icon={CalendarDays} label="Últimos 7 dias" value={week} variant="blue" />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">

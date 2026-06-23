@@ -1,7 +1,11 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { Store, CheckCircle, Eye, Map, Search, ArrowRight } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
+import { Input } from '../../../components/ui/input'
+import { Badge } from '../../../components/ui/badge'
+import { Card } from '../../../components/ui/card'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import { getUnitGallery } from '../../../lib/unit-settings'
@@ -34,27 +38,27 @@ export function AdminUnitsPage() {
   return (
     <PanelLayout title="Unidades" subtitle={`${units.length} academias na rede My Box`} nav={ADMIN_NAV}>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon="fa-store" label="Total unidades" value={units.length} color="green" />
-        <StatCard icon="fa-check-circle" label="Ativas" value={units.filter((u) => u.status).length} color="blue" />
-        <StatCard icon="fa-eye" label="Visitas totais" value={totalVisits} color="gold" />
-        <StatCard icon="fa-map" label="Estados" value={estados.length} color="dark" />
+        <StatCard icon={Store} label="Total unidades" value={units.length} />
+        <StatCard icon={CheckCircle} label="Ativas" value={units.filter((u) => u.status).length} variant="blue" />
+        <StatCard icon={Eye} label="Visitas totais" value={totalVisits} variant="gold" />
+        <StatCard icon={Map} label="Estados" value={estados.length} variant="muted" />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1 max-w-md">
-          <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
-          <input
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar unidade ou cidade..."
-            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen shadow-sm"
+            className="pl-10"
           />
         </div>
         <select
           value={estado}
           onChange={(e) => setEstado(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm font-semibold shadow-sm"
+          className="px-4 py-2 h-10 bg-background border border-input rounded-xl text-sm font-medium"
         >
           <option value="">Todos os estados</option>
           {estados.map((e) => (
@@ -67,30 +71,29 @@ export function AdminUnitsPage() {
         {filtered.map((unit) => {
           const hero = getUnitGallery(unit)[0]
           return (
-            <Link
-              key={unit.slug}
-              to={`/painel/admin/unidades/${unit.slug}`}
-              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-mygreen/30 transition-all group"
-            >
-              <div className="h-36 relative overflow-hidden">
-                <img src={hero} alt="" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute top-3 right-3 flex gap-1.5">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${unit.status ? 'bg-mygreen text-white' : 'bg-red-500 text-white'}`}>
-                    {unit.status ? 'Ativa' : 'Inativa'}
+            <Link key={unit.slug} to={`/painel/admin/unidades/${unit.slug}`}>
+              <Card className="overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all group h-full">
+                <div className="h-36 relative overflow-hidden">
+                  <img src={hero} alt="" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute top-3 right-3">
+                    <Badge variant={unit.status ? 'default' : 'destructive'}>{unit.status ? 'Ativa' : 'Inativa'}</Badge>
+                  </div>
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <h3 className="font-bold text-white text-lg leading-tight">{unit.name}</h3>
+                    <p className="text-white/80 text-xs mt-0.5">{unit.cidade} — {STATE_NAMES[unit.estado ?? ''] ?? unit.estado}</p>
+                  </div>
+                </div>
+                <div className="p-4 flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <Eye className="h-3.5 w-3.5 text-primary" />
+                    {unit.visits_count ?? 0} visitas
+                  </span>
+                  <span className="text-primary font-semibold group-hover:translate-x-1 transition inline-flex items-center gap-1">
+                    Ver dashboard <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
-                <div className="absolute bottom-3 left-4 right-4">
-                  <h3 className="font-black text-white text-lg leading-tight">{unit.name}</h3>
-                  <p className="text-white/80 text-xs mt-0.5">{unit.cidade} — {STATE_NAMES[unit.estado ?? ''] ?? unit.estado}</p>
-                </div>
-              </div>
-              <div className="p-4 flex items-center justify-between text-xs">
-                <span className="text-gray-500"><i className="fas fa-eye text-mygreen mr-1" />{unit.visits_count ?? 0} visitas</span>
-                <span className="text-mygreen font-bold group-hover:translate-x-1 transition inline-flex items-center gap-1">
-                  Ver dashboard <i className="fas fa-arrow-right" />
-                </span>
-              </div>
+              </Card>
             </Link>
           )
         })}

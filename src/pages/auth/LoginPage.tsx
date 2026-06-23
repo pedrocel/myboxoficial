@@ -1,6 +1,12 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useAuth, roleHomePath } from '../../contexts/AuthContext'
+import { ThemeToggle } from '../../components/theme/ThemeToggle'
+import { Button } from '../../components/ui/button'
+import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 
 export function LoginPage() {
   const { signIn, user, profile, loading, configured } = useAuth()
@@ -23,108 +29,69 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mydark flex">
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <img
-          src="/img/fachada.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-mygreen/30 to-mydark" />
+    <div className="min-h-screen bg-background flex">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-card">
+        <img src="/img/fachada.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-background" />
         <div className="relative z-10 p-12 flex flex-col justify-end">
-          <h2 className="text-4xl font-black text-white mb-4">Painel My Box</h2>
-          <p className="text-white/70 text-lg max-w-md">
+          <h2 className="text-4xl font-bold text-foreground mb-4">Painel My Box</h2>
+          <p className="text-muted-foreground text-lg max-w-md">
             Gerencie sua unidade, acompanhe agendamentos e conecte-se com seus alunos em um só lugar.
           </p>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+
         <div className="w-full max-w-md">
-          <Link to="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm mb-8 transition">
-            <i className="fas fa-arrow-left" />
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm mb-8 transition">
+            <ArrowLeft className="h-4 w-4" />
             Voltar ao site
           </Link>
 
-          <div className="bg-white rounded-3xl shadow-2xl p-8">
-            <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center text-white font-black text-2xl mb-6">
-              M
-            </div>
-            <h1 className="text-2xl font-black text-mydark mb-1">Entrar</h1>
-            <p className="text-gray-500 text-sm mb-8">Acesse o painel da sua unidade ou perfil de aluno</p>
-
-            {!configured && (
-              <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-                <p className="font-bold mb-1">Supabase não detectado no build</p>
-                <p className="mb-2">
-                  As variáveis precisam estar onde o site é <strong>compilado</strong>, não só no painel do
-                  Supabase.
-                </p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>
-                    <strong>Local:</strong> arquivo <code>.env</code> na raiz + reinicie{' '}
-                    <code>npm run dev</code>
-                  </li>
-                  <li>
-                    <strong>Cloudflare Pages:</strong> Settings → Environment variables → Production
-                  </li>
-                </ul>
-                <p className="mt-2 text-xs">
-                  Nomes aceitos: <code>VITE_SUPABASE_URL</code> +{' '}
-                  <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> (ou prefixo <code>NEXT_PUBLIC_</code>).
-                  Depois de alterar na Cloudflare, faça um novo deploy.
-                </p>
+          <Card className="shadow-xl border-border/60">
+            <CardHeader>
+              <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center text-white font-bold text-2xl mb-2">
+                M
               </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">E-mail</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="mt-1.5 w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen"
-                  placeholder="seu@email.com"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Senha</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="mt-1.5 w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen"
-                  placeholder="••••••••"
-                />
-              </div>
-
-              {error && (
-                <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl flex items-center gap-2">
-                  <i className="fas fa-exclamation-circle" />
-                  {error}
-                </p>
+              <CardTitle className="text-2xl">Entrar</CardTitle>
+              <CardDescription>Acesse o painel da sua unidade ou perfil de aluno</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!configured && (
+                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-sm text-amber-700 dark:text-amber-400">
+                  <p className="font-semibold mb-1">Supabase não detectado no build</p>
+                  <p className="text-xs opacity-90">
+                    Configure <code>VITE_SUPABASE_URL</code> e <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> no .env local ou na Cloudflare Pages.
+                  </p>
+                </div>
               )}
 
-              <button
-                type="submit"
-                disabled={submitting || !configured}
-                className="w-full bg-mygreen hover:bg-green-600 disabled:opacity-50 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-mygreen/25"
-              >
-                {submitting ? (
-                  <i className="fas fa-spinner fa-spin" />
-                ) : (
-                  'Acessar painel'
-                )}
-              </button>
-            </form>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="seu@email.com" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+                </div>
 
-            <p className="text-center text-xs text-gray-400 mt-6">
-              Agendou uma aula? Verifique seu e-mail para o link de acesso.
-            </p>
-          </div>
+                {error && <p className="text-destructive text-sm bg-destructive/10 px-4 py-3 rounded-xl">{error}</p>}
+
+                <Button type="submit" disabled={submitting || !configured} className="w-full" size="lg">
+                  {submitting ? <Loader2 className="animate-spin" /> : 'Acessar painel'}
+                </Button>
+              </form>
+
+              <p className="text-center text-xs text-muted-foreground mt-6">
+                Agendou uma aula? Verifique seu e-mail para o link de acesso.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
+import { Eye, CalendarCheck, Clock, Users } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
@@ -7,6 +8,7 @@ import { UnitCustomizeEditor, buildUnitUpdatePayload } from '../../../components
 import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import { getUnitGallery, getUnitModalidades, ownerDefaultPassword } from '../../../lib/unit-settings'
+import { geocodeUnit } from '../../../lib/geocode'
 import { STATE_NAMES } from '../../../lib/brazil-states'
 import type { Booking, DbUnit, Profile, UnitVisit } from '../../../types/database'
 
@@ -64,8 +66,11 @@ export function AdminUnitDetailPage() {
 
   const saveUnit = async (updated: DbUnit) => {
     if (!supabase) return { error: 'Sem conexão' }
-    const { error } = await supabase.from('units').update(buildUnitUpdatePayload(updated)).eq('slug', slug)
-    if (!error) setUnit(updated)
+    let toSave = { ...updated }
+    const coords = await geocodeUnit(toSave)
+    if (coords) toSave = { ...toSave, lat: coords.lat, lng: coords.lng }
+    const { error } = await supabase.from('units').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
+    if (!error) setUnit(toSave)
     return { error: error?.message }
   }
 
@@ -107,10 +112,10 @@ export function AdminUnitDetailPage() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <StatCard icon="fa-eye" label="Visitas totais" value={unit.visits_count ?? 0} trend={`${stats.weekVisits} esta semana`} color="green" />
-            <StatCard icon="fa-calendar-check" label="Agendamentos" value={bookings.length} color="blue" />
-            <StatCard icon="fa-clock" label="Pendentes" value={stats.pending} color="gold" />
-            <StatCard icon="fa-users" label="Alunos únicos" value={stats.students} color="dark" />
+            <StatCard icon={Eye} label="Visitas totais" value={unit.visits_count ?? 0} trend={`${stats.weekVisits} esta semana`} />
+            <StatCard icon={CalendarCheck} label="Agendamentos" value={bookings.length} variant="blue" />
+            <StatCard icon={Clock} label="Pendentes" value={stats.pending} variant="gold" />
+            <StatCard icon={Users} label="Alunos únicos" value={stats.students} variant="muted" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
