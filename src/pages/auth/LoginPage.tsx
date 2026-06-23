@@ -55,11 +55,24 @@ export function LoginPage() {
 
             {!configured && (
               <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-                <p className="font-bold mb-1">Supabase não configurado</p>
-                <p>
-                  Defina <code className="text-xs">VITE_SUPABASE_URL</code> e{' '}
-                  <code className="text-xs">VITE_SUPABASE_PUBLISHABLE_KEY</code> no arquivo{' '}
-                  <code className="text-xs">.env</code>.
+                <p className="font-bold mb-1">Supabase não detectado no build</p>
+                <p className="mb-2">
+                  As variáveis precisam estar onde o site é <strong>compilado</strong>, não só no painel do
+                  Supabase.
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-xs">
+                  <li>
+                    <strong>Local:</strong> arquivo <code>.env</code> na raiz + reinicie{' '}
+                    <code>npm run dev</code>
+                  </li>
+                  <li>
+                    <strong>Cloudflare Pages:</strong> Settings → Environment variables → Production
+                  </li>
+                </ul>
+                <p className="mt-2 text-xs">
+                  Nomes aceitos: <code>VITE_SUPABASE_URL</code> +{' '}
+                  <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> (ou prefixo <code>NEXT_PUBLIC_</code>).
+                  Depois de alterar na Cloudflare, faça um novo deploy.
                 </p>
               </div>
             )}

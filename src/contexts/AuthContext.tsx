@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: 'Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.' }
+    if (!supabase) return { error: 'Supabase não detectado. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY no build (Cloudflare ou .env local) e faça redeploy.' }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error: error?.message ?? null }
   }
