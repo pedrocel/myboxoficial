@@ -77,4 +77,28 @@
   .hero-glow {
     background: radial-gradient(ellipse at 30% 80%, rgba(106, 169, 33, 0.25) 0%, transparent 60%);
   }
+  .unit-gallery-main .swiper-button-next,
+  .unit-gallery-main .swiper-button-prev {
+    color: white;
+    background: rgba(0, 0, 0, 0.35);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
+  }
+  .unit-gallery-main .swiper-button-next::after,
+  .unit-gallery-main .swiper-button-prev::after {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .unit-gallery-main .swiper-pagination-bullet-active {
+    background: #6aa921;
+  }
+  .unit-gallery-thumbs .swiper-slide-thumb-active .swiper-thumb-img {
+    border-color: #6aa921;
+    opacity: 1;
+  }
+  .unit-gallery-thumbs .swiper-thumb-img {
+    opacity: 0.65;
+  }
 }

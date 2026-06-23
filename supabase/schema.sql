@@ -1,0 +1,3 @@
+-- My Box — schema completo
+-- Use o arquivo: supabase/migrations/20250622120000_init.sql
+-- Para popular unidades: supabase/seeds/units.sql (SQL Editor)

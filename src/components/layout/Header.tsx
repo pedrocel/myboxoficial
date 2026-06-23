@@ -13,7 +13,7 @@ const navLinks = [
 
 const externalLinks = [
   { href: 'https://www.lojamybox.com/', label: 'Loja' },
-  { href: '/login', label: 'Área do franqueado', external: false },
+  { to: '/entrar', label: 'Painel' },
 ]
 
 export function Header() {
@@ -40,16 +40,23 @@ export function Header() {
               </a>
             ),
           )}
-          {externalLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-white hover:text-mygreen transition"
-              {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            >
-              {link.label}
-            </a>
-          ))}
+          {externalLinks.map((link) =>
+            'to' in link && link.to ? (
+              <Link key={link.label} to={link.to} className="text-white hover:text-mygreen transition">
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-white hover:text-mygreen transition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+              </a>
+            ),
+          )}
         </nav>
 
         <button
@@ -93,6 +100,13 @@ export function Header() {
             >
               Loja
             </a>
+            <Link
+              to="/entrar"
+              className="text-white hover:text-mygreen transition"
+              onClick={closeMobile}
+            >
+              Painel
+            </Link>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { AgendamentoModalPremium } from '../components/units-preview/AgendamentoModalPremium'
+import { UnitGalleryCarousel } from '../components/units-preview/UnitGalleryCarousel'
 import {
   getUnitBySlug,
   getUnitImage,
@@ -10,6 +11,7 @@ import {
 } from '../lib/units'
 import { STATE_NAMES } from '../lib/brazil-states'
 import { useAOS } from '../hooks/useAOS'
+import { trackUnitVisit } from '../lib/visits'
 
 const MODALIDADES = [
   {
@@ -61,6 +63,16 @@ export function UnitDetailPreviewPage() {
 
   useEffect(() => {
     if (unit) document.title = `${unit.name} - My Box`
+  }, [unit])
+
+  useEffect(() => {
+    if (unit) trackUnitVisit(unit.url_page)
+  }, [unit])
+
+  const galleryImages = useMemo(() => {
+    if (!unit) return []
+    const hero = getUnitImage(unit)
+    return [hero, ...GALLERY_IMAGES.filter((img) => img !== hero)]
   }, [unit])
 
   if (!unit) {
@@ -169,18 +181,9 @@ export function UnitDetailPreviewPage() {
         </div>
       </section>
 
-      {/* Gallery strip */}
-      <section className="py-8 overflow-hidden" data-aos="fade-up">
-        <div className="flex gap-3 px-4 overflow-x-auto scrollbar-hide">
-          {[heroImage, ...GALLERY_IMAGES].map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt=""
-              className="h-44 w-64 shrink-0 rounded-2xl object-cover border border-white/10 shadow-lg"
-            />
-          ))}
-        </div>
+      {/* Galeria */}
+      <section className="container mx-auto px-4 py-10">
+        <UnitGalleryCarousel images={galleryImages} alt={unit.name} />
       </section>
 
       {/* Content */}

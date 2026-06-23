@@ -8,11 +8,18 @@
     "build": "tsc -b && vite build",
     "generate:units": "node scripts/generate-units-json.mjs",
     "geocode:units": "node scripts/geocode-units.mjs",
+    "seed:units": "node scripts/seed-supabase-units.mjs",
+    "seed:units:sql": "node scripts/generate-units-seed-sql.mjs",
+    "setup:supabase": "node scripts/setup-supabase.mjs",
+    "check:supabase": "node scripts/check-cloud.mjs",
+    "supabase:start": "npx supabase start && npm run setup:supabase",
+    "supabase:stop": "npx supabase stop",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
+    "@supabase/supabase-js": "^2.108.2",
     "aos": "^2.3.4",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
@@ -20,7 +27,8 @@
     "react-dom": "^19.2.6",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.18.0",
-    "slugify": "^1.6.9"
+    "slugify": "^1.6.9",
+    "swiper": "^12.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

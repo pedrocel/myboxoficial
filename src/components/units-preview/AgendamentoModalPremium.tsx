@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import type { Unit } from '../../types/unit'
 import { getUnitImage } from '../../lib/units'
+import { createBookingWithStudentAccess } from '../../lib/bookings'
 import {
   getAvailableDates,
   getTimeSlotsForDate,
@@ -24,6 +26,7 @@ export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
   const [modalidade, setModalidade] = useState('experimental')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [accessEmailSent, setAccessEmailSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [nome, setNome] = useState('')
@@ -82,15 +85,31 @@ export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL
-      if (apiUrl) {
-        const response = await fetch(`${apiUrl}/agendar-aula`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        })
-        if (!response.ok) throw new Error('Erro ao agendar')
+      const result = await createBookingWithStudentAccess({
+        unitSlug: unit.url_page,
+        nome,
+        email,
+        telefone,
+        data: selectedDate,
+        horario: selectedTime,
+        modalidade: selectedMod?.label ?? 'Aula Experimental',
+      })
+
+      if (!result.ok) {
+        const apiUrl = import.meta.env.VITE_API_URL
+        if (apiUrl) {
+          const response = await fetch(`${apiUrl}/agendar-aula`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ ...payload, unidade: unit.name }),
+          })
+          if (!response.ok) throw new Error('Erro ao agendar')
+        } else {
+          throw new Error(result.error ?? 'Erro ao agendar')
+        }
       }
+
+      setAccessEmailSent(result.accessEmailSent)
       setSuccess(true)
     } catch {
       setError('Não foi possível confirmar. Tente pelo WhatsApp.')
@@ -178,7 +197,25 @@ export function AgendamentoModalPremium({ unit, open, onClose }: Props) {
               <p className="text-gray-500 mb-2">
                 {selectedMod?.label} · {selectedDateObj?.dayNum} {selectedDateObj?.month} às {selectedTime}
               </p>
-              <p className="text-gray-400 text-sm mb-8">A unidade entrará em contato para confirmar.</p>
+              <p className="text-gray-400 text-sm mb-4">A unidade entrará em contato para confirmar.</p>
+              {accessEmailSent && (
+                <div className="bg-green-50 border border-mygreen/20 rounded-2xl p-4 mb-6 text-left">
+                  <p className="text-sm font-bold text-mydark flex items-center gap-2">
+                    <i className="fas fa-envelope text-mygreen" />
+                    Acesso ao portal do aluno
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Enviamos um link para <strong>{email}</strong>. Use-o para entrar e acompanhar seus agendamentos.
+                  </p>
+                  <Link
+                    to="/entrar"
+                    className="inline-flex items-center gap-1.5 mt-3 text-sm font-bold text-mygreen hover:text-green-600"
+                  >
+                    Ir para o login
+                    <i className="fas fa-arrow-right text-xs" />
+                  </Link>
+                </div>
+              )}
               <div className="space-y-3">
                 {unit.whatsapp && (
                   <button
