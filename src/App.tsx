@@ -25,8 +25,11 @@ const AdminUnitsPage = lazy(() =>
 const AdminBookingsPage = lazy(() =>
   import('./pages/panel/admin/AdminBookingsPage').then((m) => ({ default: m.AdminBookingsPage })),
 )
-const AdminUsersPage = lazy(() =>
-  import('./pages/panel/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })),
+const AdminUnitDetailPage = lazy(() =>
+  import('./pages/panel/admin/AdminUnitDetailPage').then((m) => ({ default: m.AdminUnitDetailPage })),
+)
+const AdminUserDetailPage = lazy(() =>
+  import('./pages/panel/admin/AdminUserDetailPage').then((m) => ({ default: m.AdminUserDetailPage })),
 )
 const OwnerDashboardPage = lazy(() =>
   import('./pages/panel/owner/OwnerDashboardPage').then((m) => ({ default: m.OwnerDashboardPage })),
@@ -40,8 +43,11 @@ const OwnerStudentsPage = lazy(() =>
 const OwnerVisitsPage = lazy(() =>
   import('./pages/panel/owner/OwnerVisitsPage').then((m) => ({ default: m.OwnerVisitsPage })),
 )
-const OwnerEditUnitPage = lazy(() =>
-  import('./pages/panel/owner/OwnerEditUnitPage').then((m) => ({ default: m.OwnerEditUnitPage })),
+const AdminUsersPage = lazy(() =>
+  import('./pages/panel/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })),
+)
+const OwnerPersonalizePage = lazy(() =>
+  import('./pages/panel/owner/OwnerPersonalizePage').then((m) => ({ default: m.OwnerPersonalizePage })),
 )
 const StudentDashboardPage = lazy(() =>
   import('./pages/panel/student/StudentDashboardPage').then((m) => ({ default: m.StudentDashboardPage })),
@@ -105,6 +111,14 @@ export default function App() {
               }
             />
             <Route
+              path="/painel/admin/unidades/:slug"
+              element={
+                <Suspense fallback={fallback}>
+                  <AdminUnitDetailPage />
+                </Suspense>
+              }
+            />
+            <Route
               path="/painel/admin/agendamentos"
               element={
                 <Suspense fallback={fallback}>
@@ -120,6 +134,14 @@ export default function App() {
                 </Suspense>
               }
             />
+            <Route
+              path="/painel/admin/usuarios/:id"
+              element={
+                <Suspense fallback={fallback}>
+                  <AdminUserDetailPage />
+                </Suspense>
+              }
+            />
           </Route>
 
           <Route element={<ProtectedRoute roles={['owner']} />}>
@@ -128,6 +150,14 @@ export default function App() {
               element={
                 <Suspense fallback={fallback}>
                   <OwnerDashboardPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/painel/unidade/personalizar"
+              element={
+                <Suspense fallback={fallback}>
+                  <OwnerPersonalizePage />
                 </Suspense>
               }
             />
@@ -159,7 +189,7 @@ export default function App() {
               path="/painel/unidade/editar"
               element={
                 <Suspense fallback={fallback}>
-                  <OwnerEditUnitPage />
+                  <OwnerPersonalizePage />
                 </Suspense>
               }
             />

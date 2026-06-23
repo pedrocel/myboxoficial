@@ -4,14 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
 import type { Booking } from '../../../types/database'
 
-const OWNER_NAV = [
-  { to: '/painel/unidade', label: 'Dashboard', icon: 'fa-chart-pie' },
-  { to: '/painel/unidade/agendamentos', label: 'Aulas agendadas', icon: 'fa-calendar-check' },
-  { to: '/painel/unidade/alunos', label: 'Alunos', icon: 'fa-users' },
-  { to: '/painel/unidade/visitas', label: 'Visitas', icon: 'fa-eye' },
-  { to: '/painel/unidade/editar', label: 'Minha unidade', icon: 'fa-edit' },
-]
-
+import { OWNER_NAV } from '../../../lib/panel-nav'
 type StudentRow = {
   email: string
   name: string

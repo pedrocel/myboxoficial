@@ -11,53 +11,19 @@ import {
 } from '../lib/units'
 import { STATE_NAMES } from '../lib/brazil-states'
 import { useAOS } from '../hooks/useAOS'
+import { useDbUnit } from '../hooks/useDbUnit'
 import { trackUnitVisit } from '../lib/visits'
-
-const MODALIDADES = [
-  {
-    icon: 'fa-dumbbell',
-    title: 'Musculação',
-    desc: 'Equipamentos de última geração em um ambiente que motiva seus resultados.',
-    color: 'from-emerald-500/20 to-emerald-600/5',
-  },
-  {
-    icon: 'fa-running',
-    title: 'Cross Training',
-    desc: 'Metodologia própria validada por mais de um milhão de alunos no Brasil.',
-    color: 'from-green-500/20 to-green-600/5',
-  },
-  {
-    icon: 'fa-users',
-    title: 'Aulas Coletivas',
-    desc: 'Comunidade, energia e variedade para você nunca enjoar do treino.',
-    color: 'from-lime-500/20 to-lime-600/5',
-  },
-  {
-    icon: 'fa-coffee',
-    title: 'My Coffee',
-    desc: 'Café especial antes ou depois do treino. Conceito de shopping fitness.',
-    color: 'from-amber-500/20 to-amber-600/5',
-  },
-]
-
-const HORARIOS = [
-  { dia: 'Segunda — Sexta', musc: '06h — 23h', cross: '06h, 07h, 08h, 12h, 18h, 19h, 20h' },
-  { dia: 'Sábado', musc: '08h — 18h', cross: '09h, 10h, 11h' },
-  { dia: 'Domingo', musc: '09h — 15h', cross: '10h, 11h' },
-]
-
-const GALLERY_IMAGES = [
-  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
-  'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80',
-  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
-  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80',
-]
+import { getUnitHorarios, getUnitModalidades, getUnitGallery } from '../lib/unit-settings'
 
 export function UnitDetailPreviewPage() {
   const { slug } = useParams<{ slug: string }>()
   const unit = slug ? getUnitBySlug(slug) : undefined
+  const { unit: dbUnit } = useDbUnit(slug)
   const [agendamentoOpen, setAgendamentoOpen] = useState(false)
   const whatsapp = unit ? getWhatsAppUrl(unit) : null
+
+  const modalidades = useMemo(() => getUnitModalidades(dbUnit), [dbUnit])
+  const horarios = useMemo(() => getUnitHorarios(dbUnit), [dbUnit])
 
   useAOS()
 
@@ -71,16 +37,20 @@ export function UnitDetailPreviewPage() {
 
   const galleryImages = useMemo(() => {
     if (!unit) return []
-    const hero = getUnitImage(unit)
-    return [hero, ...GALLERY_IMAGES.filter((img) => img !== hero)]
-  }, [unit])
+    return getUnitGallery(dbUnit, getUnitImage(unit))
+  }, [unit, dbUnit])
 
   if (!unit) {
     return <Navigate to="/unidades-preview" replace />
   }
 
   const mapsDirections = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(getFullAddress(unit))}`
-  const heroImage = getUnitImage(unit)
+  const heroImage = dbUnit?.hero_image || dbUnit?.image_background || getUnitImage(unit)
+  const mapEmbed =
+    dbUnit?.lat && dbUnit?.lng
+      ? `https://www.google.com/maps?q=${dbUnit.lat},${dbUnit.lng}&z=15&output=embed`
+      : getMapEmbedUrl(unit)
+  const comoChegar = dbUnit?.como_chegar || unit.como_chegar
 
   return (
     <div className="bg-mydark font-sans min-h-screen">
@@ -169,7 +139,7 @@ export function UnitDetailPreviewPage() {
           {[
             { icon: 'fa-star', label: 'Avaliação', value: '5.0', sub: 'Google' },
             { icon: 'fa-clock', label: 'Hoje', value: '06h—23h', sub: 'Aberto' },
-            { icon: 'fa-dumbbell', label: 'Modalidades', value: '4+', sub: 'Opções' },
+            { icon: 'fa-dumbbell', label: 'Modalidades', value: `${modalidades.length}+`, sub: 'Opções' },
             { icon: 'fa-heart', label: 'Comunidade', value: 'My Box', sub: 'Família' },
           ].map((s) => (
             <div key={s.label} className="p-5 text-center" data-aos="fade-up">
@@ -198,9 +168,9 @@ export function UnitDetailPreviewPage() {
                   <span className="text-mygreen text-sm font-bold">My Box</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {MODALIDADES.map((m) => (
+                  {modalidades.map((m) => (
                     <div
-                      key={m.title}
+                      key={m.id}
                       className={`group relative p-6 rounded-2xl bg-gradient-to-br ${m.color} border border-gray-100 hover:border-mygreen/40 hover:shadow-md transition-all overflow-hidden`}
                     >
                       <div className="w-14 h-14 rounded-2xl gradient-green flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
@@ -217,7 +187,7 @@ export function UnitDetailPreviewPage() {
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10" data-aos="fade-up">
                 <h2 className="text-2xl md:text-3xl font-black text-mydark mb-8">Horários</h2>
                 <div className="space-y-3">
-                  {HORARIOS.map((h) => (
+                  {horarios.map((h) => (
                     <div
                       key={h.dia}
                       className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 p-4 rounded-2xl bg-gray-50 border border-gray-100"
@@ -243,10 +213,10 @@ export function UnitDetailPreviewPage() {
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden" data-aos="fade-up">
                 <div className="p-8 border-b border-gray-100">
                   <h2 className="text-2xl font-black text-mydark">Como chegar</h2>
-                  <p className="text-gray-500 mt-2">{unit.como_chegar}</p>
+                  <p className="text-gray-500 mt-2">{comoChegar}</p>
                 </div>
                 <iframe
-                  src={getMapEmbedUrl(unit)}
+                  src={mapEmbed}
                   width="100%"
                   height="360"
                   style={{ border: 0 }}

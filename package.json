@@ -11,6 +11,7 @@
     "seed:units": "node scripts/seed-supabase-units.mjs",
     "seed:units:sql": "node scripts/generate-units-seed-sql.mjs",
     "setup:supabase": "node scripts/setup-supabase.mjs",
+    "owners:create": "node scripts/create-unit-owners.mjs",
     "check:supabase": "node scripts/check-cloud.mjs",
     "supabase:start": "npx supabase start && npm run setup:supabase",
     "supabase:stop": "npx supabase stop",

@@ -5,12 +5,7 @@ import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
 import type { Booking } from '../../../types/database'
 
-const STUDENT_NAV = [
-  { to: '/painel/aluno', label: 'Início', icon: 'fa-home' },
-  { to: '/painel/aluno/agendamentos', label: 'Meus agendamentos', icon: 'fa-calendar-check' },
-  { to: '/painel/aluno/perfil', label: 'Meu perfil', icon: 'fa-user' },
-]
-
+import { STUDENT_NAV } from '../../../lib/panel-nav'
 export function StudentBookingsPage() {
   const { profile, user } = useAuth()
   const [bookings, setBookings] = useState<Booking[]>([])

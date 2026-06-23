@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .env
+owners-credentials.txt
 
 # Editor directories and files
 .vscode/*

@@ -5,13 +5,7 @@ import { updateBookingStatus } from '../../../lib/bookings'
 import { supabase } from '../../../lib/supabase'
 import type { Booking, BookingStatus } from '../../../types/database'
 
-const ADMIN_NAV = [
-  { to: '/painel/admin', label: 'Dashboard', icon: 'fa-chart-pie' },
-  { to: '/painel/admin/unidades', label: 'Unidades', icon: 'fa-store' },
-  { to: '/painel/admin/agendamentos', label: 'Agendamentos', icon: 'fa-calendar-check' },
-  { to: '/painel/admin/usuarios', label: 'Usuários', icon: 'fa-users' },
-]
-
+import { ADMIN_NAV } from '../../../lib/panel-nav'
 export function AdminBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
 

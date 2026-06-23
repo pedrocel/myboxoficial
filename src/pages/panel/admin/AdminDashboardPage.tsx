@@ -2,15 +2,9 @@ import { useEffect, useState } from 'react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
+import { ADMIN_NAV } from '../../../lib/panel-nav'
 import { supabase } from '../../../lib/supabase'
 import type { Booking, DbUnit, Profile } from '../../../types/database'
-
-const ADMIN_NAV = [
-  { to: '/painel/admin', label: 'Dashboard', icon: 'fa-chart-pie' },
-  { to: '/painel/admin/unidades', label: 'Unidades', icon: 'fa-store' },
-  { to: '/painel/admin/agendamentos', label: 'Agendamentos', icon: 'fa-calendar-check' },
-  { to: '/painel/admin/usuarios', label: 'Usuários', icon: 'fa-users' },
-]
 
 export function AdminDashboardPage() {
   const [bookings, setBookings] = useState<Booking[]>([])

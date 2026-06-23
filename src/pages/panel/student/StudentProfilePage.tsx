@@ -3,12 +3,7 @@ import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { useAuth } from '../../../contexts/AuthContext'
 import { supabase } from '../../../lib/supabase'
 
-const STUDENT_NAV = [
-  { to: '/painel/aluno', label: 'Início', icon: 'fa-home' },
-  { to: '/painel/aluno/agendamentos', label: 'Meus agendamentos', icon: 'fa-calendar-check' },
-  { to: '/painel/aluno/perfil', label: 'Meu perfil', icon: 'fa-user' },
-]
-
+import { STUDENT_NAV } from '../../../lib/panel-nav'
 export function StudentProfilePage() {
   const { profile, refreshProfile } = useAuth()
   const [fullName, setFullName] = useState(profile?.full_name ?? '')

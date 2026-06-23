@@ -35,6 +35,10 @@ export type DbUnit = {
   status: boolean
   visits_count: number
   owner_id: string | null
+  horarios: unknown | null
+  modalidades: unknown | null
+  hero_image: string | null
+  description: string | null
   created_at: string
   updated_at: string
 }
