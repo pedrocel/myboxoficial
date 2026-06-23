@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+@theme {
+  --color-mygreen: #6aa921;
+  --color-mydark: #262626;
+  --color-mygold: #ffc107;
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  .gradient-green {
+    background: linear-gradient(135deg, #6aa921 0%, #8bc34a 100%);
+  }
+  .card-hover-effect {
+    transition: all 0.3s ease;
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-5px);
+  }
+  .search-input-wrapper {
+    position: relative;
+  }
+  .search-input-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #6aa921;
+    transition: width 0.3s ease;
+  }
+  .search-input-wrapper:focus-within::before {
+    width: 100%;
+  }
+}
