@@ -12,6 +12,8 @@ type FormState = {
   termos: boolean
 }
 
+const FRANCHISE_WHATSAPP = '5519971313300'
+
 const initialState: FormState = {
   nome: '',
   email: '',
@@ -56,7 +58,11 @@ export function FranchiseForm() {
         }
       }
 
-      window.location.href = 'https://wa.me/5519999622428'
+      const message = encodeURIComponent(
+        `Olá! Me chamo ${form.nome} e tenho interesse em abrir uma academia My Box.\n\n` +
+          `Cidade: ${form.cidade}\nE-mail: ${form.email}\nTelefone: ${form.telefone}`,
+      )
+      window.location.href = `https://wa.me/${FRANCHISE_WHATSAPP}?text=${message}`
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao enviar formulário')
     } finally {
