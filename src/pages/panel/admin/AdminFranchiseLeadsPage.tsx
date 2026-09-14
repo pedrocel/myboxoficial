@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, MessageCircle, Mail } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { Input } from '../../../components/ui/input'
@@ -152,7 +153,9 @@ export function AdminFranchiseLeadsPage() {
                 <tr key={lead.id} className="border-b border-border last:border-0 hover:bg-muted/30 align-top">
                   <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">{formatarData(lead.created_at)}</td>
                   <td className="px-4 py-3 font-medium text-foreground">
-                    {lead.nome}
+                    <Link to={`/painel/admin/leads-franquia/${lead.id}`} className="hover:text-primary hover:underline">
+                      {lead.nome}
+                    </Link>
                     {lead.profissao && <p className="text-xs text-muted-foreground font-normal">{lead.profissao}</p>}
                   </td>
                   <td className="px-4 py-3">
