@@ -25,21 +25,21 @@ export function AdminUnitDetailPage() {
 
   useEffect(() => {
     if (!supabase || !slug) return
-    supabase.from('units').select('*').eq('slug', slug).single().then(({ data }) => {
+    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
       if (data) {
         const u = data as DbUnit
         setUnit(u)
         if (u.owner_id && supabase) {
-          supabase.from('profiles').select('*').eq('id', u.owner_id).single().then(({ data: p }) => {
+          supabase.from('profiles_mybox').select('*').eq('id', u.owner_id).single().then(({ data: p }) => {
             if (p) setOwner(p as Profile)
           })
         }
       }
     })
-    supabase.from('bookings').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(10).then(({ data }) => {
+    supabase.from('bookings_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(10).then(({ data }) => {
       if (data) setBookings(data as Booking[])
     })
-    supabase.from('unit_visits').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(15).then(({ data }) => {
+    supabase.from('unit_visits_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(15).then(({ data }) => {
       if (data) setVisits(data as UnitVisit[])
     })
   }, [slug])
@@ -72,7 +72,7 @@ export function AdminUnitDetailPage() {
     let toSave = { ...updated }
     const coords = await geocodeUnit(toSave)
     if (coords) toSave = { ...toSave, lat: coords.lat, lng: coords.lng }
-    const { error } = await supabase.from('units').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
+    const { error } = await supabase.from('units_mybox').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
     if (!error) setUnit(toSave)
     return { error: error?.message }
   }

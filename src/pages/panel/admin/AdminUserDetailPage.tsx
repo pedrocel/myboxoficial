@@ -22,16 +22,16 @@ export function AdminUserDetailPage() {
   useEffect(() => {
     if (!supabase || !id) return
     ;(async () => {
-      const { data: p } = await supabase.from('profiles').select('*').eq('id', id).single()
+      const { data: p } = await supabase.from('profiles_mybox').select('*').eq('id', id).single()
       if (!p) return
       const prof = p as Profile
       setProfile(prof)
       if (prof.unit_slug) {
-        const { data: u } = await supabase.from('units').select('*').eq('slug', prof.unit_slug).single()
+        const { data: u } = await supabase.from('units_mybox').select('*').eq('slug', prof.unit_slug).single()
         if (u) setUnit(u as DbUnit)
       }
       const { data: b } = await supabase
-        .from('bookings')
+        .from('bookings_mybox')
         .select('*')
         .or(`student_id.eq.${id},student_email.eq.${prof.email}`)
         .order('created_at', { ascending: false })

@@ -12,7 +12,7 @@ export function AdminBookingsPage() {
   const load = () => {
     if (!supabase) return
     supabase
-      .from('bookings')
+      .from('bookings_mybox')
       .select('*')
       .order('booking_date', { ascending: true })
       .then(({ data }) => {

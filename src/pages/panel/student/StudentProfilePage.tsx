@@ -22,7 +22,7 @@ export function StudentProfilePage() {
     if (!supabase || !profile) return
     setSaving(true)
     const { error } = await supabase
-      .from('profiles')
+      .from('profiles_mybox')
       .update({ full_name: fullName, phone, updated_at: new Date().toISOString() })
       .eq('id', profile.id)
     setSaving(false)

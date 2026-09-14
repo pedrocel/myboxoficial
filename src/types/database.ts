@@ -66,13 +66,45 @@ export type UnitVisit = {
   created_at: string
 }
 
+export type FranchiseLeadStatus = 'novo' | 'contatado' | 'qualificado' | 'negociacao' | 'fechado' | 'perdido'
+
+// Tabela leads_mybox: recebe os leads de todas as landings de franquia
+// (ex: franquia.myboxoficial.com.br). "origem" e "pagina" guardam de qual
+// site/rota o lead veio.
+export type FranchiseLead = {
+  id: string
+  nome: string
+  email: string
+  telefone: string
+  cidade: string
+  estado: string | null
+  profissao: string | null
+  possui_empresa: string | null
+  investimento: string
+  prazo: string | null
+  instagram: string | null
+  mensagem: string | null
+  origem: string | null
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  utm_term: string | null
+  utm_content: string | null
+  gclid: string | null
+  pagina: string | null
+  referrer: string | null
+  status: FranchiseLeadStatus
+  created_at: string
+  updated_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> }
-      units: { Row: DbUnit; Insert: Partial<DbUnit>; Update: Partial<DbUnit> }
-      bookings: { Row: Booking; Insert: Partial<Booking>; Update: Partial<Booking> }
-      unit_visits: { Row: UnitVisit; Insert: Partial<UnitVisit>; Update: Partial<UnitVisit> }
+      profiles_mybox: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> }
+      units_mybox: { Row: DbUnit; Insert: Partial<DbUnit>; Update: Partial<DbUnit> }
+      bookings_mybox: { Row: Booking; Insert: Partial<Booking>; Update: Partial<Booking> }
+      unit_visits_mybox: { Row: UnitVisit; Insert: Partial<UnitVisit>; Update: Partial<UnitVisit> }
     }
   }
 }

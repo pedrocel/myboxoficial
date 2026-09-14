@@ -41,7 +41,7 @@ const rows = units.map((u) => ({
   status: u.status ?? true,
 }))
 
-const { error } = await supabase.from('units').upsert(rows, { onConflict: 'slug' })
+const { error } = await supabase.from('units_mybox').upsert(rows, { onConflict: 'slug' })
 
 if (error) {
   console.error('Erro:', error.message)

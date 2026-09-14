@@ -10,7 +10,7 @@ if (!url || !publishableKey) {
 }
 
 const client = createClient(url, publishableKey)
-const { error } = await client.from('units').select('slug', { count: 'exact', head: true })
+const { error } = await client.from('units_mybox').select('slug', { count: 'exact', head: true })
 
 if (error) {
   if (error.message.includes('does not exist') || error.code === '42P01') {

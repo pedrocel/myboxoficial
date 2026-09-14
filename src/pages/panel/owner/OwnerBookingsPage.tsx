@@ -15,7 +15,7 @@ export function OwnerBookingsPage() {
   useEffect(() => {
     if (!supabase || !slug) return
     supabase
-      .from('bookings')
+      .from('bookings_mybox')
       .select('*')
       .eq('unit_slug', slug)
       .order('booking_date', { ascending: true })

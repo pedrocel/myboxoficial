@@ -14,7 +14,7 @@ export function StudentBookingsPage() {
     if (!supabase || !user) return
     const email = profile?.email ?? user.email
     supabase
-      .from('bookings')
+      .from('bookings_mybox')
       .select('*')
       .or(`student_id.eq.${user.id},student_email.eq.${email}`)
       .order('booking_date', { ascending: false })

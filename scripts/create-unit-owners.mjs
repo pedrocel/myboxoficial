@@ -31,7 +31,7 @@ function isValidEmail(email) {
   return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-const { data: units, error } = await admin.from('units').select('slug, name, email, owner_id').order('name')
+const { data: units, error } = await admin.from('units_mybox').select('slug, name, email, owner_id').order('name')
 
 if (error) {
   console.error('Erro:', error.message)
@@ -61,6 +61,7 @@ for (const unit of units ?? []) {
       password,
       email_confirm: true,
       user_metadata: {
+        app: 'myboxoficial',
         full_name: unit.name,
         role: 'owner',
         unit_slug: unit.slug,
@@ -78,19 +79,19 @@ for (const unit of units ?? []) {
   } else {
     await admin.auth.admin.updateUserById(userId, {
       password,
-      user_metadata: { full_name: unit.name, role: 'owner', unit_slug: unit.slug },
+      user_metadata: { app: 'myboxoficial', full_name: unit.name, role: 'owner', unit_slug: unit.slug },
     })
     updated++
   }
 
-  await admin.from('profiles').update({
+  await admin.from('profiles_mybox').update({
     role: 'owner',
     full_name: unit.name,
     unit_slug: unit.slug,
     email,
   }).eq('id', userId)
 
-  await admin.from('units').update({ owner_id: userId }).eq('slug', unit.slug)
+  await admin.from('units_mybox').update({ owner_id: userId }).eq('slug', unit.slug)
 }
 
 console.log(`\nConcluído: ${created} criados, ${updated} atualizados, ${skipped} ignorados (sem e-mail)`)

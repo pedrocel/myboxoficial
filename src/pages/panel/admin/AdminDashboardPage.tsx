@@ -17,16 +17,16 @@ export function AdminDashboardPage() {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.from('bookings').select('*').order('created_at', { ascending: false }).limit(5).then(({ data }) => {
+    supabase.from('bookings_mybox').select('*').order('created_at', { ascending: false }).limit(5).then(({ data }) => {
       if (data) setBookings(data as Booking[])
     })
-    supabase.from('units').select('*').then(({ data }) => {
+    supabase.from('units_mybox').select('*').then(({ data }) => {
       if (data) {
         setUnits(data as DbUnit[])
         setVisits((data as DbUnit[]).reduce((s, u) => s + (u.visits_count ?? 0), 0))
       }
     })
-    supabase.from('profiles').select('*').then(({ data }) => {
+    supabase.from('profiles_mybox').select('*').then(({ data }) => {
       if (data) setUsers(data as Profile[])
     })
   }, [])

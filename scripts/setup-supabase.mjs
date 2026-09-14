@@ -99,7 +99,7 @@ async function main() {
   }))
 
   console.log(`Importando ${rows.length} unidades em ${url}...`)
-  const { error: unitsError } = await admin.from('units').upsert(rows, { onConflict: 'slug' })
+  const { error: unitsError } = await admin.from('units_mybox').upsert(rows, { onConflict: 'slug' })
   if (unitsError) {
     console.error('Erro ao importar unidades:', unitsError.message)
     process.exit(1)
@@ -120,6 +120,7 @@ async function main() {
         password: user.password,
         email_confirm: true,
         user_metadata: {
+          app: 'myboxoficial',
           full_name: user.full_name,
           role: user.role,
           unit_slug: user.unit_slug ?? '',
@@ -136,6 +137,7 @@ async function main() {
       await admin.auth.admin.updateUserById(found.id, {
         password: user.password,
         user_metadata: {
+          app: 'myboxoficial',
           full_name: user.full_name,
           role: user.role,
           unit_slug: user.unit_slug ?? '',
@@ -146,7 +148,7 @@ async function main() {
     }
 
     await admin
-      .from('profiles')
+      .from('profiles_mybox')
       .update({
         role: user.role,
         full_name: user.full_name,
@@ -158,7 +160,7 @@ async function main() {
   }
 
   if (ownerId) {
-    await admin.from('units').update({ owner_id: ownerId }).eq('slug', 'my-box-uvaranas')
+    await admin.from('units_mybox').update({ owner_id: ownerId }).eq('slug', 'my-box-uvaranas')
     console.log('✓ Dono vinculado à unidade My Box Uvaranas')
   }
 

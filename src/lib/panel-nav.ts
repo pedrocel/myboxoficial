@@ -8,6 +8,7 @@ import {
   Eye,
   Home,
   User,
+  Handshake,
 } from 'lucide-react'
 import type { NavItem } from '../components/panel/PanelLayout'
 
@@ -16,6 +17,7 @@ export const ADMIN_NAV: NavItem[] = [
   { to: '/painel/admin/unidades', label: 'Unidades', icon: Store, group: 'Operação' },
   { to: '/painel/admin/agendamentos', label: 'Agendamentos', icon: CalendarCheck, group: 'Operação' },
   { to: '/painel/admin/usuarios', label: 'Usuários', icon: Users, group: 'Operação' },
+  { to: '/painel/admin/leads-franquia', label: 'Leads Franquia', icon: Handshake, group: 'Franquia' },
 ]
 
 export const OWNER_NAV: NavItem[] = [

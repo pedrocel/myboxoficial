@@ -18,7 +18,7 @@ export function useDbUnit(slug: string | undefined) {
     }
     setLoading(true)
     supabase
-      .from('units')
+      .from('units_mybox')
       .select('*')
       .eq('slug', slug)
       .single()

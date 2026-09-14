@@ -21,7 +21,7 @@ export async function createBookingWithStudentAccess(input: CreateBookingInput):
     return { ok: false, accessEmailSent: false, error: 'Sistema indisponível no momento.' }
   }
 
-  const { error: bookingError } = await supabase.from('bookings').insert({
+  const { error: bookingError } = await supabase.from('bookings_mybox').insert({
     unit_slug: input.unitSlug,
     student_name: input.nome,
     student_email: input.email,
@@ -57,6 +57,6 @@ export async function createBookingWithStudentAccess(input: CreateBookingInput):
 
 export async function updateBookingStatus(id: string, status: string) {
   if (!supabase) return { error: 'Supabase não configurado' }
-  const { error } = await supabase.from('bookings').update({ status }).eq('id', id)
+  const { error } = await supabase.from('bookings_mybox').update({ status }).eq('id', id)
   return { error: error?.message ?? null }
 }

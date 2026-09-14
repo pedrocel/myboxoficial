@@ -31,6 +31,9 @@ const AdminUnitDetailPage = lazy(() =>
 const AdminUserDetailPage = lazy(() =>
   import('./pages/panel/admin/AdminUserDetailPage').then((m) => ({ default: m.AdminUserDetailPage })),
 )
+const AdminFranchiseLeadsPage = lazy(() =>
+  import('./pages/panel/admin/AdminFranchiseLeadsPage').then((m) => ({ default: m.AdminFranchiseLeadsPage })),
+)
 const OwnerDashboardPage = lazy(() =>
   import('./pages/panel/owner/OwnerDashboardPage').then((m) => ({ default: m.OwnerDashboardPage })),
 )
@@ -139,6 +142,14 @@ export default function App() {
               element={
                 <Suspense fallback={fallback}>
                   <AdminUserDetailPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/painel/admin/leads-franquia"
+              element={
+                <Suspense fallback={fallback}>
+                  <AdminFranchiseLeadsPage />
                 </Suspense>
               }
             />

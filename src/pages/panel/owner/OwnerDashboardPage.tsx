@@ -30,13 +30,13 @@ export function OwnerDashboardPage() {
 
   useEffect(() => {
     if (!supabase || !slug) return
-    supabase.from('units').select('*').eq('slug', slug).single().then(({ data }) => {
+    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
       if (data) setUnit(data as DbUnit)
     })
-    supabase.from('bookings').select('*').eq('unit_slug', slug).order('booking_date', { ascending: true }).then(({ data }) => {
+    supabase.from('bookings_mybox').select('*').eq('unit_slug', slug).order('booking_date', { ascending: true }).then(({ data }) => {
       if (data) setBookings(data as Booking[])
     })
-    supabase.from('unit_visits').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(5).then(({ data }) => {
+    supabase.from('unit_visits_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(5).then(({ data }) => {
       if (data) setVisits(data as UnitVisit[])
     })
   }, [slug])

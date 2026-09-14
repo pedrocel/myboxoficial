@@ -18,7 +18,7 @@ export function AdminUsersPage() {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.from('profiles').select('*').order('created_at', { ascending: false }).then(({ data }) => {
+    supabase.from('profiles_mybox').select('*').order('created_at', { ascending: false }).then(({ data }) => {
       if (data) setUsers(data as Profile[])
     })
   }, [])

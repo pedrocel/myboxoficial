@@ -19,7 +19,7 @@ export function AdminUnitsPage() {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.from('units').select('*').order('name').then(({ data }) => {
+    supabase.from('units_mybox').select('*').order('name').then(({ data }) => {
       if (data) setUnits(data as DbUnit[])
     })
   }, [])

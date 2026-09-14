@@ -1,6 +1,6 @@
 import { supabase, supabaseUrl } from './supabase'
 
-const BUCKET = 'unit-gallery'
+const BUCKET = 'mybox-unit-gallery'
 
 export function getGalleryPublicUrl(path: string): string {
   if (!supabaseUrl) return path

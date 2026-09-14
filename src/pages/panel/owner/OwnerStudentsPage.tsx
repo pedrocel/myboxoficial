@@ -22,7 +22,7 @@ export function OwnerStudentsPage() {
 
   useEffect(() => {
     if (!supabase || !slug) return
-    supabase.from('bookings').select('*').eq('unit_slug', slug).then(({ data }) => {
+    supabase.from('bookings_mybox').select('*').eq('unit_slug', slug).then(({ data }) => {
       if (data) setBookings(data as Booking[])
     })
   }, [slug])

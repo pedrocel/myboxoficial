@@ -16,7 +16,7 @@ export function OwnerVisitsPage() {
   useEffect(() => {
     if (!supabase || !slug) return
     supabase
-      .from('unit_visits')
+      .from('unit_visits_mybox')
       .select('*')
       .eq('unit_slug', slug)
       .order('created_at', { ascending: false })

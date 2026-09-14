@@ -14,7 +14,7 @@ export function OwnerPersonalizePage() {
 
   useEffect(() => {
     if (!supabase || !slug) return
-    supabase.from('units').select('*').eq('slug', slug).single().then(({ data }) => {
+    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
       if (data) setUnit(data as DbUnit)
     })
   }, [slug])
@@ -28,7 +28,7 @@ export function OwnerPersonalizePage() {
       toSave = { ...toSave, lat: coords.lat, lng: coords.lng }
     }
 
-    const { error } = await supabase.from('units').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
+    const { error } = await supabase.from('units_mybox').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
     if (!error) setUnit(toSave)
     return { error: error?.message }
   }

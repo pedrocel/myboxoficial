@@ -15,7 +15,7 @@ export function OwnerEditUnitPage() {
 
   useEffect(() => {
     if (!supabase || !slug) return
-    supabase.from('units').select('*').eq('slug', slug).single().then(({ data }) => {
+    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
       if (data) setUnit(data as DbUnit)
     })
   }, [slug])
@@ -26,7 +26,7 @@ export function OwnerEditUnitPage() {
     setSaving(true)
     setSaved(false)
     const { error } = await supabase
-      .from('units')
+      .from('units_mybox')
       .update({
         telefone: unit.telefone,
         email: unit.email,
