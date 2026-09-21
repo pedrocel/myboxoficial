@@ -108,3 +108,11 @@ export type Database = {
     }
   }
 }
+
+export type LeadEmail = {
+  id: string
+  email: string
+  nome: string | null
+  ativo: boolean
+  created_at: string
+}
