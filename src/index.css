@@ -32,6 +32,12 @@
   --radius-sm: calc(var(--radius) - 4px);
 }
 
+/*
+ * O site publico e escuro, entao os tokens do :root sao os do tema escuro.
+ * O tema claro vale so no painel: o ThemeProvider poe .light no <html> nas
+ * rotas do painel e tira ao voltar pro site. A classe .dark serve para o
+ * variant dark: funcionar dentro do painel.
+ */
 :root {
   --background: 0 0% 7%;
   --foreground: 0 0% 96%;
@@ -53,6 +59,29 @@
   --input: 0 0% 18%;
   --ring: 88 66% 45%;
   --radius: 0.75rem;
+}
+
+.light {
+  --background: 0 0% 97%;
+  --foreground: 0 0% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 12%;
+  /* Verde um pouco mais escuro que o da marca para dar contraste no branco. */
+  --primary: 88 66% 34%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 93%;
+  --secondary-foreground: 0 0% 20%;
+  --muted: 0 0% 93%;
+  --muted-foreground: 0 0% 38%;
+  --accent: 88 42% 92%;
+  --accent-foreground: 88 66% 24%;
+  --destructive: 0 70% 42%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 87%;
+  --input: 0 0% 87%;
+  --ring: 88 66% 34%;
 }
 
 @layer base {

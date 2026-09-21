@@ -7,6 +7,21 @@
     <title>My Box - Academia com Conceito</title>
     <meta name="description" content="A My Box é uma academia com conceito de shopping, transformando o tempo dedicado à atividade física em uma experiência prazerosa." />
 
+    <!-- Tema do painel: aplica antes da primeira pintura para nao piscar escuro. -->
+    <script>
+      (function () {
+        try {
+          var p = location.pathname;
+          var painel = p === '/entrar' || p === '/painel' || p.indexOf('/painel/') === 0;
+          var claro = painel && localStorage.getItem('mybox-theme') === 'light';
+          document.documentElement.classList.add(claro ? 'light' : 'dark');
+          document.documentElement.style.colorScheme = claro ? 'light' : 'dark';
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {

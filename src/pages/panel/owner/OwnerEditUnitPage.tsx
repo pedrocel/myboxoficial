@@ -45,20 +45,20 @@ export function OwnerEditUnitPage() {
 
   const field = (label: string, key: keyof DbUnit, type = 'text', rows?: number) => (
     <div>
-      <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">{label}</label>
+      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</label>
       {rows ? (
         <textarea
           rows={rows}
           value={(unit?.[key] as string) ?? ''}
           onChange={(e) => setUnit((u) => (u ? { ...u, [key]: e.target.value } : u))}
-          className="mt-1.5 w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen resize-none"
+          className="mt-1.5 w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
         />
       ) : (
         <input
           type={type}
           value={(unit?.[key] as string) ?? ''}
           onChange={(e) => setUnit((u) => (u ? { ...u, [key]: e.target.value } : u))}
-          className="mt-1.5 w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-mygreen"
+          className="mt-1.5 w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
       )}
     </div>
@@ -77,14 +77,14 @@ export function OwnerEditUnitPage() {
   return (
     <PanelLayout title="Minha unidade" subtitle="Edite os dados da sua academia" nav={OWNER_NAV}>
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-5">
-          <div className="flex items-center gap-4 pb-5 border-b border-gray-100">
+        <div className="bg-card rounded-2xl border border-border p-8 shadow-sm space-y-5">
+          <div className="flex items-center gap-4 pb-5 border-b border-border">
             <div className="w-16 h-16 rounded-2xl gradient-green flex items-center justify-center text-white font-black text-2xl">
               {unit.name[0]}
             </div>
             <div>
-              <h2 className="text-xl font-black text-mydark">{unit.name}</h2>
-              <p className="text-sm text-gray-500">{unit.cidade} — {unit.estado}</p>
+              <h2 className="text-xl font-black text-foreground">{unit.name}</h2>
+              <p className="text-sm text-muted-foreground">{unit.cidade} — {unit.estado}</p>
             </div>
           </div>
 

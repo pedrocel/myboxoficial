@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import { ThemeToggle } from '../../components/panel/ThemeToggle'
 
 export function LoginPage() {
   const { signIn, user, profile, loading, configured } = useAuth()
@@ -42,10 +43,13 @@ export function LoginPage() {
 
       <div className="flex-1 flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm mb-8 transition">
-            <ArrowLeft className="h-4 w-4" />
-            Voltar ao site
-          </Link>
+          <div className="flex items-center justify-between gap-4 mb-8">
+            <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm transition">
+              <ArrowLeft className="h-4 w-4" />
+              Voltar ao site
+            </Link>
+            <ThemeToggle />
+          </div>
 
           <Card className="shadow-xl border-border/60">
             <CardHeader>

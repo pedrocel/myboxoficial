@@ -6,7 +6,7 @@ export function PanelRedirectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <i className="fas fa-spinner fa-spin text-mygreen text-3xl" />
       </div>
     )

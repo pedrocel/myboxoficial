@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import type { UserRole } from '../../types/database'
 import type { LucideIcon } from 'lucide-react'
 import { Button } from '../ui/button'
+import { ThemeToggle } from './ThemeToggle'
 import { cn } from '../../lib/utils'
 
 export type NavItem = {
@@ -192,6 +193,7 @@ export function PanelLayout({ title, subtitle, nav, children }: Props) {
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <ThemeToggle />
             {profile?.unit_slug && (
               <Button variant="outline" size="sm" asChild className="hidden sm:flex">
                 <Link to={`/unidades-preview/${profile.unit_slug}`} target="_blank">

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { ProtectedRoute } from './components/panel/ProtectedRoute'
 import { HomePage } from './pages/HomePage'
 import { UnitsListPage } from './pages/UnitsListPage'
@@ -75,195 +76,197 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <MetaPixel />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/unidades" element={<UnitsListPage />} />
-          <Route
-            path="/unidades-preview"
-            element={
-              <Suspense fallback={fallback}>
-                <UnitsPreviewPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/unidades-preview/:slug"
-            element={
-              <Suspense fallback={fallback}>
-                <UnitDetailPreviewPage />
-              </Suspense>
-            }
-          />
-          <Route path="/unidades/:slug" element={<UnitDetailPage />} />
-          <Route path="/entrar" element={<LoginPage />} />
-          <Route path="/painel" element={<PanelRedirectPage />} />
+        <ThemeProvider>
+          <MetaPixel />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/unidades" element={<UnitsListPage />} />
+            <Route
+              path="/unidades-preview"
+              element={
+                <Suspense fallback={fallback}>
+                  <UnitsPreviewPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/unidades-preview/:slug"
+              element={
+                <Suspense fallback={fallback}>
+                  <UnitDetailPreviewPage />
+                </Suspense>
+              }
+            />
+            <Route path="/unidades/:slug" element={<UnitDetailPage />} />
+            <Route path="/entrar" element={<LoginPage />} />
+            <Route path="/painel" element={<PanelRedirectPage />} />
 
-          <Route element={<ProtectedRoute roles={['admin']} />}>
-            <Route
-              path="/painel/admin"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminDashboardPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/unidades"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminUnitsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/unidades/:slug"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminUnitDetailPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/agendamentos"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminBookingsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/usuarios"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminUsersPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/usuarios/:id"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminUserDetailPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/leads-franquia"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminFranchiseLeadsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/admin/leads-franquia/:id"
-              element={
-                <Suspense fallback={fallback}>
-                  <AdminFranchiseLeadDetailPage />
-                </Suspense>
-              }
-            />
-          </Route>
-
-          <Route element={<ProtectedRoute roles={['owner']} />}>
-            <Route
-              path="/painel/unidade"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerDashboardPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/unidade/personalizar"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerPersonalizePage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/unidade/agendamentos"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerBookingsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/unidade/alunos"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerStudentsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/unidade/visitas"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerVisitsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/unidade/editar"
-              element={
-                <Suspense fallback={fallback}>
-                  <OwnerPersonalizePage />
-                </Suspense>
-              }
-            />
-          </Route>
-
-          <Route element={<ProtectedRoute roles={['student']} />}>
-            <Route
-              path="/painel/aluno"
-              element={
-                <Suspense fallback={fallback}>
-                  <StudentDashboardPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/aluno/agendamentos"
-              element={
-                <Suspense fallback={fallback}>
-                  <StudentBookingsPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/painel/aluno/perfil"
-              element={
-                <Suspense fallback={fallback}>
-                  <StudentProfilePage />
-                </Suspense>
-              }
-            />
-          </Route>
-
-          <Route
-            path="/termos"
-            element={
-              <ComingSoonPage title="Termos de Uso" description="Conteúdo dos termos de uso será migrado em breve." />
-            }
-          />
-          <Route
-            path="/privacidade"
-            element={
-              <ComingSoonPage
-                title="Política de Privacidade"
-                description="Conteúdo da política de privacidade será migrado em breve."
+            <Route element={<ProtectedRoute roles={['admin']} />}>
+              <Route
+                path="/painel/admin"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminDashboardPage />
+                  </Suspense>
+                }
               />
-            }
-          />
-          <Route
-            path="*"
-            element={<ComingSoonPage title="Página não encontrada" description="A página que você procura não existe." />}
-          />
-        </Routes>
+              <Route
+                path="/painel/admin/unidades"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminUnitsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/unidades/:slug"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminUnitDetailPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/agendamentos"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminBookingsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/usuarios"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminUsersPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/usuarios/:id"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminUserDetailPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/leads-franquia"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminFranchiseLeadsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/admin/leads-franquia/:id"
+                element={
+                  <Suspense fallback={fallback}>
+                    <AdminFranchiseLeadDetailPage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute roles={['owner']} />}>
+              <Route
+                path="/painel/unidade"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerDashboardPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/unidade/personalizar"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerPersonalizePage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/unidade/agendamentos"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerBookingsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/unidade/alunos"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerStudentsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/unidade/visitas"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerVisitsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/unidade/editar"
+                element={
+                  <Suspense fallback={fallback}>
+                    <OwnerPersonalizePage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute roles={['student']} />}>
+              <Route
+                path="/painel/aluno"
+                element={
+                  <Suspense fallback={fallback}>
+                    <StudentDashboardPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/aluno/agendamentos"
+                element={
+                  <Suspense fallback={fallback}>
+                    <StudentBookingsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/painel/aluno/perfil"
+                element={
+                  <Suspense fallback={fallback}>
+                    <StudentProfilePage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            <Route
+              path="/termos"
+              element={
+                <ComingSoonPage title="Termos de Uso" description="Conteúdo dos termos de uso será migrado em breve." />
+              }
+            />
+            <Route
+              path="/privacidade"
+              element={
+                <ComingSoonPage
+                  title="Política de Privacidade"
+                  description="Conteúdo da política de privacidade será migrado em breve."
+                />
+              }
+            />
+            <Route
+              path="*"
+              element={<ComingSoonPage title="Página não encontrada" description="A página que você procura não existe." />}
+            />
+          </Routes>
+        </ThemeProvider>
       </BrowserRouter>
     </AuthProvider>
   )
