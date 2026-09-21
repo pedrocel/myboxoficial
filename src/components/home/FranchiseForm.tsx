@@ -14,6 +14,13 @@ type FormState = {
 
 const FRANCHISE_WHATSAPP = '5519971313300'
 
+/**
+ * Mesmo endpoint da landing de franquia: ele grava o lead no Supabase
+ * (leads_mybox, que alimenta o painel) e avisa a equipe por e-mail.
+ */
+const LEAD_ENDPOINT =
+  import.meta.env.VITE_LEAD_ENDPOINT ?? 'https://myboxfranquia.myboxoficial.com.br/api/lead'
+
 const initialState: FormState = {
   nome: '',
   email: '',
@@ -28,6 +35,7 @@ export function FranchiseForm() {
   const [form, setForm] = useState<FormState>(initialState)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [enviado, setEnviado] = useState(false)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -35,39 +43,77 @@ export function FranchiseForm() {
     setLoading(true)
 
     try {
-      const apiUrl = import.meta.env.VITE_LEADS_API_URL
+      // Form-encoded é o formato que a function espera, e evita preflight.
+      const corpo = new URLSearchParams({
+        nome: form.nome,
+        email: form.email,
+        telefone: form.telefone,
+        cidade: form.cidade,
+        investimento: form.investimento_disponivel,
+        mensagem: form.mensagem,
+        termos: form.termos ? '1' : '',
+        origem: 'site-home',
+        pagina: window.location.href,
+      })
 
-      if (apiUrl) {
-        const response = await fetch(`${apiUrl}/leads`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            nome: form.nome,
-            email: form.email,
-            telefone: form.telefone,
-            cidade: form.cidade,
-            investimento_disponivel: form.investimento_disponivel,
-            mensagem: form.mensagem,
-            termos: form.termos,
-          }),
-        })
+      const response = await fetch(LEAD_ENDPOINT, { method: 'POST', body: corpo })
+      if (!response.ok) throw new Error('Não foi possível enviar agora. Tente de novo em instantes.')
 
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}))
-          throw new Error(data.message || 'Erro ao enviar formulário')
-        }
-      }
-
-      const message = encodeURIComponent(
-        `Olá! Me chamo ${form.nome} e tenho interesse em abrir uma academia My Box.\n\n` +
-          `Cidade: ${form.cidade}\nE-mail: ${form.email}\nTelefone: ${form.telefone}`,
-      )
-      window.location.href = `https://wa.me/${FRANCHISE_WHATSAPP}?text=${message}`
+      setEnviado(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao enviar formulário')
     } finally {
       setLoading(false)
     }
+  }
+
+  const mensagemWhatsApp = encodeURIComponent(
+    `Olá! Me chamo ${form.nome} e tenho interesse em abrir uma academia My Box.\n\n` +
+      `Cidade: ${form.cidade}\nE-mail: ${form.email}\nTelefone: ${form.telefone}`,
+  )
+
+  if (enviado) {
+    return (
+      <div
+        id="formulario"
+        className="max-w-4xl mx-auto bg-card rounded-xl shadow-xl overflow-hidden"
+        data-aos="fade-up"
+      >
+        <div className="p-8 md:p-12 text-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full gradient-green flex items-center justify-center">
+            <i className="fas fa-check text-white text-2xl" />
+          </div>
+          <h3 className="text-2xl font-bold text-foreground mb-3">
+            Recebemos sua solicitação{form.nome ? `, ${form.nome.split(' ')[0]}` : ''}!
+          </h3>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+            Nossa equipe vai analisar sua região e entrar em contato. Se preferir adiantar a conversa, fale com a
+            gente agora no WhatsApp.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href={`https://wa.me/${FRANCHISE_WHATSAPP}?text=${mensagemWhatsApp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-mygreen hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg inline-flex items-center justify-center gap-2"
+            >
+              <i className="fab fa-whatsapp text-lg" />
+              Falar agora no WhatsApp
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setForm(initialState)
+                setEnviado(false)
+              }}
+              className="border border-border text-foreground font-semibold py-3 px-8 rounded-full transition hover:bg-accent"
+            >
+              Enviar outro contato
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const update = (field: keyof FormState, value: string | boolean) => {
@@ -146,8 +192,8 @@ export function FranchiseForm() {
               className="w-full px-4 py-2 bg-background text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-mygreen"
             >
               <option value="">Selecione uma opção</option>
-              <option value="ate-500k">De R$200mil à R$400mil</option>
-              <option value="500k-700k">A cima de R$400mil</option>
+              <option value="200k-400k">De R$ 200 mil a R$ 400 mil</option>
+              <option value="acima-400k">Acima de R$ 400 mil</option>
             </select>
           </div>
 

@@ -7,18 +7,18 @@ import { UnitsPreviewList } from '../components/units-preview/UnitsPreviewList'
 import { LocationSearchBar } from '../components/units-preview/LocationSearchBar'
 import { NearbyUnitBanner } from '../components/units-preview/NearbyUnitBanner'
 import {
-  getAllUnits,
   searchUnits,
-  getUnitBySlug,
+  findUnitBySlug,
   getUnitCoords,
   getStatesFromUnits,
   sortUnitsByDistance,
 } from '../lib/units'
 import { STATE_NAMES } from '../lib/brazil-states'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { useUnits } from '../hooks/useUnits'
 
 export function UnitsPreviewPage() {
-  const allUnits = useMemo(() => getAllUnits(), [])
+  const { units: allUnits, carregando } = useUnits()
   const states = useMemo(() => getStatesFromUnits(allUnits), [allUnits])
   const { coords, loading: locating, error: geoError, requestLocation, clearLocation } = useGeolocation()
 
@@ -28,7 +28,7 @@ export function UnitsPreviewPage() {
   const [showNearbyBanner, setShowNearbyBanner] = useState(true)
 
   const baseFiltered = useMemo(() => {
-    let list = query ? searchUnits(query) : allUnits
+    let list = query ? searchUnits(allUnits, query) : allUnits
     if (activeState) list = list.filter((u) => u.estado === activeState)
     return list
   }, [allUnits, query, activeState])
@@ -59,14 +59,14 @@ export function UnitsPreviewPage() {
 
   const flyToCoords = useMemo(() => {
     if (selectedSlug) {
-      const unit = getUnitBySlug(selectedSlug)
+      const unit = findUnitBySlug(allUnits, selectedSlug)
       if (unit) {
         const idx = filteredUnits.findIndex((u) => u.url_page === selectedSlug)
         return getUnitCoords(unit, idx >= 0 ? idx : 0)
       }
     }
     return coords
-  }, [selectedSlug, filteredUnits, coords])
+  }, [selectedSlug, filteredUnits, allUnits, coords])
 
   const handleSelect = useCallback((slug: string) => {
     setSelectedSlug(slug)
@@ -202,6 +202,11 @@ export function UnitsPreviewPage() {
               {coords ? 'Unidades por proximidade' : 'Lista de unidades'}
             </h2>
             <div className="overflow-y-auto flex-1 pr-1 custom-scrollbar">
+              {carregando && (
+                <div className="flex justify-center py-10">
+                  <div className="h-7 w-7 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                </div>
+              )}
               <UnitsPreviewList
                 units={filteredUnits}
                 selectedSlug={selectedSlug}

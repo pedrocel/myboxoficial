@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { Eye, CalendarCheck, Clock, Users, ArrowLeft, ExternalLink } from 'lucide-react'
+import { Eye, CalendarCheck, Clock, Users, ArrowLeft, ExternalLink, Power, PowerOff } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
@@ -22,6 +22,8 @@ export function AdminUnitDetailPage() {
   const [visits, setVisits] = useState<UnitVisit[]>([])
   const [owner, setOwner] = useState<Profile | null>(null)
   const [tab, setTab] = useState<'overview' | 'edit'>('overview')
+  const [alterandoStatus, setAlterandoStatus] = useState(false)
+  const [erroStatus, setErroStatus] = useState<string | null>(null)
 
   useEffect(() => {
     if (!supabase || !slug) return
@@ -67,6 +69,33 @@ export function AdminUnitDetailPage() {
   const hero = getUnitGallery(unit)[0]
   const mods = getUnitModalidades(unit)
 
+  /**
+   * status = false tira a unidade da lista e da pagina publica na hora, porque
+   * o site le as unidades do banco.
+   */
+  const alternarStatus = async () => {
+    if (!supabase || !unit) return
+    const novoStatus = !unit.status
+    const aviso = novoStatus
+      ? `Reativar "${unit.name}"? Ela volta a aparecer no site.`
+      : `Desativar "${unit.name}"? Ela sai da lista de unidades e da busca do site.`
+    if (!window.confirm(aviso)) return
+
+    setAlterandoStatus(true)
+    setErroStatus(null)
+    const { error } = await supabase
+      .from('units_mybox')
+      .update({ status: novoStatus, updated_at: new Date().toISOString() })
+      .eq('slug', slug)
+    setAlterandoStatus(false)
+
+    if (error) {
+      setErroStatus(error.message)
+      return
+    }
+    setUnit({ ...unit, status: novoStatus })
+  }
+
   const saveUnit = async (updated: DbUnit) => {
     if (!supabase) return { error: 'Sem conexão' }
     let toSave = { ...updated }
@@ -95,8 +124,31 @@ export function AdminUnitDetailPage() {
               <ExternalLink className="h-3.5 w-3.5" /> Página pública
             </Link>
           </Button>
+          <Button
+            type="button"
+            variant={unit.status ? 'destructive' : 'default'}
+            size="sm"
+            onClick={alternarStatus}
+            disabled={alterandoStatus}
+          >
+            {unit.status ? <PowerOff className="h-3.5 w-3.5" /> : <Power className="h-3.5 w-3.5" />}
+            {alterandoStatus ? 'Salvando...' : unit.status ? 'Desativar unidade' : 'Ativar unidade'}
+          </Button>
         </div>
       </div>
+
+      {erroStatus && (
+        <p className="mb-4 text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-xl">
+          Não foi possível mudar o status: {erroStatus}
+        </p>
+      )}
+
+      {!unit.status && (
+        <p className="mb-6 text-sm text-muted-foreground bg-muted px-4 py-3 rounded-xl">
+          Esta unidade está <strong className="text-foreground">desativada</strong> e não aparece na lista de unidades
+          do site.
+        </p>
+      )}
 
       {tab === 'overview' ? (
         <>

@@ -3,7 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom'
 import { AgendamentoModalPremium } from '../components/units-preview/AgendamentoModalPremium'
 import { UnitGalleryCarousel } from '../components/units-preview/UnitGalleryCarousel'
 import {
-  getUnitBySlug,
+  findUnitBySlug,
   getUnitImage,
   getFullAddress,
   getWhatsAppUrl,
@@ -13,11 +13,13 @@ import { STATE_NAMES } from '../lib/brazil-states'
 import { useAOS } from '../hooks/useAOS'
 import { useDbUnit } from '../hooks/useDbUnit'
 import { trackUnitVisit } from '../lib/visits'
+import { useUnits } from '../hooks/useUnits'
 import { getUnitHorarios, getUnitModalidades, getUnitGallery } from '../lib/unit-settings'
 
 export function UnitDetailPreviewPage() {
   const { slug } = useParams<{ slug: string }>()
-  const unit = slug ? getUnitBySlug(slug) : undefined
+  const { units, carregando } = useUnits()
+  const unit = slug ? findUnitBySlug(units, slug) : undefined
   const { unit: dbUnit } = useDbUnit(slug)
   const [agendamentoOpen, setAgendamentoOpen] = useState(false)
   const whatsapp = unit ? getWhatsAppUrl(unit) : null
@@ -39,6 +41,14 @@ export function UnitDetailPreviewPage() {
     if (!unit) return []
     return getUnitGallery(dbUnit, getUnitImage(unit))
   }, [unit, dbUnit])
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
 
   if (!unit) {
     return <Navigate to="/unidades-preview" replace />

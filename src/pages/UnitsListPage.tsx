@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { UnitsListHeader } from '../components/units/UnitsListHeader'
 import { UnitsListFooter } from '../components/units/UnitsListFooter'
 import { UnitsSearchBar } from '../components/units/UnitsSearchBar'
 import { UnitCard } from '../components/units/UnitCard'
 import { AgendamentosModal } from '../components/units/AgendamentosModal'
-import { getAllUnits, searchUnits } from '../lib/units'
+import { searchUnits } from '../lib/units'
+import { useUnits } from '../hooks/useUnits'
 import { useAOS } from '../hooks/useAOS'
 
 const ITEMS_PER_PAGE = 6
@@ -12,17 +13,18 @@ const ITEMS_PER_PAGE = 6
 export function UnitsListPage() {
   useAOS()
 
-  const allUnits = useMemo(() => getAllUnits(), [])
-  const [filteredUnits, setFilteredUnits] = useState(allUnits)
+  const { units: allUnits, carregando } = useUnits()
+  const [busca, setBusca] = useState('')
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
   const [agendamentosOpen, setAgendamentosOpen] = useState(false)
 
+  // A lista chega do banco depois do primeiro render, entao o filtro e derivado.
+  const filteredUnits = busca ? searchUnits(allUnits, busca) : allUnits
   const visibleUnits = filteredUnits.slice(0, visibleCount)
   const hasMore = visibleCount < filteredUnits.length
 
   const handleSearch = (query: string) => {
-    const results = query ? searchUnits(query) : allUnits
-    setFilteredUnits(results)
+    setBusca(query)
     setVisibleCount(ITEMS_PER_PAGE)
   }
 
@@ -31,7 +33,7 @@ export function UnitsListPage() {
   }
 
   const handleReset = () => {
-    setFilteredUnits(allUnits)
+    setBusca('')
     setVisibleCount(ITEMS_PER_PAGE)
   }
 
@@ -48,7 +50,11 @@ export function UnitsListPage() {
         <section>
           <h2 className="text-xl font-bold text-foreground mb-6">Unidades My Box</h2>
 
-          {visibleUnits.length === 0 ? (
+          {carregando ? (
+            <div className="flex justify-center py-16">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+          ) : visibleUnits.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
               <i className="fas fa-search text-muted-foreground/50 text-5xl mb-4" />
               <p className="text-muted-foreground text-center">Nenhuma unidade encontrada com os critérios selecionados.</p>

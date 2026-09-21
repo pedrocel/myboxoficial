@@ -6,12 +6,14 @@ import { UnitHero } from '../components/units/UnitHero'
 import { UnitLocation } from '../components/units/UnitLocation'
 import { UnitContactCard } from '../components/units/UnitContactCard'
 import { AgendamentoModal } from '../components/units/AgendamentoModal'
-import { getUnitBySlug } from '../lib/units'
+import { findUnitBySlug } from '../lib/units'
+import { useUnits } from '../hooks/useUnits'
 import { useAOS } from '../hooks/useAOS'
 
 export function UnitDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const unit = slug ? getUnitBySlug(slug) : undefined
+  const { units, carregando } = useUnits()
+  const unit = slug ? findUnitBySlug(units, slug) : undefined
   const [agendamentoOpen, setAgendamentoOpen] = useState(false)
 
   useAOS()
@@ -21,6 +23,14 @@ export function UnitDetailPage() {
       document.title = `${unit.name} - My Box`
     }
   }, [unit])
+
+  if (carregando) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
 
   if (!unit) {
     return <Navigate to="/unidades" replace />

@@ -1,22 +1,19 @@
+/*
+ * Funcoes puras sobre uma lista de unidades. Quem carrega a lista e o
+ * units-source.ts (banco, com o units.json de reserva); aqui nada le dados.
+ */
 import type { Unit } from '../types/unit'
-import unitsData from '../data/units.json'
 import { getFallbackCoords } from './brazil-states'
 import { getDistanceKm } from './geo'
 
 const DEFAULT_IMAGE =
   'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
 
-const units = (unitsData as Unit[]).filter((u) => u.status)
-
-export function getAllUnits(): Unit[] {
-  return units
-}
-
-export function getUnitBySlug(slug: string): Unit | undefined {
+export function findUnitBySlug(units: Unit[], slug: string): Unit | undefined {
   return units.find((u) => u.url_page === slug)
 }
 
-export function searchUnits(query: string): Unit[] {
+export function searchUnits(units: Unit[], query: string): Unit[] {
   const term = query.toLowerCase().trim()
   if (!term) return units
 
@@ -28,10 +25,6 @@ export function searchUnits(query: string): Unit[] {
       unit.logradouro.toLowerCase().includes(term) ||
       unit.como_chegar.toLowerCase().includes(term),
   )
-}
-
-export function filterUnitsByState(estado: string): Unit[] {
-  return units.filter((u) => u.estado === estado.toUpperCase())
 }
 
 export function getUnitImage(unit: Unit): string {
