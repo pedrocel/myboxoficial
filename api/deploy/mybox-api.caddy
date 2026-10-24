@@ -1,0 +1,8 @@
+# API da My Box. Copiado pelo deploy.sh para /opt/edge/sites/; o Caddy do PoseMe importa essa pasta.
+api.myboxoficial.com.br {
+	encode zstd gzip
+	request_body {
+		max_size 6MB
+	}
+	reverse_proxy mybox-api:3000
+}

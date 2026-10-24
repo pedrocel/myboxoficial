@@ -1,95 +1,160 @@
 @import "tailwindcss";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "./styles/site.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-media: 4px;
+
   --color-mygreen: #6aa921;
   --color-mydark: #262626;
   --color-mygold: #ffc107;
+}
 
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+/* inline: as classes usam var(--x) direto, entao .bg-night/.theme-night e .light valem dentro de qualquer secao. */
+@theme inline {
+  --color-night: var(--night);
+  --color-snow: var(--snow);
+  --color-brand: var(--brand);
+  --color-subtle: var(--subtle);
+  --color-border-strong: var(--border-strong);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 }
 
 /*
- * O site publico e escuro, entao os tokens do :root sao os do tema escuro.
- * O tema claro vale so no painel: o ThemeProvider poe .light no <html> nas
- * rotas do painel e tira ao voltar pro site. A classe .dark serve para o
- * variant dark: funcionar dentro do painel.
+ * Paleta igual a do site de referencia (mybox.tokadigital.com.br).
+ * O escuro e o padrao; .light vale quando o usuario escolhe o tema claro
+ * no rodape do site ou no painel. .bg-night e .theme-night forcam o escuro
+ * em secoes com foto, independente do tema.
  */
 :root {
-  --background: 0 0% 7%;
-  --foreground: 0 0% 96%;
-  --card: 0 0% 10%;
-  --card-foreground: 0 0% 96%;
-  --popover: 0 0% 10%;
-  --popover-foreground: 0 0% 96%;
-  --primary: 88 66% 45%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 14%;
-  --secondary-foreground: 0 0% 90%;
-  --muted: 0 0% 14%;
-  --muted-foreground: 0 0% 60%;
-  --accent: 88 30% 14%;
-  --accent-foreground: 88 66% 55%;
-  --destructive: 0 62% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 18%;
-  --input: 0 0% 18%;
-  --ring: 88 66% 45%;
-  --radius: 0.75rem;
+  --radius: 0.625rem;
+  --night: oklch(15.7% 0.004 128.8);
+  --snow: oklch(95.2% 0.01 119.6);
+  --background: oklch(15.7% 0.004 128.8);
+  --foreground: oklch(95.2% 0.01 119.6);
+  --card: oklch(19.2% 0.008 129);
+  --card-foreground: oklch(95.2% 0.01 119.6);
+  --popover: oklch(19.2% 0.008 129);
+  --popover-foreground: oklch(95.2% 0.01 119.6);
+  --primary: oklch(66.7% 0.173 132.2);
+  --primary-foreground: oklch(15.7% 0.004 128.8);
+  --secondary: oklch(14.3% 0.005 128.2);
+  --secondary-foreground: oklch(95.2% 0.01 119.6);
+  --muted: oklch(14.3% 0.005 128.2);
+  --muted-foreground: oklch(77.8% 0.02 122.9);
+  --subtle: oklch(64.4% 0.023 124.9);
+  --accent: oklch(19.2% 0.008 129);
+  --accent-foreground: oklch(95.2% 0.01 119.6);
+  --brand: oklch(78.7% 0.174 130.4);
+  --destructive: oklch(71.2% 0.181 21.3);
+  --destructive-foreground: oklch(15.7% 0.004 128.8);
+  --border: oklch(95% 0.016 114.4 / 0.1);
+  --border-strong: oklch(95% 0.016 114.4 / 0.2);
+  --input: oklch(95% 0.016 114.4 / 0.2);
+  --ring: oklch(66.7% 0.173 132.2);
+  color-scheme: dark;
 }
 
 .light {
-  --background: 0 0% 97%;
-  --foreground: 0 0% 12%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 12%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 12%;
-  /* Verde um pouco mais escuro que o da marca para dar contraste no branco. */
-  --primary: 88 66% 34%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 93%;
-  --secondary-foreground: 0 0% 20%;
-  --muted: 0 0% 93%;
-  --muted-foreground: 0 0% 38%;
-  --accent: 88 42% 92%;
-  --accent-foreground: 88 66% 24%;
-  --destructive: 0 70% 42%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 87%;
-  --input: 0 0% 87%;
-  --ring: 88 66% 34%;
+  --background: oklch(96.9% 0.004 121.6);
+  --foreground: oklch(18.6% 0.013 129.3);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(18.6% 0.013 129.3);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(18.6% 0.013 129.3);
+  --primary: oklch(66.7% 0.173 132.2);
+  --primary-foreground: oklch(15.7% 0.004 128.8);
+  --secondary: oklch(93.7% 0.008 121.6);
+  --secondary-foreground: oklch(18.6% 0.013 129.3);
+  --muted: oklch(93.7% 0.008 121.6);
+  --muted-foreground: oklch(40.7% 0.023 127.6);
+  --subtle: oklch(50% 0.025 127.7);
+  --accent: oklch(93.7% 0.008 121.6);
+  --accent-foreground: oklch(18.6% 0.013 129.3);
+  --brand: oklch(47.8% 0.127 132.8);
+  --destructive: oklch(54.1% 0.192 25.1);
+  --destructive-foreground: oklch(96.9% 0.004 121.6);
+  --border: oklch(19.3% 0.017 129.5 / 0.1);
+  --border-strong: oklch(19.3% 0.017 129.5 / 0.22);
+  --input: oklch(19.3% 0.017 129.5 / 0.22);
+  color-scheme: light;
+}
+
+.bg-night,
+.theme-night {
+  --night: oklch(15.7% 0.004 128.8);
+  --snow: oklch(95.2% 0.01 119.6);
+  --background: oklch(15.7% 0.004 128.8);
+  --foreground: oklch(95.2% 0.01 119.6);
+  --card: oklch(19.2% 0.008 129);
+  --card-foreground: oklch(95.2% 0.01 119.6);
+  --popover: oklch(19.2% 0.008 129);
+  --popover-foreground: oklch(95.2% 0.01 119.6);
+  --primary: oklch(66.7% 0.173 132.2);
+  --primary-foreground: oklch(15.7% 0.004 128.8);
+  --secondary: oklch(14.3% 0.005 128.2);
+  --secondary-foreground: oklch(95.2% 0.01 119.6);
+  --muted: oklch(14.3% 0.005 128.2);
+  --muted-foreground: oklch(77.8% 0.02 122.9);
+  --subtle: oklch(64.4% 0.023 124.9);
+  --accent: oklch(19.2% 0.008 129);
+  --accent-foreground: oklch(95.2% 0.01 119.6);
+  --brand: oklch(78.7% 0.174 130.4);
+  --destructive: oklch(71.2% 0.181 21.3);
+  --destructive-foreground: oklch(15.7% 0.004 128.8);
+  --border: oklch(95% 0.016 114.4 / 0.1);
+  --border-strong: oklch(95% 0.016 114.4 / 0.2);
+  --input: oklch(95% 0.016 114.4 / 0.2);
+  --ring: oklch(66.7% 0.173 132.2);
+  color-scheme: dark;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+  html {
+    scroll-padding-top: 6rem;
+  }
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
   }
 }
 
@@ -136,7 +201,7 @@
     width: 6px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary));
+    background: var(--primary);
     border-radius: 10px;
   }
   .scrollbar-hide::-webkit-scrollbar {
@@ -191,3 +256,5 @@
     @apply bg-card/80 backdrop-blur-xl border border-border/60;
   }
 }
+
+

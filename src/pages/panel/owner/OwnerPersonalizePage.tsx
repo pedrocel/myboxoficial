@@ -4,7 +4,7 @@ import { UnitCustomizeEditor, buildUnitUpdatePayload } from '../../../components
 import { useAuth } from '../../../contexts/AuthContext'
 import { OWNER_NAV } from '../../../lib/panel-nav'
 import { geocodeUnit } from '../../../lib/geocode'
-import { supabase } from '../../../lib/supabase'
+import { api, attempt } from '../../../lib/api'
 import type { DbUnit } from '../../../types/database'
 
 export function OwnerPersonalizePage() {
@@ -13,14 +13,12 @@ export function OwnerPersonalizePage() {
   const slug = profile?.unit_slug
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
-      if (data) setUnit(data as DbUnit)
-    })
+    if (!slug) return
+    api.get<DbUnit>(`/units/${slug}`).then(setUnit).catch(() => {})
   }, [slug])
 
   const saveUnit = async (updated: DbUnit) => {
-    if (!supabase || !slug) return { error: 'Sem conexão' }
+    if (!slug) return { error: 'Sem unidade vinculada' }
 
     let toSave = { ...updated }
     const coords = await geocodeUnit(toSave)
@@ -28,9 +26,9 @@ export function OwnerPersonalizePage() {
       toSave = { ...toSave, lat: coords.lat, lng: coords.lng }
     }
 
-    const { error } = await supabase.from('units_mybox').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
+    const { error } = await attempt(api.patch(`/units/${slug}`, buildUnitUpdatePayload(toSave)))
     if (!error) setUnit(toSave)
-    return { error: error?.message }
+    return { error: error ?? undefined }
   }
 
   if (!unit) {

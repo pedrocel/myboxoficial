@@ -1,14 +1,12 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import type { User, Session } from '@supabase/supabase-js'
-import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { api, ApiError } from '../lib/api'
 import type { Profile, UserRole } from '../types/database'
 
 type AuthContextValue = {
-  user: User | null
-  session: Session | null
+  /** Quem esta logado; o perfil e o proprio usuario agora que o login e da nossa API. */
+  user: Profile | null
   profile: Profile | null
   loading: boolean
-  configured: boolean
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
@@ -16,72 +14,44 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-async function fetchProfile(userId: string): Promise<Profile | null> {
-  if (!supabase) return null
-  const { data, error } = await supabase.from('profiles_mybox').select('*').eq('id', userId).single()
-  if (error) return null
-  return data as Profile
+async function fetchMe(): Promise<Profile | null> {
+  try {
+    return (await api.get<{ profile: Profile }>('/auth/me')).profile
+  } catch {
+    return null
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [loading, setLoading] = useState(isSupabaseConfigured)
-
-  const refreshProfile = async () => {
-    if (!user) {
-      setProfile(null)
-      return
-    }
-    const p = await fetchProfile(user.id)
-    setProfile(p)
-  }
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!supabase) {
-      setLoading(false)
-      return
-    }
-
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setUser(data.session?.user ?? null)
-      if (data.session?.user) {
-        fetchProfile(data.session.user.id).then(setProfile)
-      }
+    fetchMe().then((p) => {
+      setProfile(p)
       setLoading(false)
     })
-
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      setSession(newSession)
-      setUser(newSession?.user ?? null)
-      if (newSession?.user) {
-        const p = await fetchProfile(newSession.user.id)
-        setProfile(p)
-      } else {
-        setProfile(null)
-      }
-    })
-
-    return () => sub.subscription.unsubscribe()
   }, [])
 
+  const refreshProfile = async () => setProfile(await fetchMe())
+
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: 'Supabase não detectado. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY no build (Cloudflare ou .env local) e faça redeploy.' }
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error: error?.message ?? null }
+    try {
+      const { profile: p } = await api.post<{ profile: Profile }>('/auth/login', { email, password })
+      setProfile(p)
+      return { error: null }
+    } catch (err) {
+      return { error: err instanceof ApiError ? err.message : 'Não foi possível entrar agora.' }
+    }
   }
 
   const signOut = async () => {
-    if (supabase) await supabase.auth.signOut()
+    await api.post('/auth/logout').catch(() => {})
     setProfile(null)
   }
 
   return (
-    <AuthContext.Provider
-      value={{ user, session, profile, loading, configured: isSupabaseConfigured, signIn, signOut, refreshProfile }}
-    >
+    <AuthContext.Provider value={{ user: profile, profile, loading, signIn, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )

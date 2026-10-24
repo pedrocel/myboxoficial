@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Loader2 } from 'lucide-react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { useAuth } from '../../../contexts/AuthContext'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import { STUDENT_NAV } from '../../../lib/panel-nav'
 import { Button } from '../../../components/ui/button'
 import { Input } from '../../../components/ui/input'
@@ -19,12 +19,9 @@ export function StudentProfilePage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!supabase || !profile) return
+    if (!profile) return
     setSaving(true)
-    const { error } = await supabase
-      .from('profiles_mybox')
-      .update({ full_name: fullName, phone, updated_at: new Date().toISOString() })
-      .eq('id', profile.id)
+    const error = await api.patch('/profiles/me', { full_name: fullName, phone }).then(() => null, (e: Error) => e)
     setSaving(false)
     if (!error) {
       setSaved(true)

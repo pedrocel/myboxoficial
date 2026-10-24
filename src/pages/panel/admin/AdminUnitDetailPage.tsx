@@ -9,8 +9,9 @@ import { Button } from '../../../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
-import { getUnitGallery, getUnitModalidades, ownerDefaultPassword } from '../../../lib/unit-settings'
+import { api, attempt } from '../../../lib/api'
+import { getUnitGallery, getUnitModalidades } from '../../../lib/unit-settings'
+import { AccessPasswordButton } from '../../../components/panel/AccessPasswordButton'
 import { geocodeUnit } from '../../../lib/geocode'
 import { STATE_NAMES } from '../../../lib/brazil-states'
 import type { Booking, DbUnit, Profile, UnitVisit } from '../../../types/database'
@@ -26,24 +27,16 @@ export function AdminUnitDetailPage() {
   const [erroStatus, setErroStatus] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
-      if (data) {
-        const u = data as DbUnit
+    if (!slug) return
+    api
+      .get<DbUnit>(`/units/${slug}`)
+      .then((u) => {
         setUnit(u)
-        if (u.owner_id && supabase) {
-          supabase.from('profiles_mybox').select('*').eq('id', u.owner_id).single().then(({ data: p }) => {
-            if (p) setOwner(p as Profile)
-          })
-        }
-      }
-    })
-    supabase.from('bookings_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(10).then(({ data }) => {
-      if (data) setBookings(data as Booking[])
-    })
-    supabase.from('unit_visits_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(15).then(({ data }) => {
-      if (data) setVisits(data as UnitVisit[])
-    })
+        if (u.owner_id) api.get<Profile>(`/profiles/${u.owner_id}`).then(setOwner).catch(() => {})
+      })
+      .catch(() => {})
+    api.get<Booking[]>(`/bookings?unit=${slug}&limit=10`).then(setBookings).catch(() => {})
+    api.get<UnitVisit[]>(`/units/${slug}/visits?limit=15`).then(setVisits).catch(() => {})
   }, [slug])
 
   const stats = useMemo(() => {
@@ -74,7 +67,7 @@ export function AdminUnitDetailPage() {
    * o site le as unidades do banco.
    */
   const alternarStatus = async () => {
-    if (!supabase || !unit) return
+    if (!unit) return
     const novoStatus = !unit.status
     const aviso = novoStatus
       ? `Reativar "${unit.name}"? Ela volta a aparecer no site.`
@@ -83,27 +76,23 @@ export function AdminUnitDetailPage() {
 
     setAlterandoStatus(true)
     setErroStatus(null)
-    const { error } = await supabase
-      .from('units_mybox')
-      .update({ status: novoStatus, updated_at: new Date().toISOString() })
-      .eq('slug', slug)
+    const { error } = await attempt(api.patch(`/units/${slug}`, { status: novoStatus }))
     setAlterandoStatus(false)
 
     if (error) {
-      setErroStatus(error.message)
+      setErroStatus(error)
       return
     }
     setUnit({ ...unit, status: novoStatus })
   }
 
   const saveUnit = async (updated: DbUnit) => {
-    if (!supabase) return { error: 'Sem conexão' }
     let toSave = { ...updated }
     const coords = await geocodeUnit(toSave)
     if (coords) toSave = { ...toSave, lat: coords.lat, lng: coords.lng }
-    const { error } = await supabase.from('units_mybox').update(buildUnitUpdatePayload(toSave)).eq('slug', slug)
+    const { error } = await attempt(api.patch(`/units/${slug}`, buildUnitUpdatePayload(toSave)))
     if (!error) setUnit(toSave)
-    return { error: error?.message }
+    return { error: error ?? undefined }
   }
 
   return (
@@ -218,10 +207,13 @@ export function AdminUnitDetailPage() {
                     <p className="text-xs text-primary mt-2 font-semibold">Ver perfil →</p>
                   </Link>
                 ) : (
-                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-sm text-amber-400">
-                    <p className="font-bold mb-1">Sem owner vinculado</p>
-                    <p className="text-xs">Rode <code>npm run owners:create</code></p>
-                    {unit.email && <p className="text-xs mt-2">Senha padrão: <strong>{ownerDefaultPassword(unit.name)}</strong></p>}
+                  <div className="space-y-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-sm text-amber-700 dark:text-amber-400">
+                    <p className="font-bold">Sem dono vinculado</p>
+                    {unit.email ? (
+                      <AccessPasswordButton mode="create-owner" unitSlug={unit.slug} email={unit.email} fullName={unit.nome_dono} />
+                    ) : (
+                      <p className="text-xs">Cadastre o e-mail da unidade na aba de edição para criar o acesso do dono.</p>
+                    )}
                   </div>
                 )}
               </CardContent>

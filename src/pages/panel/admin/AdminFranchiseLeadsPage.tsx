@@ -8,7 +8,7 @@ import { Badge } from '../../../components/ui/badge'
 import { StatCard } from '../../../components/panel/StatCard'
 import { Handshake, Clock, CheckCircle2 } from 'lucide-react'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { FranchiseLead, FranchiseLeadStatus } from '../../../types/database'
 
 const STATUS_LABELS: Record<FranchiseLeadStatus, string> = {
@@ -51,24 +51,19 @@ export function AdminFranchiseLeadsPage() {
   const [statusFilter, setStatusFilter] = useState('')
 
   const load = () => {
-    if (!supabase) return
     setLoading(true)
-    supabase
-      .from('leads_mybox')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) setLeads(data as FranchiseLead[])
-        setLoading(false)
-      })
+    api
+      .get<FranchiseLead[]>('/leads')
+      .then(setLeads)
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }
 
   useEffect(load, [])
 
   const handleStatus = async (id: string, status: FranchiseLeadStatus) => {
     setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)))
-    if (!supabase) return
-    await supabase.from('leads_mybox').update({ status }).eq('id', id)
+    await api.patch(`/leads/${id}`, { status }).catch(() => {})
   }
 
   const filtered = useMemo(

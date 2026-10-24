@@ -7,46 +7,36 @@ import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api, ApiError } from '../../../lib/api'
 import type { LeadEmail } from '../../../types/database'
 
 const EMAIL_VALIDO = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
-/** Traduz os erros do Supabase que o admin pode encontrar aqui. */
-function mensagemDeErro(error: { code?: string; message: string }) {
-  if (error.code === '23505') return 'Esse e-mail já está na lista.'
-  if (error.code === '42P01' || error.message.includes('schema cache')) {
-    return 'A lista ainda não foi criada no banco. Rode a migration lead_emails_mybox no Supabase e recarregue esta página.'
-  }
-  if (error.code === '42501') return 'Seu usuário não tem permissão para mexer nesta lista.'
-  return error.message
-}
+const mensagemDeErro = (error: unknown) =>
+  error instanceof ApiError && error.code === 'email_ja_cadastrado'
+    ? 'Esse e-mail já está na lista.'
+    : error instanceof Error
+      ? error.message
+      : 'Erro inesperado'
 
 export function AdminSettingsPage() {
   const [emails, setEmails] = useState<LeadEmail[]>([])
-  // Sem Supabase configurado no build nao ha o que carregar.
-  const [carregando, setCarregando] = useState(Boolean(supabase))
+  const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
   const [novoEmail, setNovoEmail] = useState('')
   const [novoNome, setNovoNome] = useState('')
   const [salvando, setSalvando] = useState(false)
 
   useEffect(() => {
-    if (!supabase) return
-    supabase
-      .from('lead_emails_mybox')
-      .select('*')
-      .order('created_at')
-      .then(({ data, error }) => {
-        if (error) setErro(mensagemDeErro(error))
-        if (data) setEmails(data as LeadEmail[])
-        setCarregando(false)
-      })
+    api
+      .get<LeadEmail[]>('/lead-emails')
+      .then(setEmails)
+      .catch((error) => setErro(mensagemDeErro(error)))
+      .finally(() => setCarregando(false))
   }, [])
 
   const adicionar = async (e: FormEvent) => {
     e.preventDefault()
-    if (!supabase) return
     const email = novoEmail.trim().toLowerCase()
     if (!EMAIL_VALIDO.test(email)) {
       setErro('E-mail inválido.')
@@ -55,30 +45,24 @@ export function AdminSettingsPage() {
 
     setSalvando(true)
     setErro(null)
-    const { data, error } = await supabase
-      .from('lead_emails_mybox')
-      .insert({ email, nome: novoNome.trim() || null })
-      .select()
-      .single()
-    setSalvando(false)
-
-    if (error) {
+    try {
+      const novo = await api.post<LeadEmail>('/lead-emails', { email, nome: novoNome.trim() || null })
+      setEmails((atual) => [...atual, novo])
+    } catch (error) {
       setErro(mensagemDeErro(error))
       return
+    } finally {
+      setSalvando(false)
     }
-    setEmails((atual) => [...atual, data as LeadEmail])
     setNovoEmail('')
     setNovoNome('')
   }
 
   const alternarAtivo = async (item: LeadEmail) => {
-    if (!supabase) return
     setErro(null)
-    const { error } = await supabase
-      .from('lead_emails_mybox')
-      .update({ ativo: !item.ativo })
-      .eq('id', item.id)
-    if (error) {
+    try {
+      await api.patch(`/lead-emails/${item.id}`, { ativo: !item.ativo })
+    } catch (error) {
       setErro(mensagemDeErro(error))
       return
     }
@@ -86,11 +70,11 @@ export function AdminSettingsPage() {
   }
 
   const remover = async (item: LeadEmail) => {
-    if (!supabase) return
     if (!window.confirm(`Remover ${item.email} da lista de avisos?`)) return
     setErro(null)
-    const { error } = await supabase.from('lead_emails_mybox').delete().eq('id', item.id)
-    if (error) {
+    try {
+      await api.delete(`/lead-emails/${item.id}`)
+    } catch (error) {
       setErro(mensagemDeErro(error))
       return
     }

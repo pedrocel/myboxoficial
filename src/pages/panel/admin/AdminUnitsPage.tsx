@@ -7,7 +7,7 @@ import { Input } from '../../../components/ui/input'
 import { Badge } from '../../../components/ui/badge'
 import { Card } from '../../../components/ui/card'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import { getUnitGallery } from '../../../lib/unit-settings'
 import { STATE_NAMES } from '../../../lib/brazil-states'
 import type { DbUnit } from '../../../types/database'
@@ -18,10 +18,7 @@ export function AdminUnitsPage() {
   const [estado, setEstado] = useState('')
 
   useEffect(() => {
-    if (!supabase) return
-    supabase.from('units_mybox').select('*').order('name').then(({ data }) => {
-      if (data) setUnits(data as DbUnit[])
-    })
+    api.get<DbUnit[]>('/units').then(setUnits).catch(() => {})
   }, [])
 
   const estados = useMemo(() => [...new Set(units.map((u) => u.estado).filter(Boolean))].sort(), [units])

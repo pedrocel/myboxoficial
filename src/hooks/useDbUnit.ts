@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import type { DbUnit } from '../types/database'
 
 export function useDbUnit(slug: string | undefined) {
@@ -12,20 +12,12 @@ export function useDbUnit(slug: string | undefined) {
       setLoading(false)
       return
     }
-    if (!supabase) {
-      setLoading(false)
-      return
-    }
     setLoading(true)
-    supabase
-      .from('units_mybox')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-      .then(({ data }) => {
-        if (data) setUnit(data as DbUnit)
-        setLoading(false)
-      })
+    api
+      .get<DbUnit>(`/units/${encodeURIComponent(slug)}`)
+      .then(setUnit)
+      .catch(() => setUnit(null))
+      .finally(() => setLoading(false))
   }, [slug])
 
   return { unit, loading }

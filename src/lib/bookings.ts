@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { api, attempt } from './api'
 
 export type CreateBookingInput = {
   unitSlug: string
@@ -8,55 +8,37 @@ export type CreateBookingInput = {
   data: string
   horario: string
   modalidade: string
+  /** Opcional: com senha o aluno ganha acesso ao painel e ja sai logado. */
+  password?: string
 }
+
+/** created: conta nova; logged_in: ja tinha conta e a senha conferiu; exists: ja tinha conta. */
+export type BookingAccount = 'none' | 'created' | 'logged_in' | 'exists'
 
 export type CreateBookingResult = {
   ok: boolean
-  accessEmailSent: boolean
+  account: BookingAccount
   error?: string
 }
 
-export async function createBookingWithStudentAccess(input: CreateBookingInput): Promise<CreateBookingResult> {
-  if (!supabase) {
-    return { ok: false, accessEmailSent: false, error: 'Sistema indisponível no momento.' }
-  }
-
-  const { error: bookingError } = await supabase.from('bookings_mybox').insert({
-    unit_slug: input.unitSlug,
-    student_name: input.nome,
-    student_email: input.email,
-    student_phone: input.telefone,
-    booking_date: input.data,
-    booking_time: input.horario,
-    modalidade: input.modalidade,
-    status: 'pending',
-  })
-
-  if (bookingError) {
-    return { ok: false, accessEmailSent: false, error: bookingError.message }
-  }
-
-  const { error: otpError } = await supabase.auth.signInWithOtp({
-    email: input.email,
-    options: {
-      data: {
-        full_name: input.nome,
-        phone: input.telefone,
-        role: 'student',
-      },
-      emailRedirectTo: `${window.location.origin}/entrar`,
-    },
-  })
-
-  return {
-    ok: true,
-    accessEmailSent: !otpError,
-    error: otpError?.message,
-  }
+export async function createBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
+  const { data, error } = await attempt(
+    api.post<{ account: BookingAccount }>('/bookings', {
+      unit_slug: input.unitSlug,
+      nome: input.nome,
+      email: input.email,
+      telefone: input.telefone,
+      data: input.data,
+      horario: input.horario,
+      modalidade: input.modalidade,
+      password: input.password || undefined,
+    }),
+  )
+  if (error || !data) return { ok: false, account: 'none', error: error ?? undefined }
+  return { ok: true, account: data.account }
 }
 
 export async function updateBookingStatus(id: string, status: string) {
-  if (!supabase) return { error: 'Supabase não configurado' }
-  const { error } = await supabase.from('bookings_mybox').update({ status }).eq('id', id)
-  return { error: error?.message ?? null }
+  const { error } = await attempt(api.patch(`/bookings/${id}`, { status }))
+  return { error }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { useAuth } from '../../../contexts/AuthContext'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { DbUnit } from '../../../types/database'
 
 import { OWNER_NAV } from '../../../lib/panel-nav'
@@ -14,20 +14,17 @@ export function OwnerEditUnitPage() {
   const slug = profile?.unit_slug
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
-      if (data) setUnit(data as DbUnit)
-    })
+    if (!slug) return
+    api.get<DbUnit>(`/units/${slug}`).then(setUnit).catch(() => {})
   }, [slug])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!supabase || !unit || !slug) return
+    if (!unit || !slug) return
     setSaving(true)
     setSaved(false)
-    const { error } = await supabase
-      .from('units_mybox')
-      .update({
+    const ok = await api
+      .patch(`/units/${slug}`, {
         telefone: unit.telefone,
         email: unit.email,
         whatsapp: unit.whatsapp,
@@ -36,11 +33,10 @@ export function OwnerEditUnitPage() {
         numero: unit.numero,
         cep: unit.cep,
         nome_dono: unit.nome_dono,
-        updated_at: new Date().toISOString(),
       })
-      .eq('slug', slug)
+      .then(() => true, () => false)
     setSaving(false)
-    if (!error) setSaved(true)
+    if (ok) setSaved(true)
   }
 
   const field = (label: string, key: keyof DbUnit, type = 'text', rows?: number) => (

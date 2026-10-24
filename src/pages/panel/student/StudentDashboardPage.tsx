@@ -8,7 +8,7 @@ import { Button } from '../../../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { useAuth } from '../../../contexts/AuthContext'
 import { STUDENT_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Booking } from '../../../types/database'
 
 export function StudentDashboardPage() {
@@ -16,16 +16,9 @@ export function StudentDashboardPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
 
   useEffect(() => {
-    if (!supabase || !user) return
-    const email = profile?.email ?? user.email ?? ''
-    supabase
-      .from('bookings_mybox')
-      .select('*')
-      .or(`student_id.eq.${user.id},student_email.eq.${email}`)
-      .order('booking_date', { ascending: true })
-      .then(({ data }) => {
-        if (data) setBookings(data as Booking[])
-      })
+    if (!user) return
+    // A API ja devolve so os agendamentos do aluno logado.
+    api.get<Booking[]>('/bookings?order=booking_date&dir=asc').then(setBookings).catch(() => {})
   }, [user, profile])
 
   const upcoming = useMemo(

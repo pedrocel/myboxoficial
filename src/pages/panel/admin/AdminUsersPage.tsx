@@ -6,7 +6,7 @@ import { Input } from '../../../components/ui/input'
 import { Card } from '../../../components/ui/card'
 import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Profile } from '../../../types/database'
 
 const ROLE_LABELS = { admin: 'Administrador', owner: 'Dono', student: 'Aluno' }
@@ -17,10 +17,7 @@ export function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState('')
 
   useEffect(() => {
-    if (!supabase) return
-    supabase.from('profiles_mybox').select('*').order('created_at', { ascending: false }).then(({ data }) => {
-      if (data) setUsers(data as Profile[])
-    })
+    api.get<Profile[]>('/profiles').then(setUsers).catch(() => {})
   }, [])
 
   const filtered = users.filter((u) => {

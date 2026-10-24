@@ -1,14 +1,14 @@
 /**
  * Fonte das unidades do site publico.
  *
- * O banco (units_mybox) manda: e o que o painel edita. O src/data/units.json
- * fica so como reserva, para o site nao ficar sem unidades se o Supabase
- * estiver fora do ar ou sem configuracao no build.
+ * O banco da API (VPS) manda: e o que o painel edita. O src/data/units.json
+ * fica so como reserva, para o site nao ficar sem unidades se a API
+ * estiver fora do ar.
  *
  * Unidade desativada (status = false) nao aparece no site.
  */
 import unitsData from '../data/units.json'
-import { supabase } from './supabase'
+import { api } from './api'
 import type { Unit } from '../types/unit'
 import type { DbUnit } from '../types/database'
 
@@ -42,16 +42,14 @@ export function unitFromDb(linha: DbUnit): Unit {
 }
 
 async function buscarUnidades(): Promise<Unit[]> {
-  if (!supabase) return somenteAtivas(UNIDADES_RESERVA)
-
-  const { data, error } = await supabase.from('units_mybox').select('*').order('name')
-
-  if (error || !data?.length) {
-    console.warn('Unidades: caindo para o units.json de reserva.', error?.message ?? 'banco sem registros')
-    return somenteAtivas(UNIDADES_RESERVA)
+  try {
+    const data = await api.get<DbUnit[]>('/units')
+    if (data.length) return somenteAtivas(data.map(unitFromDb))
+    console.warn('Unidades: banco sem registros, caindo para o units.json de reserva.')
+  } catch (err) {
+    console.warn('Unidades: API fora do ar, caindo para o units.json de reserva.', err)
   }
-
-  return somenteAtivas((data as DbUnit[]).map(unitFromDb))
+  return somenteAtivas(UNIDADES_RESERVA)
 }
 
 let emCache: Promise<Unit[]> | null = null

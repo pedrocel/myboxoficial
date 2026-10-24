@@ -4,8 +4,25 @@
     {
       "name": "myboxoficial",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "5183"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5183"
+      ],
       "port": 5183
+    },
+    {
+      "name": "mybox-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "api",
+        "run",
+        "dev"
+      ],
+      "port": 3020
     }
   ]
 }

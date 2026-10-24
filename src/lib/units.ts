@@ -80,3 +80,40 @@ export function sortUnitsByDistance(
     })
     .sort((a, b) => a.distanceKm - b.distanceKm)
 }
+
+export const STATE_NAMES: Record<string, string> = {
+  AC: 'Acre', AL: 'Alagoas', AM: 'Amazonas', AP: 'Amapá', BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal',
+  ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão', MG: 'Minas Gerais', MS: 'Mato Grosso do Sul',
+  MT: 'Mato Grosso', PA: 'Pará', PB: 'Paraíba', PE: 'Pernambuco', PI: 'Piauí', PR: 'Paraná',
+  RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte', RO: 'Rondônia', RR: 'Roraima', RS: 'Rio Grande do Sul',
+  SC: 'Santa Catarina', SE: 'Sergipe', SP: 'São Paulo', TO: 'Tocantins',
+}
+
+export type StateGroup = { uf: string; name: string; units: Unit[] }
+
+/** Unidades por estado, do estado com mais unidades para o com menos. */
+export function groupUnitsByState(units: Unit[]): StateGroup[] {
+  const map = new Map<string, Unit[]>()
+  for (const unit of units) map.set(unit.estado, [...(map.get(unit.estado) ?? []), unit])
+  return [...map.entries()]
+    .map(([uf, list]) => ({
+      uf,
+      name: STATE_NAMES[uf] ?? uf,
+      units: list.sort((a, b) => a.cidade.localeCompare(b.cidade, 'pt-BR') || a.name.localeCompare(b.name, 'pt-BR')),
+    }))
+    .sort((a, b) => b.units.length - a.units.length || a.name.localeCompare(b.name, 'pt-BR'))
+}
+
+/** Cidades com unidade, sem repetir, em ordem alfabetica. */
+export function getUnitCities(units: Unit[]): string[] {
+  return [...new Set(units.map((u) => u.cidade.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+}
+
+export function pluralUnits(count: number) {
+  return `${count} ${count === 1 ? 'unidade' : 'unidades'}`
+}
+
+/** Rua e numero, sem cidade: o cartao ja mostra a cidade acima. */
+export function getStreetAddress(unit: Unit): string {
+  return [unit.logradouro, unit.numero].filter(Boolean).join(', ') || unit.como_chegar
+}

@@ -1,7 +1,6 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { UnitsListHeader } from '../components/units/UnitsListHeader'
-import { UnitsListFooter } from '../components/units/UnitsListFooter'
+import { SiteLayout } from '../components/site/SiteLayout'
 import { UnitsMap } from '../components/units-preview/UnitsMap'
 import { UnitsPreviewList } from '../components/units-preview/UnitsPreviewList'
 import { LocationSearchBar } from '../components/units-preview/LocationSearchBar'
@@ -93,8 +92,7 @@ export function UnitsPreviewPage() {
   }, [allUnits])
 
   return (
-    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
-      <UnitsListHeader />
+    <SiteLayout solidHeader>
 
       <div className="bg-gradient-to-r from-mydark to-gray-800 text-white">
         <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -108,7 +106,7 @@ export function UnitsPreviewPage() {
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-6 flex-1 flex flex-col gap-6">
+      <div className="container mx-auto px-4 py-6 flex-1 flex flex-col gap-6">
         <section>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Encontre sua <span className="text-primary">My Box</span>
@@ -217,9 +215,8 @@ export function UnitsPreviewPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
 
-      <UnitsListFooter />
-    </div>
+    </SiteLayout>
   )
 }

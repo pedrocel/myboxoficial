@@ -3,7 +3,7 @@ import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { useAuth } from '../../../contexts/AuthContext'
 import { updateBookingStatus } from '../../../lib/bookings'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Booking, BookingStatus } from '../../../types/database'
 
 import { OWNER_NAV } from '../../../lib/panel-nav'
@@ -13,15 +13,8 @@ export function OwnerBookingsPage() {
   const slug = profile?.unit_slug
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase
-      .from('bookings_mybox')
-      .select('*')
-      .eq('unit_slug', slug)
-      .order('booking_date', { ascending: true })
-      .then(({ data }) => {
-        if (data) setBookings(data as Booking[])
-      })
+    if (!slug) return
+    api.get<Booking[]>('/bookings?order=booking_date&dir=asc').then(setBookings).catch(() => {})
   }, [slug])
 
   const handleStatus = async (id: string, status: BookingStatus) => {

@@ -7,11 +7,7 @@ type Props = {
 }
 
 export function ProtectedRoute({ roles }: Props) {
-  const { user, profile, loading, configured } = useAuth()
-
-  if (!configured) {
-    return <Navigate to="/entrar" replace />
-  }
+  const { user, profile, loading } = useAuth()
 
   if (loading) {
     return (

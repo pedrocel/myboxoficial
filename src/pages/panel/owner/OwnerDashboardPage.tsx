@@ -17,7 +17,7 @@ import { Button } from '../../../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { useAuth } from '../../../contexts/AuthContext'
 import { OWNER_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import { getUnitGallery, getUnitModalidades } from '../../../lib/unit-settings'
 import type { Booking, DbUnit, UnitVisit } from '../../../types/database'
 
@@ -29,16 +29,10 @@ export function OwnerDashboardPage() {
   const slug = profile?.unit_slug
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase.from('units_mybox').select('*').eq('slug', slug).single().then(({ data }) => {
-      if (data) setUnit(data as DbUnit)
-    })
-    supabase.from('bookings_mybox').select('*').eq('unit_slug', slug).order('booking_date', { ascending: true }).then(({ data }) => {
-      if (data) setBookings(data as Booking[])
-    })
-    supabase.from('unit_visits_mybox').select('*').eq('unit_slug', slug).order('created_at', { ascending: false }).limit(5).then(({ data }) => {
-      if (data) setVisits(data as UnitVisit[])
-    })
+    if (!slug) return
+    api.get<DbUnit>(`/units/${slug}`).then(setUnit).catch(() => {})
+    api.get<Booking[]>('/bookings?order=booking_date&dir=asc').then(setBookings).catch(() => {})
+    api.get<UnitVisit[]>(`/units/${slug}/visits?limit=5`).then(setVisits).catch(() => {})
   }, [slug])
 
   const stats = useMemo(() => {

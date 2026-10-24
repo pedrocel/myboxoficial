@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/img/mybox.PNG" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Box - Academia com Conceito</title>
+    <title>My Box | Academia com conceito de shopping</title>
     <meta name="description" content="A My Box é uma academia com conceito de shopping, transformando o tempo dedicado à atividade física em uma experiência prazerosa." />
 
     <!-- Tema do painel: aplica antes da primeira pintura para nao piscar escuro. -->
@@ -34,6 +34,18 @@
         j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
       })(window, document, 'script', 'dataLayer', 'GTM-K6XT5NT4');
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet" />
+    <script>
+      // Aplica o tema antes do React montar, para nao piscar escuro no carregamento.
+      try {
+        var escuro = localStorage.getItem('mybox-theme') === 'dark'
+        document.documentElement.classList.add(escuro ? 'dark' : 'light')
+      } catch (e) {
+        document.documentElement.classList.add('light')
+      }
     </script>
   </head>
   <body>

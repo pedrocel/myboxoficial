@@ -6,6 +6,10 @@ import { ProtectedRoute } from './components/panel/ProtectedRoute'
 import { HomePage } from './pages/HomePage'
 import { UnitsListPage } from './pages/UnitsListPage'
 import { UnitDetailPage } from './pages/UnitDetailPage'
+import { NetworkPage } from './pages/NetworkPage'
+import { TrainingPage } from './pages/TrainingPage'
+import { FranchisePage } from './pages/FranchisePage'
+import { ContactPage } from './pages/ContactPage'
 import { ComingSoonPage } from './pages/ComingSoonPage'
 import { LoginPage } from './pages/auth/LoginPage'
 import { PanelRedirectPage } from './pages/panel/PanelRedirectPage'
@@ -83,6 +87,10 @@ export default function App() {
           <MetaPixel />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/a-rede" element={<NetworkPage />} />
+            <Route path="/treinos" element={<TrainingPage />} />
+            <Route path="/franquia" element={<FranchisePage />} />
+            <Route path="/contato" element={<ContactPage />} />
             <Route path="/unidades" element={<UnitsListPage />} />
             <Route
               path="/unidades-preview"

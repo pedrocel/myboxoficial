@@ -5,7 +5,7 @@ import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { FranchiseLead, FranchiseLeadStatus } from '../../../types/database'
 
 const STATUS_LABELS: Record<FranchiseLeadStatus, string> = {
@@ -44,23 +44,21 @@ export function AdminFranchiseLeadDetailPage() {
   const [savingStatus, setSavingStatus] = useState(false)
 
   useEffect(() => {
-    if (!supabase || !id) return
-    supabase
-      .from('leads_mybox')
-      .select('*')
-      .eq('id', id)
-      .single()
-      .then(({ data }) => {
-        if (data) setLead(data as FranchiseLead)
+    if (!id) return
+    api
+      .get<FranchiseLead>(`/leads/${id}`)
+      .then(setLead)
+      .catch(() => {})
+      .finally(() => {
         setLoading(false)
       })
   }, [id])
 
   const handleStatus = async (status: FranchiseLeadStatus) => {
-    if (!supabase || !lead) return
+    if (!lead) return
     setSavingStatus(true)
-    const { error } = await supabase.from('leads_mybox').update({ status }).eq('id', lead.id)
-    if (!error) setLead({ ...lead, status })
+    const ok = await api.patch(`/leads/${lead.id}`, { status }).then(() => true, () => false)
+    if (ok) setLead({ ...lead, status })
     setSavingStatus(false)
   }
 

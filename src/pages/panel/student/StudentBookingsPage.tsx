@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { useAuth } from '../../../contexts/AuthContext'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Booking } from '../../../types/database'
 
 import { STUDENT_NAV } from '../../../lib/panel-nav'
@@ -11,16 +11,8 @@ export function StudentBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
 
   useEffect(() => {
-    if (!supabase || !user) return
-    const email = profile?.email ?? user.email
-    supabase
-      .from('bookings_mybox')
-      .select('*')
-      .or(`student_id.eq.${user.id},student_email.eq.${email}`)
-      .order('booking_date', { ascending: false })
-      .then(({ data }) => {
-        if (data) setBookings(data as Booking[])
-      })
+    if (!user) return
+    api.get<Booking[]>('/bookings?order=booking_date&dir=desc').then(setBookings).catch(() => {})
   }, [user, profile])
 
   return (

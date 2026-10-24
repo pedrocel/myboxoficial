@@ -126,7 +126,7 @@ export function UnitCustomizeEditor({ unit: initial, onSave, readOnly }: Props) 
 
   const removeImage = async (url: string) => {
     if (readOnly) return
-    await deleteUnitImage(url, unit.slug)
+    await deleteUnitImage(url)
     const next = gallery.filter((u) => u !== url)
     setField('gallery_images', next)
     if (unit.hero_image === url) setField('hero_image', next[0] ?? null)
@@ -264,7 +264,7 @@ export function UnitCustomizeEditor({ unit: initial, onSave, readOnly }: Props) 
           <Card>
             <CardHeader>
               <CardTitle>Galeria de imagens</CardTitle>
-              <CardDescription>Fotos da unidade exibidas na página pública. Armazenadas no Supabase.</CardDescription>
+              <CardDescription>Fotos da unidade exibidas na página pública. Armazenadas no servidor da API.</CardDescription>
             </CardHeader>
             <CardContent>
               {!readOnly && (

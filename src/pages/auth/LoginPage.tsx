@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { ThemeToggle } from '../../components/panel/ThemeToggle'
 
 export function LoginPage() {
-  const { signIn, user, profile, loading, configured } = useAuth()
+  const { signIn, user, profile, loading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -60,14 +60,6 @@ export function LoginPage() {
               <CardDescription>Acesse o painel da sua unidade ou perfil de aluno</CardDescription>
             </CardHeader>
             <CardContent>
-              {!configured && (
-                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-sm text-amber-700 dark:text-amber-400">
-                  <p className="font-semibold mb-1">Supabase não detectado no build</p>
-                  <p className="text-xs opacity-90">
-                    Configure <code>VITE_SUPABASE_URL</code> e <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> no .env local ou na Cloudflare Pages.
-                  </p>
-                </div>
-              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -81,13 +73,13 @@ export function LoginPage() {
 
                 {error && <p className="text-destructive text-sm bg-destructive/10 px-4 py-3 rounded-xl">{error}</p>}
 
-                <Button type="submit" disabled={submitting || !configured} className="w-full" size="lg">
+                <Button type="submit" disabled={submitting} className="w-full" size="lg">
                   {submitting ? <Loader2 className="animate-spin" /> : 'Acessar painel'}
                 </Button>
               </form>
 
               <p className="text-center text-xs text-muted-foreground mt-6">
-                Agendou uma aula? Verifique seu e-mail para o link de acesso.
+                Agendou uma aula? Entre com o e-mail e a senha que você criou no agendamento.
               </p>
             </CardContent>
           </Card>

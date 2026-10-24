@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import type { Unit } from '../../types/unit'
 import { getUnitImage } from '../../lib/units'
-import { createBookingWithStudentAccess } from '../../lib/bookings'
+import { createBooking } from '../../lib/bookings'
 import {
   getAvailableDates,
   getTimeSlotsFromUnitHorarios,
@@ -79,18 +79,8 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
     setError(null)
     setLoading(true)
 
-    const payload = {
-      nome,
-      email,
-      telefone,
-      data: selectedDate,
-      horario: selectedTime,
-      modalidade: selectedMod?.label ?? 'Aula Experimental',
-      unidade: unit.name,
-    }
-
     try {
-      const result = await createBookingWithStudentAccess({
+      const result = await createBooking({
         unitSlug: unit.url_page,
         nome,
         email,
@@ -99,22 +89,9 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
         horario: selectedTime,
         modalidade: selectedMod?.label ?? 'Aula Experimental',
       })
+      if (!result.ok) throw new Error(result.error ?? 'Erro ao agendar')
 
-      if (!result.ok) {
-        const apiUrl = import.meta.env.VITE_API_URL
-        if (apiUrl) {
-          const response = await fetch(`${apiUrl}/agendar-aula`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ ...payload, unidade: unit.name }),
-          })
-          if (!response.ok) throw new Error('Erro ao agendar')
-        } else {
-          throw new Error(result.error ?? 'Erro ao agendar')
-        }
-      }
-
-      setAccessEmailSent(result.accessEmailSent)
+      setAccessEmailSent(result.account !== 'none')
       setSuccess(true)
     } catch {
       setError('Não foi possível confirmar. Tente pelo WhatsApp.')
@@ -210,7 +187,7 @@ export function AgendamentoModalPremium({ unit, horarios, open, onClose }: Props
                     Acesso ao portal do aluno
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Enviamos um link para <strong>{email}</strong>. Use-o para entrar e acompanhar seus agendamentos.
+                    Você já tem conta com <strong>{email}</strong>. Entre para acompanhar seus agendamentos.
                   </p>
                   <Link
                     to="/entrar"

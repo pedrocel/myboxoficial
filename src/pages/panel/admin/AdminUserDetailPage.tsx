@@ -7,8 +7,8 @@ import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { Badge } from '../../../components/ui/badge'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
-import { ownerDefaultPassword } from '../../../lib/unit-settings'
+import { api } from '../../../lib/api'
+import { AccessPasswordButton } from '../../../components/panel/AccessPasswordButton'
 import type { Booking, DbUnit, Profile } from '../../../types/database'
 
 const ROLE_LABELS = { admin: 'Administrador', owner: 'Dono da unidade', student: 'Aluno' }
@@ -20,22 +20,16 @@ export function AdminUserDetailPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
 
   useEffect(() => {
-    if (!supabase || !id) return
+    if (!id) return
     ;(async () => {
-      const { data: p } = await supabase.from('profiles_mybox').select('*').eq('id', id).single()
-      if (!p) return
-      const prof = p as Profile
+      const prof = await api.get<Profile>(`/profiles/${id}`).catch(() => null)
+      if (!prof) return
       setProfile(prof)
       if (prof.unit_slug) {
-        const { data: u } = await supabase.from('units_mybox').select('*').eq('slug', prof.unit_slug).single()
-        if (u) setUnit(u as DbUnit)
+        const u = await api.get<DbUnit>(`/units/${prof.unit_slug}`).catch(() => null)
+        if (u) setUnit(u)
       }
-      const { data: b } = await supabase
-        .from('bookings_mybox')
-        .select('*')
-        .or(`student_id.eq.${id},student_email.eq.${prof.email}`)
-        .order('created_at', { ascending: false })
-      if (b) setBookings(b as Booking[])
+      setBookings(await api.get<Booking[]>(`/bookings?student=${id}`).catch(() => []))
     })()
   }, [id])
 
@@ -102,9 +96,9 @@ export function AdminUserDetailPage() {
                   </div>
                   <ArrowRight className="h-4 w-4 text-primary" />
                 </Link>
-                <p className="text-xs text-muted-foreground mt-3">
-                  Senha padrão owner: <code className="bg-muted px-1 rounded">{ownerDefaultPassword(unit.name)}</code>
-                </p>
+                <div className="mt-3">
+                  <AccessPasswordButton mode="reset" profileId={profile.id} />
+                </div>
               </CardContent>
             </Card>
           )}

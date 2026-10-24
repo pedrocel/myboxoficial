@@ -1,24 +1,20 @@
 import { Link } from 'react-router-dom'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
+import { ArrowUpRight } from 'lucide-react'
+import { SiteLayout } from '../components/site/SiteLayout'
 
 export function ComingSoonPage({ title, description }: { title: string; description: string }) {
   return (
-    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
-      <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-20">
-        <div className="text-center max-w-lg">
-          <h1 className="text-4xl font-bold text-foreground mb-4">{title}</h1>
-          <p className="text-muted-foreground mb-8">{description}</p>
-          <Link
-            to="/"
-            className="bg-mygreen hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition"
-          >
-            Voltar para a Home
+    <SiteLayout solidHeader>
+      <section className="pt-16 pb-24 lg:pt-24 lg:pb-36">
+        <div className="shell">
+          <h1 className="display display-xl max-w-[14ch]">{title}</h1>
+          <p className="lede mt-6">{description}</p>
+          <Link to="/" className="btn mt-10">
+            Voltar para a página inicial
+            <ArrowUpRight size={18} className="btn-icon" aria-hidden />
           </Link>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </section>
+    </SiteLayout>
   )
 }

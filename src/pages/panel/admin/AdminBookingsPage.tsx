@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { updateBookingStatus } from '../../../lib/bookings'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Booking, BookingStatus } from '../../../types/database'
 
 import { ADMIN_NAV } from '../../../lib/panel-nav'
@@ -10,14 +10,7 @@ export function AdminBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
 
   const load = () => {
-    if (!supabase) return
-    supabase
-      .from('bookings_mybox')
-      .select('*')
-      .order('booking_date', { ascending: true })
-      .then(({ data }) => {
-        if (data) setBookings(data as Booking[])
-      })
+    api.get<Booking[]>('/bookings?order=booking_date&dir=asc').then(setBookings).catch(() => {})
   }
 
   useEffect(load, [])

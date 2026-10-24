@@ -4,7 +4,7 @@ import { PanelLayout } from '../../../components/panel/PanelLayout'
 import { StatCard } from '../../../components/panel/StatCard'
 import { Card } from '../../../components/ui/card'
 import { useAuth } from '../../../contexts/AuthContext'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import { OWNER_NAV } from '../../../lib/panel-nav'
 import type { UnitVisit } from '../../../types/database'
 
@@ -14,15 +14,9 @@ export function OwnerVisitsPage() {
   const slug = profile?.unit_slug
 
   useEffect(() => {
-    if (!supabase || !slug) return
-    supabase
-      .from('unit_visits_mybox')
-      .select('*')
-      .eq('unit_slug', slug)
-      .order('created_at', { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        if (data) setVisits(data as UnitVisit[])
+    if (!slug) return
+    api.get<UnitVisit[]>(`/units/${slug}/visits?limit=50`).then((data) => {
+        setVisits(data)
       })
   }, [slug])
 

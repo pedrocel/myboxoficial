@@ -1,10 +1,8 @@
-import { supabase } from './supabase'
+import { api } from './api'
 
 export async function trackUnitVisit(unitSlug: string, path?: string) {
-  if (!supabase) return
   try {
-    await supabase.from('unit_visits_mybox').insert({
-      unit_slug: unitSlug,
+    await api.post(`/units/${encodeURIComponent(unitSlug)}/visits`, {
       path: path ?? window.location.pathname,
       referrer: document.referrer || null,
     })

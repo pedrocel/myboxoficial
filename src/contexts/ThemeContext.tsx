@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
-import { isPanelPath, readStoredTheme, storeTheme, type Theme } from '../lib/theme'
+import { readStoredTheme, storeTheme, type Theme } from '../lib/theme'
 
 type ThemeContextValue = {
   theme: Theme
@@ -9,13 +8,12 @@ type ThemeContextValue = {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: 'dark',
+  theme: 'light',
   setTheme: () => {},
   toggleTheme: () => {},
 })
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const { pathname } = useLocation()
   const [theme, setThemeState] = useState<Theme>(readStoredTheme)
 
   const setTheme = useCallback((novo: Theme) => {
@@ -24,13 +22,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    // Fora do painel a classe .light sai e o site volta ao escuro do :root.
-    const claro = isPanelPath(pathname) && theme === 'light'
+    // Site e painel seguem a mesma escolha; sem escolha salva, vale o claro.
+    const claro = theme === 'light'
     const root = document.documentElement
     root.classList.toggle('light', claro)
     root.classList.toggle('dark', !claro)
     root.style.colorScheme = claro ? 'light' : 'dark'
-  }, [pathname, theme])
+  }, [theme])
 
   const value = useMemo<ThemeContextValue>(
     () => ({ theme, setTheme, toggleTheme: () => setTheme(theme === 'dark' ? 'light' : 'dark') }),

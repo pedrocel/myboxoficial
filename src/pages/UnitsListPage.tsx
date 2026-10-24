@@ -1,106 +1,136 @@
-import { useState } from 'react'
-import { UnitsListHeader } from '../components/units/UnitsListHeader'
-import { UnitsListFooter } from '../components/units/UnitsListFooter'
-import { UnitsSearchBar } from '../components/units/UnitsSearchBar'
+import { useSearchParams } from 'react-router-dom'
+import { Search } from 'lucide-react'
+import { SiteLayout } from '../components/site/SiteLayout'
+import { stagger } from '../components/site/stagger'
 import { UnitCard } from '../components/units/UnitCard'
-import { AgendamentosModal } from '../components/units/AgendamentosModal'
-import { searchUnits } from '../lib/units'
+import { getUnitCities, groupUnitsByState, pluralUnits, searchUnits } from '../lib/units'
 import { useUnits } from '../hooks/useUnits'
-import { useAOS } from '../hooks/useAOS'
-
-const ITEMS_PER_PAGE = 6
 
 export function UnitsListPage() {
-  useAOS()
-
   const { units: allUnits, carregando } = useUnits()
-  const [busca, setBusca] = useState('')
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
-  const [agendamentosOpen, setAgendamentosOpen] = useState(false)
+  const [params, setParams] = useSearchParams()
+  const busca = params.get('q') ?? ''
+  const uf = params.get('uf') ?? ''
 
-  // A lista chega do banco depois do primeiro render, entao o filtro e derivado.
-  const filteredUnits = busca ? searchUnits(allUnits, busca) : allUnits
-  const visibleUnits = filteredUnits.slice(0, visibleCount)
-  const hasMore = visibleCount < filteredUnits.length
-
-  const handleSearch = (query: string) => {
-    setBusca(query)
-    setVisibleCount(ITEMS_PER_PAGE)
+  // Busca e estado ficam na URL, entao links como /unidades?uf=SP ja chegam filtrados.
+  const update = (next: { q?: string; uf?: string }) => {
+    const q = next.q ?? busca
+    const estado = next.uf ?? uf
+    setParams({ ...(q ? { q } : {}), ...(estado ? { uf: estado } : {}) }, { replace: true, preventScrollReset: true })
   }
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + ITEMS_PER_PAGE)
-  }
-
-  const handleReset = () => {
-    setBusca('')
-    setVisibleCount(ITEMS_PER_PAGE)
-  }
+  const allStates = groupUnitsByState(allUnits).sort((a, b) => a.uf.localeCompare(b.uf))
+  const filtered = searchUnits(allUnits, busca).filter((u) => !uf || u.estado === uf)
+  const groups = groupUnitsByState(filtered)
+  const cities = getUnitCities(allUnits).length
 
   return (
-    <div className="bg-background font-sans min-h-screen flex flex-col text-foreground">
-      <UnitsListHeader />
-      <main className="container mx-auto px-4 py-8 flex-1">
-        <UnitsSearchBar
-          onSearch={handleSearch}
-          onOpenAgendamentos={() => setAgendamentosOpen(true)}
-          unitsCount={filteredUnits.length}
-        />
+    <SiteLayout solidHeader>
+      <section className="border-b pt-16 pb-12 lg:pt-24">
+        <div className="shell">
+          <h1 className="display display-lg max-w-[14ch]" data-reveal>
+            E aí, onde você quer treinar?
+          </h1>
+          <p className="lede mt-6" data-reveal style={stagger(1)}>
+            {carregando
+              ? 'Busque pela sua cidade e fale direto com a equipe.'
+              : `${allUnits.length} unidades em ${cities} cidades de ${allStates.length} estados. Busque pela sua cidade e fale direto com a equipe.`}
+          </p>
+          <form
+            role="search"
+            className="mt-10 max-w-2xl"
+            data-reveal
+            style={stagger(2)}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <label htmlFor="unit-search" className="text-sm font-medium text-muted-foreground">
+              Cidade, bairro, endereço ou nome da unidade
+            </label>
+            <div className="relative mt-3">
+              <Search
+                size={20}
+                className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-subtle"
+                aria-hidden
+              />
+              <input
+                id="unit-search"
+                type="search"
+                className="input pl-13"
+                placeholder="Ex.: Porto Alegre"
+                autoComplete="off"
+                value={busca}
+                onChange={(e) => update({ q: e.target.value })}
+              />
+            </div>
+          </form>
+          <div
+            className="mt-6 flex flex-wrap gap-2"
+            role="group"
+            aria-label="Filtrar por estado"
+            data-reveal
+            style={stagger(3)}
+          >
+            <button type="button" className="chip" aria-pressed={!uf} onClick={() => update({ uf: '' })}>
+              Todos
+            </button>
+            {allStates.map((state) => (
+              <button
+                key={state.uf}
+                type="button"
+                className="chip"
+                aria-pressed={uf === state.uf}
+                title={state.name}
+                onClick={() => update({ uf: state.uf })}
+              >
+                {state.uf}
+                <span className="text-xs tabular-nums opacity-70">{state.units.length}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <section>
-          <h2 className="text-xl font-bold text-foreground mb-6">Unidades My Box</h2>
-
+      <section className="py-12 lg:py-16">
+        <div className="shell">
           {carregando ? (
             <div className="flex justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             </div>
-          ) : visibleUnits.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10">
-              <i className="fas fa-search text-muted-foreground/50 text-5xl mb-4" />
-              <p className="text-muted-foreground text-center">Nenhuma unidade encontrada com os critérios selecionados.</p>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="mt-4 text-mygreen hover:text-green-700 font-medium flex items-center"
-              >
-                <i className="fas fa-redo-alt mr-2" /> Limpar filtros
-              </button>
-            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {visibleUnits.map((unit) => (
-                <UnitCard key={unit.url_page} unit={unit} />
+            <>
+              <p className="text-sm text-subtle" aria-live="polite">
+                {filtered.length === 1 ? '1 unidade encontrada' : `${filtered.length} unidades encontradas`}
+              </p>
+              {groups.length === 0 && (
+                <div className="mt-8 rounded-media border bg-card p-8">
+                  <p className="display display-sm">Nenhuma unidade encontrada.</p>
+                  <p className="mt-3 text-muted-foreground">Tente outra cidade ou bairro, ou veja todas as unidades.</p>
+                  <button type="button" className="btn btn-ghost mt-6" onClick={() => setParams({}, { replace: true })}>
+                    Limpar busca
+                  </button>
+                </div>
+              )}
+              {groups.map((group) => (
+                <div key={group.uf} className="mt-12 first-of-type:mt-8">
+                  <h2 className="flex items-baseline gap-3 border-b pb-4">
+                    <span className="display display-sm">{group.name}</span>
+                    <span className="text-sm text-subtle tabular-nums" aria-label={pluralUnits(group.units.length)}>
+                      {group.units.length}
+                    </span>
+                  </h2>
+                  <ul className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    {group.units.map((unit) => (
+                      <li key={unit.url_page}>
+                        <UnitCard unit={unit} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </div>
+            </>
           )}
-
-          {hasMore && visibleUnits.length > 0 && (
-            <div className="text-center mt-10">
-              <button
-                type="button"
-                onClick={handleLoadMore}
-                className="border border-border text-foreground hover:bg-muted font-medium py-2 px-8 rounded-md transition"
-              >
-                Ver mais
-              </button>
-            </div>
-          )}
-        </section>
-      </main>
-
-      <UnitsListFooter />
-
-      <a
-        href="https://wa.me/5519999622428"
-        className="fixed bottom-6 right-6 bg-green-500 text-white rounded-full p-3 shadow-lg z-40 hover:bg-green-600 transition"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-      >
-        <i className="fab fa-whatsapp text-2xl" />
-      </a>
-
-      <AgendamentosModal open={agendamentosOpen} onClose={() => setAgendamentosOpen(false)} />
-    </div>
+        </div>
+      </section>
+    </SiteLayout>
   )
 }

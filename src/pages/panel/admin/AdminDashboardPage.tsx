@@ -6,7 +6,7 @@ import { BookingsTable } from '../../../components/panel/BookingsTable'
 import { Badge } from '../../../components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card'
 import { ADMIN_NAV } from '../../../lib/panel-nav'
-import { supabase } from '../../../lib/supabase'
+import { api } from '../../../lib/api'
 import type { Booking, DbUnit, Profile } from '../../../types/database'
 
 export function AdminDashboardPage() {
@@ -16,19 +16,15 @@ export function AdminDashboardPage() {
   const [visits, setVisits] = useState(0)
 
   useEffect(() => {
-    if (!supabase) return
-    supabase.from('bookings_mybox').select('*').order('created_at', { ascending: false }).limit(5).then(({ data }) => {
-      if (data) setBookings(data as Booking[])
-    })
-    supabase.from('units_mybox').select('*').then(({ data }) => {
-      if (data) {
-        setUnits(data as DbUnit[])
-        setVisits((data as DbUnit[]).reduce((s, u) => s + (u.visits_count ?? 0), 0))
-      }
-    })
-    supabase.from('profiles_mybox').select('*').then(({ data }) => {
-      if (data) setUsers(data as Profile[])
-    })
+    api.get<Booking[]>('/bookings?limit=5').then(setBookings).catch(() => {})
+    api
+      .get<DbUnit[]>('/units')
+      .then((data) => {
+        setUnits(data)
+        setVisits(data.reduce((s, u) => s + (u.visits_count ?? 0), 0))
+      })
+      .catch(() => {})
+    api.get<Profile[]>('/profiles').then(setUsers).catch(() => {})
   }, [])
 
   const pending = bookings.filter((b) => b.status === 'pending').length

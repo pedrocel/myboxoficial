@@ -110,10 +110,6 @@ export function getUnitGallery(unit: DbUnit | null | undefined, fallbackHero?: s
   return FALLBACK_GALLERY
 }
 
-export function ownerDefaultPassword(unitName: string): string {
-  return `${unitName.trim()} 2026`
-}
-
 export function createEmptyHorario(): UnitHorario {
   return {
     id: newHorarioId(),
