@@ -5,6 +5,8 @@ import { HTTPException } from 'hono/http-exception'
 import { findSessionProfileId, SESSION_COOKIE } from './auth.ts'
 import type { Config } from './config.ts'
 import type { Db } from './db.ts'
+import type { SendEmail } from './email.ts'
+import { registerPasswordRoutes } from './routes/password.ts'
 import { toProfile, type Profile, type ProfileRow } from './rows.ts'
 import { registerAuthRoutes } from './routes/auth.ts'
 import { registerGameRoutes } from './routes/games.ts'
@@ -22,6 +24,7 @@ export type Deps = {
   db: Db
   /** Endereco de quem chamou: atras do Caddy vem do X-Forwarded-For. */
   clientIp: (c: Context) => string
+  sendEmail: SendEmail
 }
 
 export function buildApp(deps: Deps): App {
@@ -59,6 +62,7 @@ export function buildApp(deps: Deps): App {
   registerLeadRoutes(app, deps)
   registerUploadRoutes(app, deps)
   registerGameRoutes(app, deps)
+  registerPasswordRoutes(app, deps)
 
   app.notFound((c) => c.json({ error: 'nao_encontrado' }, 404))
   app.onError((err, c) => {

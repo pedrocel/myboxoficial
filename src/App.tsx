@@ -12,6 +12,8 @@ import { FranchisePage } from './pages/FranchisePage'
 import { ContactPage } from './pages/ContactPage'
 import { ComingSoonPage } from './pages/ComingSoonPage'
 import { LoginPage } from './pages/auth/LoginPage'
+import { FirstAccessPage } from './pages/auth/FirstAccessPage'
+import { CreatePasswordPage } from './pages/auth/CreatePasswordPage'
 import { PanelRedirectPage } from './pages/panel/PanelRedirectPage'
 import { MetaPixel } from './components/analytics/MetaPixel'
 
@@ -110,6 +112,8 @@ export default function App() {
             />
             <Route path="/unidades/:slug" element={<UnitDetailPage />} />
             <Route path="/entrar" element={<LoginPage />} />
+            <Route path="/primeiro-acesso" element={<FirstAccessPage />} />
+            <Route path="/criar-senha" element={<CreatePasswordPage />} />
             <Route path="/painel" element={<PanelRedirectPage />} />
 
             <Route element={<ProtectedRoute roles={['admin']} />}>

@@ -4,6 +4,7 @@ import { buildApp } from './app.ts'
 import { purgeExpiredSessions } from './auth.ts'
 import { loadConfig } from './config.ts'
 import { openDatabase } from './db.ts'
+import { createMailer } from './email.ts'
 
 const config = loadConfig()
 const db = openDatabase(config.databasePath)
@@ -11,6 +12,7 @@ const db = openDatabase(config.databasePath)
 const app = buildApp({
   config,
   db,
+  sendEmail: createMailer(config),
   // Atras do Caddy o socket e o proxy; so ai o cabecalho encaminhado vale.
   clientIp: (c) => {
     const forwarded = (c.req.header('x-forwarded-for') ?? '').split(',')[0].trim()

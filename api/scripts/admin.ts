@@ -3,7 +3,7 @@
  *
  *   npm run admin -- seed-units <units.json>       carrega/atualiza as unidades
  *   npm run admin -- create-admin <email> [nome]   cria um admin e mostra a senha
- *   npm run admin -- create-owners                 cria um dono por unidade com e-mail e lista as senhas
+ *   npm run admin -- create-owners                 cria um dono por unidade (sem senha: criam no primeiro acesso)
  *   npm run admin -- reset-password <email>        gera senha nova para alguem
  */
 import fs from 'node:fs'
@@ -37,14 +37,14 @@ type JsonUnit = {
   lng?: number
 }
 
-async function createProfile(email: string, fullName: string | null, role: 'admin' | 'owner', unitSlug: string | null) {
-  const password = randomPassword()
+async function createProfile(email: string, fullName: string | null, role: 'admin' | 'owner', unitSlug: string | null, withPassword = true) {
+  const password = withPassword ? randomPassword() : null
   const id = newId()
   const now = nowIso()
   db.prepare(
     `INSERT INTO profiles (id, email, password_hash, full_name, role, unit_slug, created_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).run(id, email, await hashPassword(password), fullName, role, unitSlug, now, now)
+  ).run(id, email, password ? await hashPassword(password) : null, fullName, role, unitSlug, now, now)
   return { id, password }
 }
 
@@ -92,14 +92,15 @@ switch (command) {
       email: string | null
       nome_dono: string | null
     }[]
-    const lines = ['unidade;email;senha']
+    const lines = ['unidade;email']
     for (const unit of units) {
       const email = unit.email?.trim().toLowerCase() ?? ''
       // Sem e-mail valido, ou com e-mail ja usado por outra unidade, fica para o admin cadastrar a mao.
       if (!EMAIL.test(email) || db.prepare('SELECT 1 FROM profiles WHERE email = ?').get(email)) continue
-      const { id, password } = await createProfile(email, unit.nome_dono, 'owner', unit.slug)
+      // Sem senha: o dono cria a dele no primeiro acesso, pelo link que chega por e-mail.
+      const { id } = await createProfile(email, unit.nome_dono, 'owner', unit.slug, false)
       db.prepare('UPDATE units SET owner_id = ? WHERE slug = ?').run(id, unit.slug)
-      lines.push(`${unit.name};${email};${password}`)
+      lines.push(`${unit.name};${email}`)
     }
     console.log(lines.join('\n'))
     console.error(`\n${lines.length - 1} donos criados.`)

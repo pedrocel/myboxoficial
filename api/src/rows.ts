@@ -19,11 +19,12 @@ export type ProfileRow = {
   updated_at: string
 }
 
-export type Profile = Omit<ProfileRow, 'password_hash'>
+/** Sem o hash; has_password diz se a pessoa ja fez o primeiro acesso. */
+export type Profile = Omit<ProfileRow, 'password_hash'> & { has_password: boolean }
 
 export function toProfile(row: ProfileRow): Profile {
-  const { password_hash: _, ...profile } = row
-  return profile
+  const { password_hash, ...profile } = row
+  return { ...profile, has_password: Boolean(password_hash) }
 }
 
 export type UnitRow = Record<string, unknown> & {

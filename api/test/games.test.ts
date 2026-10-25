@@ -13,6 +13,10 @@ const config: Config = {
   publicBaseUrl: 'http://api.test',
   allowedOrigins: ['http://site.test'],
   leadApiToken: 'token-de-teste',
+  resendApiKey: '',
+  emailFrom: 'test@test',
+  siteUrl: 'http://site.test',
+  gamesUrl: 'http://games.test',
   secureCookies: false,
   trustProxy: false,
 }
@@ -26,7 +30,7 @@ async function setup() {
   db.prepare('INSERT INTO profiles (id, email, password_hash, role, unit_slug, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
     newId(), 'dono-a@test.com', await hashPassword('senha-forte-1'), 'owner', 'unidade-a', now, now,
   )
-  const app = buildApp({ config, db, clientIp: () => '127.0.0.1' })
+  const app = buildApp({ config, db, clientIp: () => '127.0.0.1', sendEmail: async () => {} })
   const call = async (path: string, init: RequestInit & { token?: string; json?: unknown } = {}) => {
     const res = await app.request(path, {
       method: init.method ?? (init.json ? 'POST' : 'GET'),

@@ -78,6 +78,16 @@ export function LoginPage() {
                 </Button>
               </form>
 
+              <div className="mt-5 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
+                <p className="font-semibold text-foreground">Primeiro acesso ou esqueceu a senha?</p>
+                <p className="text-muted-foreground mt-0.5">
+                  Responsável por unidade? Seu usuário já está criado.{' '}
+                  <Link to="/primeiro-acesso" className="font-semibold text-primary hover:underline">
+                    Receber link para criar a senha
+                  </Link>
+                </p>
+              </div>
+
               <p className="text-center text-xs text-muted-foreground mt-6">
                 Agendou uma aula? Entre com o e-mail e a senha que você criou no agendamento.
               </p>

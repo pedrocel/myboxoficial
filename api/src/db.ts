@@ -167,6 +167,18 @@ const MIGRATIONS = [
   );
   CREATE INDEX idx_game_results_wod ON game_results(wod_id, unit_slug);
   `,
+  // Primeiro acesso e redefinicao de senha: link por e-mail com token de uso unico (so o hash fica no banco).
+  `
+  CREATE TABLE password_tokens (
+    id TEXT PRIMARY KEY,
+    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    app TEXT NOT NULL DEFAULT 'painel' CHECK (app IN ('painel', 'games')),
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used_at TEXT
+  );
+  CREATE INDEX idx_password_tokens_profile ON password_tokens(profile_id);
+  `,
 ]
 
 export function openDatabase(file: string): Db {

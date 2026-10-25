@@ -9,6 +9,8 @@ export type Profile = {
   role: UserRole
   unit_slug: string | null
   avatar_url: string | null
+  /** false: dono cadastrado que ainda nao criou a senha (primeiro acesso). */
+  has_password?: boolean
   created_at: string
   updated_at: string
 }

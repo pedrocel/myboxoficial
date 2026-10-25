@@ -13,6 +13,7 @@ const MESSAGES: Record<string, string> = {
   email_ja_cadastrado: 'Esse e-mail já está cadastrado.',
   email_invalido: 'E-mail inválido.',
   senha_curta: 'A senha precisa de pelo menos 8 caracteres.',
+  link_invalido: 'Este link expirou ou já foi usado. Peça um novo.',
   senha_atual_incorreta: 'A senha atual está incorreta.',
   arquivo_grande_demais: 'A imagem passa de 5 MB.',
   formato_nao_suportado: 'Use JPG, PNG, WEBP ou GIF.',

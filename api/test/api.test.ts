@@ -13,6 +13,10 @@ const config: Config = {
   publicBaseUrl: 'http://api.test',
   allowedOrigins: ['http://site.test'],
   leadApiToken: 'token-de-teste',
+  resendApiKey: '',
+  emailFrom: 'test@test',
+  siteUrl: 'http://site.test',
+  gamesUrl: 'http://games.test',
   secureCookies: false,
   trustProxy: false,
 }
@@ -30,7 +34,7 @@ async function setup() {
   await addUser('admin@test.com', 'admin', null)
   await addUser('dono-a@test.com', 'owner', 'unidade-a')
 
-  const app = buildApp({ config, db, clientIp: () => '127.0.0.1' })
+  const app = buildApp({ config, db, clientIp: () => '127.0.0.1', sendEmail: async () => {} })
   const call = (path: string, init: RequestInit & { cookie?: string } = {}) =>
     app.request(path, {
       ...init,
@@ -98,4 +102,36 @@ test('leads so entram com o token e fazem upsert por e-mail', async () => {
   const cookie = await login('admin@test.com')
   const leads = (await (await call('/leads', { cookie })).json()) as { email: string }[]
   assert.deepEqual(leads.map((l) => l.email), ['lead@test.com'])
+})
+
+test('primeiro acesso: dono sem senha recebe link, cria a senha e entra', async () => {
+  const db = openDatabase(':memory:')
+  const now = nowIso()
+  db.prepare('INSERT INTO units (slug, name, created_at, updated_at) VALUES (?, ?, ?, ?)').run('unidade-a', 'Unidade A', now, now)
+  db.prepare('INSERT INTO profiles (id, email, password_hash, full_name, role, unit_slug, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, ?, ?, ?)').run(
+    newId(), 'dono@test.com', 'Gabriela Souza', 'owner', 'unidade-a', now, now,
+  )
+  const sent: { to: string; subject: string; text: string; html: string }[] = []
+  const app = buildApp({ config, db, clientIp: () => '127.0.0.1', sendEmail: async (e) => void sent.push(e) })
+  const post = (path: string, body: unknown) =>
+    app.request(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+
+  assert.equal((await post('/auth/login', { email: 'dono@test.com', password: 'qualquer-coisa' })).status, 401)
+  assert.equal((await post('/auth/password/request', { email: 'ninguem@test.com' })).status, 200)
+  assert.equal(sent.length, 0)
+
+  assert.equal((await post('/auth/password/request', { email: 'Dono@Test.com' })).status, 200)
+  assert.equal(sent.length, 1)
+  assert.match(sent[0].subject, /crie sua senha/)
+  assert.match(sent[0].html, /Unidade A/)
+  const token = sent[0].text.match(/token=([\w-]+)/)![1]
+
+  const check = await app.request(`/auth/password/check?token=${token}`)
+  assert.equal(((await check.json()) as { first_access: boolean }).first_access, true)
+  assert.equal((await post('/auth/password/set', { token, password: 'curta' })).status, 400)
+  const set = await post('/auth/password/set', { token, password: 'senha-nova-123' })
+  assert.equal(set.status, 200)
+  assert.ok(set.headers.get('set-cookie'))
+  assert.equal((await post('/auth/password/set', { token, password: 'outra-senha-123' })).status, 404)
+  assert.equal((await post('/auth/login', { email: 'dono@test.com', password: 'senha-nova-123' })).status, 200)
 })

@@ -10,6 +10,12 @@ export type Config = {
   allowedOrigins: string[]
   /** Segredo compartilhado com a landing de franquia para gravar leads. */
   leadApiToken: string
+  /** Envio de e-mail pelo Resend (dominio myboxoficial.com.br verificado). Vazio: so registra no log. */
+  resendApiKey: string
+  emailFrom: string
+  /** Enderecos dos sites usados nos links dos e-mails. */
+  siteUrl: string
+  gamesUrl: string
   secureCookies: boolean
   trustProxy: boolean
 }
@@ -38,6 +44,10 @@ export function loadConfig(): Config {
       // O My Box Games (web) sempre chama a API, sem depender do .env do servidor.
       .concat('https://games.myboxoficial.com.br', 'http://localhost:8081'),
     leadApiToken,
+    resendApiKey: process.env.RESEND_API_KEY?.trim() ?? '',
+    emailFrom: process.env.EMAIL_FROM ?? 'My Box <nao-responda@myboxoficial.com.br>',
+    siteUrl: (process.env.SITE_URL ?? (production ? 'https://myboxoficial.com.br' : 'http://localhost:5183')).replace(/\/+$/, ''),
+    gamesUrl: (process.env.GAMES_URL ?? (production ? 'https://games.myboxoficial.com.br' : 'http://localhost:8091')).replace(/\/+$/, ''),
     secureCookies: production,
     trustProxy: process.env.TRUST_PROXY === 'true',
   }

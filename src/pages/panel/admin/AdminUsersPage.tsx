@@ -15,6 +15,7 @@ export function AdminUsersPage() {
   const [users, setUsers] = useState<Profile[]>([])
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('')
+  const [accessFilter, setAccessFilter] = useState('')
 
   useEffect(() => {
     api.get<Profile[]>('/profiles').then(setUsers).catch(() => {})
@@ -24,11 +25,12 @@ export function AdminUsersPage() {
     const q = search.toLowerCase()
     const matchQ = !q || u.full_name?.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     const matchR = !roleFilter || u.role === roleFilter
-    return matchQ && matchR
+    const matchA = !accessFilter || (accessFilter === 'pending' ? u.has_password === false : u.has_password !== false)
+    return matchQ && matchR && matchA
   })
 
   return (
-    <PanelLayout title="Usuários" subtitle={`${users.length} contas no sistema`} nav={ADMIN_NAV}>
+    <PanelLayout title="Usuários" subtitle={`${users.length} contas no sistema · ${users.filter((u) => u.has_password === false).length} aguardando primeiro acesso`} nav={ADMIN_NAV}>
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -40,6 +42,16 @@ export function AdminUsersPage() {
             className="pl-10"
           />
         </div>
+        <select
+          aria-label="Situação do acesso"
+          value={accessFilter}
+          onChange={(e) => setAccessFilter(e.target.value)}
+          className="px-4 py-2 h-10 bg-background border border-input rounded-xl text-sm font-medium text-foreground"
+        >
+          <option value="">Todos os acessos</option>
+          <option value="pending">Aguardando primeiro acesso</option>
+          <option value="active">Já acessaram</option>
+        </select>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
@@ -65,6 +77,7 @@ export function AdminUsersPage() {
                 <div className="flex flex-wrap gap-2 mt-2">
                   <Badge variant="secondary">{ROLE_LABELS[u.role]}</Badge>
                   {u.unit_slug && <Badge variant="outline">{u.unit_slug}</Badge>}
+                  {u.has_password === false && <Badge variant="outline">Aguardando primeiro acesso</Badge>}
                 </div>
               </div>
             </Card>
