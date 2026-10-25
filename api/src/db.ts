@@ -124,6 +124,49 @@ const MIGRATIONS = [
     created_at TEXT NOT NULL
   );
   `,
+  // My Box Games: anfitrioes (donos) aprovam alunos da unidade; check-ins e resultados viram ranking.
+  `
+  ALTER TABLE profiles ADD COLUMN terms_accepted_at TEXT;
+
+  CREATE TABLE game_units (
+    unit_slug TEXT PRIMARY KEY REFERENCES units(slug) ON DELETE CASCADE,
+    join_code TEXT NOT NULL UNIQUE,
+    auto_approve INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE game_members (
+    id TEXT PRIMARY KEY,
+    profile_id TEXT NOT NULL UNIQUE REFERENCES profiles(id) ON DELETE CASCADE,
+    unit_slug TEXT NOT NULL REFERENCES units(slug) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    created_at TEXT NOT NULL,
+    decided_at TEXT,
+    decided_by TEXT REFERENCES profiles(id) ON DELETE SET NULL
+  );
+  CREATE INDEX idx_game_members_unit ON game_members(unit_slug, status);
+
+  CREATE TABLE game_checkins (
+    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    unit_slug TEXT NOT NULL REFERENCES units(slug) ON DELETE CASCADE,
+    day TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (profile_id, day)
+  );
+  CREATE INDEX idx_game_checkins_unit ON game_checkins(unit_slug, day);
+
+  CREATE TABLE game_results (
+    id TEXT PRIMARY KEY,
+    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    unit_slug TEXT NOT NULL REFERENCES units(slug) ON DELETE CASCADE,
+    wod_id TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    rx INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    UNIQUE (profile_id, wod_id)
+  );
+  CREATE INDEX idx_game_results_wod ON game_results(wod_id, unit_slug);
+  `,
 ]
 
 export function openDatabase(file: string): Db {

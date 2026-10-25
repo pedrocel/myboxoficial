@@ -23,6 +23,15 @@
         "dev"
       ],
       "port": 3020
+    },
+    {
+      "name": "games-web",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd ../my-box-wars && EXPO_PUBLIC_API_URL=http://localhost:3020 npx expo start --web --port 8091"
+      ],
+      "port": 8091
     }
   ]
 }

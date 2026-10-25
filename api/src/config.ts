@@ -34,7 +34,9 @@ export function loadConfig(): Config {
     allowedOrigins: (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5183')
       .split(',')
       .map((o) => o.trim())
-      .filter(Boolean),
+      .filter(Boolean)
+      // O My Box Games (web) sempre chama a API, sem depender do .env do servidor.
+      .concat('https://games.myboxoficial.com.br', 'http://localhost:8081'),
     leadApiToken,
     secureCookies: production,
     trustProxy: process.env.TRUST_PROXY === 'true',

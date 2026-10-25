@@ -7,6 +7,7 @@ import type { Config } from './config.ts'
 import type { Db } from './db.ts'
 import { toProfile, type Profile, type ProfileRow } from './rows.ts'
 import { registerAuthRoutes } from './routes/auth.ts'
+import { registerGameRoutes } from './routes/games.ts'
 import { registerBookingRoutes } from './routes/bookings.ts'
 import { registerLeadRoutes } from './routes/leads.ts'
 import { registerProfileRoutes } from './routes/profiles.ts'
@@ -33,14 +34,16 @@ export function buildApp(deps: Deps): App {
       origin: (origin) => (config.allowedOrigins.includes(origin) ? origin : null),
       credentials: true,
       allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowHeaders: ['Content-Type', 'X-Lead-Token'],
+      allowHeaders: ['Content-Type', 'X-Lead-Token', 'Authorization'],
       maxAge: 86400,
     }),
   )
 
   // Quem esta logado, se alguem estiver. Cada rota decide o que exigir.
   app.use('*', async (c, next) => {
-    const token = getCookie(c, SESSION_COOKIE)
+    // Site usa o cookie; o app (iOS) manda o mesmo token no Authorization.
+    const bearer = c.req.header('authorization')?.match(/^Bearer (.+)$/)?.[1]
+    const token = bearer ?? getCookie(c, SESSION_COOKIE)
     const profileId = token ? findSessionProfileId(db, token) : undefined
     const row = profileId ? (db.prepare('SELECT * FROM profiles WHERE id = ?').get(profileId) as ProfileRow | undefined) : undefined
     c.set('profile', row ? toProfile(row) : null)
@@ -55,6 +58,7 @@ export function buildApp(deps: Deps): App {
   registerProfileRoutes(app, deps)
   registerLeadRoutes(app, deps)
   registerUploadRoutes(app, deps)
+  registerGameRoutes(app, deps)
 
   app.notFound((c) => c.json({ error: 'nao_encontrado' }, 404))
   app.onError((err, c) => {

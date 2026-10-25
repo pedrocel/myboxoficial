@@ -14,6 +14,7 @@ export type ProfileRow = {
   role: Role
   unit_slug: string | null
   avatar_url: string | null
+  terms_accepted_at: string | null
   created_at: string
   updated_at: string
 }
