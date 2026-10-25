@@ -12,6 +12,8 @@ export type Config = {
   leadApiToken: string
   /** Envio de e-mail pelo Resend (dominio myboxoficial.com.br verificado). Vazio: so registra no log. */
   resendApiKey: string
+  /** Chave geral de envio. Desligada (padrao), nenhum e-mail sai: so vai para o log. */
+  emailEnabled: boolean
   emailFrom: string
   /** Enderecos dos sites usados nos links dos e-mails. */
   siteUrl: string
@@ -45,6 +47,7 @@ export function loadConfig(): Config {
       .concat('https://games.myboxoficial.com.br', 'http://localhost:8081'),
     leadApiToken,
     resendApiKey: process.env.RESEND_API_KEY?.trim() ?? '',
+    emailEnabled: process.env.EMAIL_ENABLED === 'true',
     emailFrom: process.env.EMAIL_FROM ?? 'My Box <nao-responda@myboxoficial.com.br>',
     siteUrl: (process.env.SITE_URL ?? (production ? 'https://myboxoficial.com.br' : 'http://localhost:5183')).replace(/\/+$/, ''),
     gamesUrl: (process.env.GAMES_URL ?? (production ? 'https://games.myboxoficial.com.br' : 'http://localhost:8091')).replace(/\/+$/, ''),

@@ -11,9 +11,9 @@ export type SendEmail = (email: Email) => Promise<void>
 
 export function createMailer(config: Config): SendEmail {
   return async (email) => {
-    if (!config.resendApiKey) {
-      // Sem chave (local/testes): o link aparece no log para dar para testar.
-      console.log(`[email] para ${email.to}: ${email.subject}\n${email.text}`)
+    if (!config.emailEnabled || !config.resendApiKey) {
+      // Envio desligado (EMAIL_ENABLED=false, o padrao) ou sem chave: nada sai, so fica registrado no log.
+      console.log(`[email desligado] para ${email.to}: ${email.subject}`)
       return
     }
     const res = await fetch('https://api.resend.com/emails', {

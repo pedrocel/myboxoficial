@@ -14,6 +14,7 @@ const config: Config = {
   allowedOrigins: ['http://site.test'],
   leadApiToken: 'token-de-teste',
   resendApiKey: '',
+  emailEnabled: false,
   emailFrom: 'test@test',
   siteUrl: 'http://site.test',
   gamesUrl: 'http://games.test',
