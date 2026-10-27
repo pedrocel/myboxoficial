@@ -21,7 +21,7 @@ export function ContactPage() {
               style={stagger(0)}
               to="/unidades"
             >
-              <span className="inline-flex size-14 items-center justify-center rounded-full bg-night/10">
+              <span className="inline-flex size-14 items-center justify-center rounded-xl bg-night/10">
                 <Dumbbell size={26} aria-hidden />
               </span>
               <div>
@@ -45,7 +45,7 @@ export function ContactPage() {
               style={stagger(1)}
               to="/franquia"
             >
-              <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Handshake size={26} aria-hidden />
               </span>
               <div>
@@ -69,7 +69,7 @@ export function ContactPage() {
               data-reveal
               style={stagger(2)}
             >
-              <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Mail size={26} aria-hidden />
               </span>
               <div>

@@ -91,7 +91,7 @@ export function AgendamentoModal({ unit, open, onClose }: Props) {
         <button
           type="button"
           onClick={close}
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border-strong"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-border-strong"
           aria-label="Fechar"
         >
           <X size={18} aria-hidden />
@@ -100,7 +100,7 @@ export function AgendamentoModal({ unit, open, onClose }: Props) {
 
       {done ? (
         <div className="grid gap-6 p-6 sm:p-8">
-          <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/15 text-brand">
+          <span className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/15 text-brand">
             <CircleCheck size={26} aria-hidden />
           </span>
           <div>

@@ -27,7 +27,7 @@ export function SiteFooter() {
         <div className="lg:col-span-5">
           <span className="logo-mark h-14 text-primary" />
           <p className="mt-6 max-w-sm text-muted-foreground">
-            Academia com conceito de shopping. 92 unidades em 12 estados, desde 2016.
+            Rede de academias de cross training, musculação e aulas coletivas. 92 unidades em 12 estados, desde 2016.
           </p>
           <div className="mt-8 flex gap-2">
             {socials.map((s) => (
@@ -106,7 +106,7 @@ export function SiteFooter() {
           <Link className={linkClass} to="/privacidade">
             Política de Privacidade
           </Link>
-          <div className="flex items-center gap-1 rounded-full border p-1" role="group" aria-label="Tema do site">
+          <div className="flex items-center gap-1 rounded-xl border p-1" role="group" aria-label="Tema do site">
             {themes.map(({ value, label, Icon }) => (
               <button
                 key={value}
@@ -114,7 +114,7 @@ export function SiteFooter() {
                 onClick={() => setTheme(value)}
                 aria-pressed={theme === value}
                 aria-label={label}
-                className="inline-flex size-8 items-center justify-center rounded-full aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+                className="inline-flex size-8 items-center justify-center rounded-xl aria-pressed:bg-primary aria-pressed:text-primary-foreground"
               >
                 <Icon size={16} aria-hidden />
               </button>

@@ -11,7 +11,7 @@ type Props = {
 }
 
 const navLinkClass =
-  'relative rounded-full px-4 py-2 text-[0.95rem] font-medium opacity-80 transition-opacity hover:opacity-100 aria-[current=page]:opacity-100 aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-4 aria-[current=page]:after:-bottom-0.5 aria-[current=page]:after:h-0.5 aria-[current=page]:after:bg-primary'
+  'relative rounded-xl px-3.5 py-2 text-[0.8rem] font-extrabold tracking-[0.08em] uppercase opacity-80 transition-opacity hover:opacity-100 aria-[current=page]:opacity-100 aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-4 aria-[current=page]:after:-bottom-0.5 aria-[current=page]:after:h-0.5 aria-[current=page]:after:bg-primary'
 
 export function SiteHeader({ solid = false }: Props) {
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -68,7 +68,7 @@ export function SiteHeader({ solid = false }: Props) {
                   href={STORE_URL}
                   target="_blank"
                   rel="noopener"
-                  className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[0.95rem] font-medium opacity-80 transition-opacity hover:opacity-100"
+                  className="inline-flex items-center gap-1 rounded-xl px-3.5 py-2 text-[0.8rem] font-extrabold tracking-[0.08em] uppercase opacity-80 transition-opacity hover:opacity-100"
                 >
                   Loja <ArrowUpRight size={14} aria-hidden />
                 </a>
@@ -82,7 +82,7 @@ export function SiteHeader({ solid = false }: Props) {
             <button
               type="button"
               onClick={openMenu}
-              className="inline-flex size-11 items-center justify-center rounded-full border border-current/25 lg:hidden"
+              className="inline-flex size-11 items-center justify-center rounded-xl border border-current/25 lg:hidden"
               aria-controls="mobile-menu"
               aria-expanded={menuOpen}
               aria-label="Abrir menu"
@@ -108,7 +108,7 @@ export function SiteHeader({ solid = false }: Props) {
               <button
                 type="button"
                 onClick={closeMenu}
-                className="inline-flex size-11 items-center justify-center rounded-full border border-snow/25"
+                className="inline-flex size-11 items-center justify-center rounded-xl border border-snow/25"
                 aria-label="Fechar menu"
               >
                 <X size={22} aria-hidden />

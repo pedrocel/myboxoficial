@@ -75,7 +75,7 @@ export function FranchiseForm() {
   if (enviado) {
     return (
       <div className="grid gap-6 rounded-media border bg-card p-6 sm:p-10">
-        <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/15 text-brand">
+        <span className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/15 text-brand">
           <CircleCheck size={26} aria-hidden />
         </span>
         <div>

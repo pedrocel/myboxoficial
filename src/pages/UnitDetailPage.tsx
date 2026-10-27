@@ -29,7 +29,7 @@ export function UnitDetailPage() {
   if (carregando) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-xl border-2 border-primary border-t-transparent" />
       </div>
     )
   }
@@ -60,12 +60,12 @@ export function UnitDetailPage() {
           />
         ) : (
           <img
-            src="/images/gym-floor-1600.webp"
-            srcSet="/images/gym-floor-640.webp 640w, /images/gym-floor-1024.webp 1024w, /images/gym-floor-1600.webp 1600w, /images/gym-floor-2400.webp 2400w"
+            src="/images/interior-1600.webp"
+            srcSet="/images/interior-640.webp 640w, /images/interior-1024.webp 1024w, /images/interior-1600.webp 1600w"
             sizes="100vw"
-            width="2400"
-            height="1602"
-            alt="Interior de uma academia com piso de treino e equipamentos"
+            width="1600"
+            height="897"
+            alt="Projeto do interior de uma unidade My Box"
             loading="eager"
             fetchPriority="high"
             className="hero-photo absolute inset-0 -z-10 size-full object-cover"
@@ -213,11 +213,11 @@ export function UnitDetailPage() {
 
       <section className="relative isolate overflow-hidden bg-night text-foreground">
         <img
-          src="/images/deadlift-dark-1600.webp"
-          srcSet="/images/deadlift-dark-640.webp 640w, /images/deadlift-dark-1024.webp 1024w, /images/deadlift-dark-1600.webp 1600w, /images/deadlift-dark-2400.webp 2400w"
+          src="/images/fachada-3-1310.webp"
+          srcSet="/images/fachada-3-640.webp 640w, /images/fachada-3-1024.webp 1024w, /images/fachada-3-1310.webp 1310w"
           sizes="100vw"
-          width="2400"
-          height="1600"
+          width="1310"
+          height="736"
           alt=""
           loading="lazy"
           decoding="async"

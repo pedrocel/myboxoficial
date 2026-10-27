@@ -1,20 +1,21 @@
 /*
- * Componentes visuais do site publico, iguais aos de mybox.tokadigital.com.br.
+ * Componentes visuais do site publico (identidade propria da My Box:
+ * titulos em Barlow Condensed maiusculo, cantos arredondados, verde da marca).
  * As cores vem dos tokens de index.css.
  */
 @layer components {
   .display {
     font-family: var(--font-display);
-    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
     text-wrap: balance;
-    font-weight: 760;
-    font-stretch: 118%;
-    line-height: 0.98;
+    font-weight: 800;
+    line-height: 0.92;
   }
-  .display-xl { font-size: clamp(2.6rem, 6.2vw, 6.4rem); }
-  .display-lg { font-size: clamp(2.2rem, 4.6vw, 4.5rem); }
-  .display-md { font-size: clamp(1.8rem, 3.2vw, 3rem); line-height: 1.04; }
-  .display-sm { letter-spacing: -0.02em; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.1; }
+  .display-xl { font-size: clamp(3rem, 7.4vw, 7.2rem); }
+  .display-lg { font-size: clamp(2.5rem, 5.2vw, 5rem); }
+  .display-md { font-size: clamp(1.9rem, 3.2vw, 2.9rem); line-height: 0.95; }
+  .display-sm { letter-spacing: 0.01em; font-size: clamp(1.4rem, 2vw, 1.8rem); line-height: 1; }
 
   .lede {
     color: var(--muted-foreground);
@@ -24,13 +25,21 @@
     line-height: 1.6;
   }
   .eyebrow {
-    font-family: var(--font-display);
-    letter-spacing: 0.18em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--brand);
-    font-size: 0.72rem;
-    font-weight: 700;
-    font-stretch: 125%;
+    font-size: 0.76rem;
+    font-weight: 800;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 1.75rem;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--primary);
   }
   .shell {
     width: 100%;
@@ -48,13 +57,15 @@
     white-space: nowrap;
     transition: transform 0.4s var(--ease-out-expo), background-color 0.3s, color 0.3s, border-color 0.3s;
     isolation: isolate;
-    border-radius: 999px;
+    border-radius: 12px;
     justify-content: center;
     align-items: center;
     gap: 0.6rem;
-    padding: 0 1.6rem;
-    font-size: 0.98rem;
-    font-weight: 600;
+    padding: 0 1.5rem;
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     display: inline-flex;
     position: relative;
     overflow: hidden;
@@ -106,7 +117,7 @@
     border: 1px solid var(--border-strong);
     min-height: 2.5rem;
     color: var(--muted-foreground);
-    border-radius: 999px;
+    border-radius: 10px;
     align-items: center;
     gap: 0.4rem;
     padding: 0 1rem;
@@ -131,12 +142,12 @@
     width: 100%;
     min-height: 3.25rem;
     color: var(--foreground);
-    border-radius: 999px;
+    border-radius: 12px;
     padding: 0 1.25rem;
     font-size: 1rem;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  textarea.input { resize: vertical; border-radius: 1.4rem; min-height: 7.5rem; padding: 0.9rem 1.25rem; }
+  textarea.input { resize: vertical; border-radius: 12px; min-height: 7.5rem; padding: 0.9rem 1.25rem; }
   select.input {
     appearance: none;
     background-image: linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
@@ -162,6 +173,55 @@
     background: linear-gradient(oklch(15.7% 0.004 128.8 / 0.1) 30%, oklch(15.7% 0.004 128.8 / 0.55) 62%, oklch(15.7% 0.004 128.8 / 0.92) 100%),
       linear-gradient(90deg, oklch(15.7% 0.004 128.8 / 0.55), #0000 65%);
   }
+  /* Cards da Home: modalidades, fundadores, chamada de franquia. */
+  .feature-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-media);
+    background: var(--card);
+    padding: 1.75rem;
+    transition: border-color 0.3s, transform 0.5s var(--ease-out-expo);
+  }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+  .icon-tile {
+    display: inline-flex;
+    width: 3.5rem;
+    height: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .icon-tile-sm { width: 2.75rem; height: 2.75rem; border-radius: 12px; }
+  .founder-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-media);
+    background: var(--card);
+  }
+  .founder-card .media { border-radius: 0; }
+  @media (width >= 640px) {
+    .founder-card { grid-template-columns: 2fr 3fr; }
+  }
+  .badge-card {
+    display: grid;
+    gap: 0.15rem;
+    border-radius: 16px;
+    background: var(--primary);
+    padding: 1rem 1.4rem;
+    box-shadow: 0 20px 40px -12px oklch(0% 0 0 / 0.5);
+  }
+  .cta-panel { border-radius: calc(var(--radius-media) + 6px); }
+  .hero-split {
+    background:
+      radial-gradient(60rem 40rem at 85% 20%, oklch(66.7% 0.173 132.2 / 0.16), transparent 60%),
+      var(--night);
+  }
+
   .logo-mark {
     aspect-ratio: 574 / 231;
     background-color: currentColor;
@@ -243,12 +303,3 @@
   to { transform: scale(1.12) translateY(4%); }
 }
 
-.grain::after {
-  content: '';
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  position: fixed;
-  inset: 0;
-}

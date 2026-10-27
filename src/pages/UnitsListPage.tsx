@@ -94,7 +94,7 @@ export function UnitsListPage() {
         <div className="shell">
           {carregando ? (
             <div className="flex justify-center py-16">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <div className="h-8 w-8 animate-spin rounded-xl border-2 border-primary border-t-transparent" />
             </div>
           ) : (
             <>

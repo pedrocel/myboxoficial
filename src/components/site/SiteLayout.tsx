@@ -9,7 +9,7 @@ type Props = {
 }
 
 /**
- * Casca das paginas publicas: header, rodape, granulado e a animacao de
+ * Casca das paginas publicas: header, rodape e a animacao de
  * entrada dos elementos marcados com data-reveal.
  */
 export function SiteLayout({ children, solidHeader = false }: Props) {
@@ -43,10 +43,10 @@ export function SiteLayout({ children, solidHeader = false }: Props) {
   }, [])
 
   return (
-    <div className="grain min-h-dvh">
+    <div className="min-h-dvh">
       <a
         href="#conteudo"
-        className="sr-only z-50 rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        className="sr-only z-50 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
       >
         Pular para o conteúdo
       </a>

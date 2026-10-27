@@ -33,7 +33,7 @@ export function UnitCard({ unit }: { unit: Unit }) {
             href={whatsappUrl}
             target="_blank"
             rel="noopener"
-            className="relative z-10 inline-flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
+            className="relative z-10 inline-flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform hover:scale-105"
             aria-label={`WhatsApp da ${unit.name}`}
           >
             <SocialIcon name="whatsapp" size={20} />

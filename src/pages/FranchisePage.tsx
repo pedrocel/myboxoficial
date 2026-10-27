@@ -76,7 +76,7 @@ export function FranchisePage() {
           </h2>
           <div className="mt-16 grid gap-x-16 md:grid-cols-2 lg:mt-24">
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(0)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <ChartLine size={26} aria-hidden />
               </span>
               <div>
@@ -87,7 +87,7 @@ export function FranchisePage() {
               </div>
             </div>
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(1)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Hourglass size={26} aria-hidden />
               </span>
               <div>
@@ -99,7 +99,7 @@ export function FranchisePage() {
               </div>
             </div>
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(0)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Store size={26} aria-hidden />
               </span>
               <div>
@@ -110,7 +110,7 @@ export function FranchisePage() {
               </div>
             </div>
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(1)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <TrendingUp size={26} aria-hidden />
               </span>
               <div>
@@ -122,7 +122,7 @@ export function FranchisePage() {
               </div>
             </div>
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(0)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Coins size={26} aria-hidden />
               </span>
               <div>
@@ -133,7 +133,7 @@ export function FranchisePage() {
               </div>
             </div>
             <div className="flex gap-6 border-t py-10" data-reveal style={stagger(1)}>
-              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand">
+              <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-brand">
                 <Cross size={26} aria-hidden />
               </span>
               <div>

@@ -8,12 +8,12 @@ export function NetworkPage() {
     <SiteLayout>
       <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden bg-night text-foreground lg:min-h-[82svh]">
         <img
-          src="/images/woman-focus-1600.webp"
-          srcSet="/images/woman-focus-640.webp 640w, /images/woman-focus-1024.webp 1024w, /images/woman-focus-1600.webp 1600w, /images/woman-focus-2400.webp 2400w"
+          src="/images/recepcao-1600.webp"
+          srcSet="/images/recepcao-640.webp 640w, /images/recepcao-1024.webp 1024w, /images/recepcao-1600.webp 1600w"
           sizes="100vw"
-          width="2400"
-          height="3600"
-          alt="Atleta concentrada antes de um levantamento"
+          width="1600"
+          height="896"
+          alt="Projeto da recepção de uma unidade My Box com o leão da marca"
           loading="eager"
           decoding="sync"
           fetchPriority="high"
@@ -53,8 +53,8 @@ export function NetworkPage() {
               <p className="text-sm font-medium text-brand">Em menos de 5 anos</p>
               <h3 className="display display-sm mt-4">Uma das maiores redes do país</h3>
               <p className="mt-4 max-w-[40ch] text-muted-foreground">
-                Testamos, validamos e levamos ao mercado um formato que virou tendência: a academia com conceito de
-                shopping.
+                Testamos, validamos e levamos ao mercado um formato que virou tendência: treino com método,
+                comunidade e atendimento de excelência.
               </p>
             </li>
             <li className="relative border-t border-border-strong pt-8" data-reveal style={stagger(2)}>
@@ -90,7 +90,7 @@ export function NetworkPage() {
           </figure>
           <div className="lg:col-span-5">
             <h2 className="display display-md" data-reveal>
-              Academia com conceito de shopping.
+              Mais que um lugar para treinar.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground" data-reveal style={stagger(1)}>
               Transformamos o tempo dedicado à atividade física em uma experiência prazerosa. Aqui as pessoas não apenas
@@ -220,11 +220,11 @@ export function NetworkPage() {
       </section>
       <section className="relative isolate overflow-hidden bg-night text-foreground">
         <img
-          src="/images/deadlift-dark-1600.webp"
-          srcSet="/images/deadlift-dark-640.webp 640w, /images/deadlift-dark-1024.webp 1024w, /images/deadlift-dark-1600.webp 1600w, /images/deadlift-dark-2400.webp 2400w"
+          src="/images/fachada-3-1310.webp"
+          srcSet="/images/fachada-3-640.webp 640w, /images/fachada-3-1024.webp 1024w, /images/fachada-3-1310.webp 1310w"
           sizes="100vw"
-          width="2400"
-          height="1600"
+          width="1310"
+          height="736"
           alt=""
           loading="lazy"
           decoding="async"

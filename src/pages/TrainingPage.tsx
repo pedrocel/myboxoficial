@@ -8,17 +8,17 @@ export function TrainingPage() {
     <SiteLayout>
       <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden bg-night text-foreground lg:min-h-[82svh]">
         <img
-          src="/images/cross-kettlebell-1600.webp"
-          srcSet="/images/cross-kettlebell-640.webp 640w, /images/cross-kettlebell-1024.webp 1024w, /images/cross-kettlebell-1600.webp 1600w, /images/cross-kettlebell-2400.webp 2400w"
+          src="/images/interior-1600.webp"
+          srcSet="/images/interior-640.webp 640w, /images/interior-1024.webp 1024w, /images/interior-1600.webp 1600w"
           sizes="100vw"
-          width="2400"
-          height="1920"
-          alt="Atleta erguendo um kettlebell em um box de cross training"
+          width="1600"
+          height="897"
+          alt="Projeto do interior de uma unidade My Box"
           loading="eager"
           decoding="sync"
           fetchPriority="high"
           className="hero-photo absolute inset-0 -z-10 size-full object-cover"
-          style={{ objectPosition: '45% 40%' }}
+          style={{ objectPosition: '50% 55%' }}
         />
         <div className="scrim absolute inset-0 -z-10" />
         <div className="shell hero-enter pt-36 pb-14 lg:pb-20">
@@ -65,12 +65,12 @@ export function TrainingPage() {
           <div className="grid grid-cols-5 gap-3 lg:col-span-7" data-reveal>
             <div className="media col-span-3 aspect-[3/4]">
               <img
-                src="/images/muscle-dumbbell-1600.webp"
-                srcSet="/images/muscle-dumbbell-640.webp 640w, /images/muscle-dumbbell-1024.webp 1024w, /images/muscle-dumbbell-1600.webp 1600w, /images/muscle-dumbbell-2400.webp 2400w"
+                src="/images/daniel-box-1024.webp"
+                srcSet="/images/daniel-box-640.webp 640w, /images/daniel-box-1024.webp 1024w, /images/daniel-box-1600.webp 1600w"
                 sizes="(min-width:1024px) 35vw, 60vw"
-                width="2400"
-                height="1600"
-                alt="Mão segurando um halter no suporte"
+                width="1024"
+                height="1536"
+                alt="Daniel Ambiel no box da My Box, em frente ao mural do leão"
                 loading="lazy"
                 decoding="async"
                 fetchPriority="auto"
@@ -78,12 +78,12 @@ export function TrainingPage() {
             </div>
             <div className="media col-span-2 mt-16 aspect-[3/4]">
               <img
-                src="/images/muscle-rack-1600.webp"
-                srcSet="/images/muscle-rack-640.webp 640w, /images/muscle-rack-1024.webp 1024w, /images/muscle-rack-1600.webp 1600w, /images/muscle-rack-2400.webp 2400w"
+                src="/images/recepcao-1600.webp"
+                srcSet="/images/recepcao-640.webp 640w, /images/recepcao-1024.webp 1024w, /images/recepcao-1600.webp 1600w"
                 sizes="(min-width:1024px) 22vw, 40vw"
-                width="2400"
-                height="1600"
-                alt="Fileira de halteres em uma academia"
+                width="1600"
+                height="896"
+                alt="Projeto da recepção de uma unidade My Box com o leão da marca"
                 loading="lazy"
                 decoding="async"
                 fetchPriority="auto"
@@ -118,11 +118,11 @@ export function TrainingPage() {
       <section id="cross-training" className="relative isolate scroll-mt-36 overflow-hidden bg-night text-foreground">
         <div className="parallax absolute inset-0 -z-10">
           <img
-            src="/images/cross-ropes-1600.webp"
-            srcSet="/images/cross-ropes-640.webp 640w, /images/cross-ropes-1024.webp 1024w, /images/cross-ropes-1600.webp 1600w, /images/cross-ropes-2400.webp 2400w"
+            src="/images/professor-mural-1600.webp"
+            srcSet="/images/professor-mural-640.webp 640w, /images/professor-mural-1024.webp 1024w, /images/professor-mural-1600.webp 1600w"
             sizes="100vw"
-            width="2400"
-            height="3593"
+            width="1600"
+            height="1067"
             alt=""
             loading="lazy"
             decoding="async"
@@ -178,12 +178,12 @@ export function TrainingPage() {
           <div className="relative lg:col-span-7" data-reveal style={stagger(1)}>
             <div className="media aspect-[16/11] w-[88%]">
               <img
-                src="/images/group-barbells-1600.webp"
-                srcSet="/images/group-barbells-640.webp 640w, /images/group-barbells-1024.webp 1024w, /images/group-barbells-1600.webp 1600w, /images/group-barbells-2400.webp 2400w"
+                src="/images/fachada-2-1307.webp"
+                srcSet="/images/fachada-2-640.webp 640w, /images/fachada-2-1024.webp 1024w, /images/fachada-2-1307.webp 1307w"
                 sizes="(min-width:1024px) 50vw, 90vw"
-                width="2400"
-                height="1401"
-                alt="Turma treinando junta com barras"
+                width="1307"
+                height="734"
+                alt="Projeto de uma unidade My Box"
                 loading="lazy"
                 decoding="async"
                 fetchPriority="auto"
@@ -191,12 +191,12 @@ export function TrainingPage() {
             </div>
             <div className="media absolute right-0 -bottom-12 aspect-square w-[42%] border-8 border-background">
               <img
-                src="/images/group-mats-1600.webp"
-                srcSet="/images/group-mats-640.webp 640w, /images/group-mats-1024.webp 1024w, /images/group-mats-1600.webp 1600w, /images/group-mats-2400.webp 2400w"
+                src="/images/daniel-box-1024.webp"
+                srcSet="/images/daniel-box-640.webp 640w, /images/daniel-box-1024.webp 1024w, /images/daniel-box-1600.webp 1600w"
                 sizes="(min-width:1024px) 25vw, 45vw"
-                width="2400"
-                height="1600"
-                alt="Alunas em aula coletiva sobre tapetes"
+                width="1024"
+                height="1536"
+                alt="Daniel Ambiel no box da My Box, em frente ao mural do leão"
                 loading="lazy"
                 decoding="async"
                 fetchPriority="auto"
@@ -232,12 +232,12 @@ export function TrainingPage() {
           </div>
           <div className="media aspect-[4/3] lg:col-span-5 lg:col-start-8" data-reveal style={stagger(1)}>
             <img
-              src="/images/shoe-plate-1600.webp"
-              srcSet="/images/shoe-plate-640.webp 640w, /images/shoe-plate-1024.webp 1024w, /images/shoe-plate-1600.webp 1600w, /images/shoe-plate-2400.webp 2400w"
+              src="/images/fachada-1-1310.webp"
+              srcSet="/images/fachada-1-640.webp 640w, /images/fachada-1-1024.webp 1024w, /images/fachada-1-1310.webp 1310w"
               sizes="(min-width:1024px) 40vw, 100vw"
-              width="2400"
-              height="1600"
-              alt="Tênis de treino ao lado de uma anilha"
+              width="1310"
+              height="735"
+              alt="Projeto de fachada de uma unidade My Box à noite"
               loading="lazy"
               decoding="async"
               fetchPriority="auto"
@@ -247,11 +247,11 @@ export function TrainingPage() {
       </section>
       <section className="relative isolate overflow-hidden bg-night text-foreground">
         <img
-          src="/images/deadlift-dark-1600.webp"
-          srcSet="/images/deadlift-dark-640.webp 640w, /images/deadlift-dark-1024.webp 1024w, /images/deadlift-dark-1600.webp 1600w, /images/deadlift-dark-2400.webp 2400w"
+          src="/images/fachada-3-1310.webp"
+          srcSet="/images/fachada-3-640.webp 640w, /images/fachada-3-1024.webp 1024w, /images/fachada-3-1310.webp 1310w"
           sizes="100vw"
-          width="2400"
-          height="1600"
+          width="1310"
+          height="736"
           alt=""
           loading="lazy"
           decoding="async"
